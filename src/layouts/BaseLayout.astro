@@ -101,5 +101,25 @@ const altPath = swapLangInPath(Astro.url.pathname, otherLang(lang));
         items.forEach((item) => item.classList.add('is-visible'));
       }
     </script>
+    <script>
+      // One delegated listener handles every `data-sound` trigger on the
+      // page (and any added later, e.g. inside a <details> that opens) -
+      // this is the "reusable module, not a separate implementation per
+      // page" the sound design calls for. Components just add
+      // data-sound="click|confirm|whoosh" to a button/summary; nothing else
+      // to wire up.
+      import { sound } from '../lib/sound-manager';
+
+      sound.init();
+
+      document.addEventListener('click', (event) => {
+        const trigger = (event.target as HTMLElement)?.closest<HTMLElement>('[data-sound]');
+        if (!trigger) return;
+        const kind = trigger.dataset.sound;
+        if (kind === 'click') sound.click();
+        else if (kind === 'confirm') sound.confirm();
+        else if (kind === 'whoosh') sound.whoosh();
+      });
+    </script>
   </body>
 </html>

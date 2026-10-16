@@ -1,6 +1,7 @@
 ---
 import Logo from './Logo.astro';
 import ThemeToggle from './ThemeToggle.astro';
+import SoundToggle from './SoundToggle.astro';
 import LanguageSwitcher from './LanguageSwitcher.astro';
 import { navRoutes } from '../data/site';
 import { ui } from '../i18n/ui';
@@ -45,7 +46,10 @@ function isActive(href: string) {
         <LanguageSwitcher lang={lang} />
       </div>
       <ThemeToggle lang={lang} />
-      <a class="btn btn-primary cta-desktop" href={localePath(lang, 'projects/')}>{t.common.heroCta}</a>
+      <div class="sound-desktop">
+        <SoundToggle lang={lang} />
+      </div>
+      <a class="btn btn-primary cta-desktop" href={localePath(lang, 'projects/')} data-sound="click">{t.common.heroCta}</a>
 
       <button id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="mobile-menu">
         <span class="visually-hidden">{t.nav.menuLabel}</span>
@@ -57,6 +61,7 @@ function isActive(href: string) {
   <div id="mobile-menu" class="mobile-menu" hidden>
     <div class="mobile-menu-lang">
       <LanguageSwitcher lang={lang} />
+      <SoundToggle lang={lang} />
     </div>
     <ul>
       {navItems.map((item) => (
@@ -131,12 +136,16 @@ function isActive(href: string) {
     gap: var(--space-2);
   }
 
-  .lang-desktop {
+  .lang-desktop,
+  .sound-desktop {
     display: none;
   }
 
   .mobile-menu-lang {
     padding: var(--space-2) var(--container-gutter) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
   }
 
   .cta-desktop {
@@ -206,7 +215,8 @@ function isActive(href: string) {
     .primary-nav {
       display: block;
     }
-    .lang-desktop {
+    .lang-desktop,
+    .sound-desktop {
       display: block;
     }
     .cta-desktop {

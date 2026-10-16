@@ -15,10 +15,13 @@ Live site (once deployed): https://elbacha-ux.github.io/portfolio-bu4/
 - Light/dark theme, respects OS preference, no flash of wrong theme
 - Plain CSS with custom properties (design tokens) — no CSS framework
 - Self-hosted Montserrat variable font (the charter's required typeface)
+- Hand-rolled, dependency-free charts (plain CSS/SVG - no charting library)
+- An optional, synthesized (Web Audio API) sound design system - no audio
+  files or third-party audio library (see [Sound design](#sound-design))
 - `@astrojs/sitemap` for `sitemap-index.xml`
 - No backend, no database, no client-side framework — HTML/CSS with a
-  small amount of vanilla JS (mobile menu, theme toggle, language
-  persistence, scroll-reveal)
+  small amount of vanilla JS (mobile menu, theme toggle, sound toggle,
+  language persistence, scroll-reveal, project filters)
 
 ## Prerequisites
 
@@ -65,13 +68,19 @@ src/
   i18n/
     index.ts     # locale list, localePath()/swapLangInPath()/pick()/pickAll() helpers
     ui.ts        # every UI chrome / page-copy string, in English AND French
+  lib/
+    cv.ts               # public/cv/<slug>.pdf convention + fs existence/size check
+    skillCategories.ts  # pure grouping of technical skills into categories (for charts)
+    languageLevels.ts   # CEFR level -> ordinal rank (for the language chart)
+    sound-manager.ts    # the sound system (see Sound design)
   components/    # reusable .astro components (Logo, MemberCard, AwardCard, ThemeToggle,
-                 # LanguageSwitcher, AwardIcon, ...) - each takes a `lang` prop
+                 # SoundToggle, LanguageSwitcher, BarChart, DonutChart, CvSection, ...)
+                 # - each takes a `lang` prop
   views/         # the actual page content, one file per route, lang-agnostic markup
     HomeView.astro, AboutView.astro, TeamView.astro, MemberView.astro,
     BumView.astro, ProjectsView.astro, AwardsView.astro, ContactView.astro
   layouts/
-    BaseLayout.astro   # <head>, header, footer, SEO meta, theme/lang blocking script
+    BaseLayout.astro   # <head>, header, footer, SEO meta, theme/sound/lang blocking script
   pages/               # thin routes - each just imports a View and passes lang="en"
     index.astro, about.astro, team/, members/[slug].astro, bum/, projects/,
     awards/, contact/, 404.astro
@@ -87,6 +96,7 @@ public/
   fonts/         # self-hosted Montserrat (woff2, variable, OFL licensed)
   images/brand/  # logo + favicon assets (derived from the approved logo)
   images/members/# member portraits (optimized JPEGs)
+  cv/            # member CV PDFs - public/cv/<slug>.pdf (see "Add a member's CV")
 docs/
   BU4-SPEC.md         # brand findings + implementation decisions (incl. i18n/dark mode)
   brand/              # the graphic charter PDF + approved logo (source assets)
@@ -147,15 +157,31 @@ placeholder photo.
 3. Members without a photo automatically get a neutral initials fallback —
    never a stock photo or a placeholder that looks like a real picture.
 
+### Add a member's CV
+
+1. Get the member's own, approved PDF résumé.
+2. Save it as `public/cv/<slug>.pdf` (the same slugs used everywhere else,
+   e.g. `public/cv/fedi-khouildi.pdf`).
+3. That's it — nothing to edit in `src/data/`. `src/lib/cv.ts` checks for
+   the file at build time (`fs.existsSync`); the member's page
+   automatically shows the "My CV — take it with you" Download/View
+   buttons (with the real file size) the next time the site builds. If the
+   file isn't there, the page shows an elegant "CV coming soon" state
+   instead — never a broken link.
+4. **Get the member's explicit approval before adding their CV** - same
+   privacy rule as everything else under `docs/content/`.
+
 ### Replace the logo
 
-The approved BU4 logo lives at `docs/brand/logo/logo.jpeg`, mirrored to
-`public/images/brand/bu4-logo.jpg` and used everywhere through the single
+The approved BU4 logo lives at `docs/brand/logo/logo.jpeg` (untouched
+original). The working asset is `public/images/brand/bu4-logo.png` - its
+background has been made transparent (so it sits on the page in both
+themes instead of a white box) - used everywhere through the single
 `src/components/Logo.astro` component. To replace it with a newer approved
-file, overwrite `public/images/brand/bu4-logo.jpg` (and regenerate the
-favicon — see the note in `docs/BU4-SPEC.md`). Never recolor, stretch,
-rotate or add a background behind the logo — see the brand rules in
-`docs/BU4-SPEC.md`.
+file, regenerate a transparent PNG from it and overwrite
+`public/images/brand/bu4-logo.png` (and regenerate the favicon — see the
+note in `docs/BU4-SPEC.md`). Never recolor, stretch, rotate, or otherwise
+redraw the mark itself — see the brand rules in `docs/BU4-SPEC.md`.
 
 ### Configure the deployment base path
 
@@ -181,6 +207,33 @@ blocking script in `BaseLayout.astro` redirects a returning visitor to the
 correct language version of whatever page they land on, and sets the
 light/dark theme before the page paints. See `docs/BU4-SPEC.md` §4-5 for
 the full mechanism.
+
+## Sound design
+
+Off by default; a visitor must click the speaker icon in the header (or
+mobile menu) to turn interface sounds on - the choice is then remembered
+via `localStorage['bu4-sound']`, the same mechanism as theme/language. The
+BU4 sonic signature (About page, next to the slogan) is a separate,
+always-available "play" action and isn't gated by that toggle, for the
+same reason a `<audio controls>` player wouldn't be.
+
+**No recorded audio files exist yet** for this project, so every sound -
+the short UI tones and the signature - is synthesized at runtime with the
+Web Audio API in `src/lib/sound-manager.ts` (a handful of short oscillator
+tones; no audio files, no third-party audio library). This is the
+documented fallback for when real assets aren't available yet, not a
+placeholder that pretends to be finished.
+
+**To add real recorded sounds later**: drop the files under
+`public/sounds/` (create the folder) and swap the relevant `tone(...)` /
+`sweep(...)` call in `src/lib/sound-manager.ts` for
+`new Audio('/portfolio-bu4/sounds/<name>.mp3').play()`. The public API
+(`sound.click()`, `sound.confirm()`, `sound.themeToggle()`, `sound.whoosh()`,
+`sound.playSignature()`) stays the same, so no component needs to change.
+
+To hook a new interaction up to a UI sound, add `data-sound="click"` (or
+`"confirm"` / `"whoosh"`) to any button/link - a single delegated listener
+in `BaseLayout.astro` handles the rest; no per-component wiring needed.
 
 ## Deployment (GitHub Pages)
 

@@ -1,0 +1,257 @@
+---
+/**
+ * Project showcase for a member page. Each project is an honest subset of
+ * an engineering case study - Overview / My contribution / Tools / Result -
+ * built only from fields that actually exist in src/data/people.ts
+ * (MemberProject). No "Challenge / Approach / Lessons learned" narrative is
+ * invented when the source is a single verified paragraph; sections that
+ * have no data simply don't render.
+ *
+ * Tool badges are real filters (not decorative): clicking one hides every
+ * project that doesn't use that tool. Only shown when there's enough real
+ * data to make filtering worthwhile (2+ projects, 2+ distinct tools).
+ */
+import Tag from './Tag.astro';
+import DonutChart from './DonutChart.astro';
+import Placeholder from './Placeholder.astro';
+import { ui } from '../i18n/ui';
+import { pick, pickAll } from '../i18n';
+import type { Lang } from '../i18n';
+import type { Member } from '../data/types';
+
+interface Props {
+  member: Member;
+  lang: Lang;
+}
+const { member, lang } = Astro.props;
+const t = ui[lang];
+
+const projects = member.projects.map((p) => ({
+  title: pick(p.title, lang) ?? '',
+  description: pick(p.description, lang),
+  role: pick(p.role, lang),
+  tools: pickAll(p.tools, lang),
+  status: p.status,
+  result: pick(p.result, lang),
+  link: p.link,
+}));
+
+const toolSlug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+const allTools = Array.from(new Set(projects.flatMap((p) => p.tools)));
+const showFilters = projects.length > 1 && allTools.length > 1;
+
+const completedCount = projects.filter((p) => p.status === 'completed').length;
+const inProgressCount = projects.filter((p) => p.status === 'in-progress').length;
+const showStatusChart = projects.length > 1 && completedCount > 0 && inProgressCount > 0;
+---
+
+<section id="projects" class="member-projects reveal">
+  <div class="projects-head">
+    <h2>{t.member.projectsTitle}</h2>
+    {showStatusChart && (
+      <div class="status-chart">
+        <DonutChart
+          segments={[
+            { label: t.member.statusCompleted, value: completedCount, color: 'var(--color-blue)' },
+            { label: t.common.inProgress, value: inProgressCount, color: 'var(--color-mid-gray)' },
+          ]}
+          centerLabel={t.member.statProjects}
+          summaryLabel={t.member.chartSummaryLabel}
+        />
+      </div>
+    )}
+  </div>
+
+  {projects.length > 0 ? (
+    <>
+      {showFilters && (
+        <div class="filters" role="group" aria-label={t.member.filterByTool}>
+          <button type="button" class="filter-chip is-active" data-filter="">{t.member.filterAll}</button>
+          {allTools.map((tool) => (
+            <button type="button" class="filter-chip" data-filter={toolSlug(tool)}>{tool}</button>
+          ))}
+        </div>
+      )}
+
+      <ul class="project-items">
+        {projects.map((p) => (
+          <li class="project-item" data-tools={p.tools.map(toolSlug).join(' ')}>
+            <details>
+              <summary data-sound="whoosh">
+                <span class="summary-main">
+                  <span class="project-title">{p.title}</span>
+                  {p.status === 'in-progress' && <Tag class="status-tag">{t.common.inProgress}</Tag>}
+                  {p.status === 'completed' && <Tag class="status-tag status-tag-done">{t.member.statusCompleted}</Tag>}
+                </span>
+                <span class="chevron" aria-hidden="true"></span>
+              </summary>
+              <div class="project-detail">
+                {p.description && <p>{p.description}</p>}
+                {p.role && <p class="muted"><strong>{t.member.role}:</strong> {p.role}</p>}
+                {p.tools.length > 0 && (
+                  <div class="detail-tools">
+                    {p.tools.map((tool) => <Tag>{tool}</Tag>)}
+                  </div>
+                )}
+                {p.result && <p class="muted"><strong>{t.member.result}:</strong> {p.result}</p>}
+                {p.link && (
+                  <a class="project-link" href={p.link} target="_blank" rel="noopener noreferrer">{p.link}</a>
+                )}
+              </div>
+            </details>
+          </li>
+        ))}
+      </ul>
+    </>
+  ) : (
+    <Placeholder label={t.member.placeholderProjects} lang={lang} />
+  )}
+</section>
+
+<script>
+  const container = document.querySelector<HTMLElement>('.member-projects');
+  if (container) {
+    const chips = container.querySelectorAll<HTMLButtonElement>('.filter-chip');
+    const items = container.querySelectorAll<HTMLLIElement>('.project-item');
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const filter = chip.dataset.filter ?? '';
+        chips.forEach((c) => c.classList.toggle('is-active', c === chip));
+        items.forEach((item) => {
+          const tools = (item.dataset.tools ?? '').split(' ');
+          item.hidden = Boolean(filter) && !tools.includes(filter);
+        });
+      });
+    });
+  }
+</script>
+
+<style>
+  .member-projects {
+    scroll-margin-top: 90px;
+  }
+  .projects-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+  .member-projects h2 {
+    font-size: var(--fs-600);
+    border-bottom: var(--rule-weight) solid var(--color-blue);
+    padding-bottom: var(--space-1);
+    display: inline-block;
+  }
+  .status-chart {
+    max-width: 280px;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: var(--space-3);
+  }
+  .filter-chip {
+    font-size: var(--fs-100);
+    font-weight: var(--fw-heading);
+    padding: 0.4em 0.9em;
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: border-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard);
+  }
+  .filter-chip:hover {
+    border-color: var(--color-accent);
+  }
+  .filter-chip.is-active {
+    background: var(--color-navy);
+    border-color: var(--color-navy);
+    color: var(--color-white);
+  }
+
+  .project-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+  .project-item {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-standard);
+  }
+  .project-item:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-accent);
+  }
+  details summary {
+    list-style: none;
+    cursor: pointer;
+    padding: var(--space-3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+  .summary-main {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+  .project-title {
+    font-weight: var(--fw-heading);
+    font-size: var(--fs-400);
+    color: var(--color-text);
+  }
+  .status-tag {
+    background: var(--color-accent-soft);
+    color: var(--color-accent-strong);
+  }
+  .status-tag-done {
+    background: var(--color-bg-muted);
+    color: var(--color-text-muted);
+  }
+  .chevron {
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid var(--color-text-muted);
+    border-bottom: 2px solid var(--color-text-muted);
+    transform: rotate(45deg);
+    transition: transform var(--duration-fast) var(--ease-standard);
+  }
+  details[open] .chevron {
+    transform: rotate(-135deg);
+  }
+  .project-detail {
+    padding: 0 var(--space-3) var(--space-3);
+  }
+  .project-detail p {
+    margin: 0 0 var(--space-2);
+  }
+  .muted {
+    color: var(--color-text-muted);
+  }
+  .detail-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: var(--space-2);
+  }
+  .project-link {
+    font-size: var(--fs-200);
+    font-weight: var(--fw-heading);
+    word-break: break-all;
+  }
+</style>

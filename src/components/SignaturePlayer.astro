@@ -1,0 +1,95 @@
+---
+/**
+ * The optional BU4 sonic signature. Entirely user-triggered - never
+ * autoplays, and works independently of the ambient sound toggle (clicking
+ * this specific button is itself the explicit gesture, the same as
+ * pressing play on an embedded audio player). A subtle pulse syncs on the
+ * accompanying facet while it plays.
+ */
+import { ui } from '../i18n/ui';
+import type { Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+
+<div class="signature-player">
+  <button id="signature-play" type="button" class="signature-btn" data-label-play={t.sound.play} data-label-stop={t.sound.stop} data-label-replay={t.sound.replay}>
+    <span class="play-icon" aria-hidden="true"></span>
+    <span class="play-label">{t.sound.play}</span>
+  </button>
+</div>
+
+<script>
+  import { sound } from '../lib/sound-manager';
+
+  const btn = document.getElementById('signature-play');
+  const label = btn?.querySelector('.play-label');
+  let playing = false;
+
+  function setLabel(text: string | undefined) {
+    if (label && text) label.textContent = text;
+  }
+
+  btn?.addEventListener('click', () => {
+    if (playing) {
+      sound.stopSignature();
+      playing = false;
+      btn.classList.remove('is-playing');
+      setLabel(btn.dataset.labelPlay);
+      return;
+    }
+    playing = true;
+    btn.classList.add('is-playing');
+    setLabel(btn.dataset.labelStop);
+    sound.playSignature(() => {
+      playing = false;
+      btn.classList.remove('is-playing');
+      setLabel(btn.dataset.labelReplay);
+    });
+  });
+</script>
+
+<style>
+  .signature-player {
+    display: flex;
+    justify-content: center;
+  }
+  .signature-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: transparent;
+    border: 2px solid var(--color-white);
+    color: var(--color-white);
+    padding: 0.7em 1.4em;
+    font-weight: var(--fw-heading);
+    cursor: pointer;
+    transition: background-color var(--duration-fast) var(--ease-standard);
+  }
+  .signature-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+  .play-icon {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--color-light-blue);
+    flex-shrink: 0;
+  }
+  .signature-btn.is-playing .play-icon {
+    animation: pulse 0.6s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.6; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .signature-btn.is-playing .play-icon {
+      animation: none;
+    }
+  }
+</style>

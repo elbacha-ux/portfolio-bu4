@@ -138,6 +138,37 @@ placeholder wherever one of these gaps exists.
     English 404 page (no per-locale 404 is possible on static GH Pages
     without a Functions/Worker layer).
 
+## Member portfolios, CV PDFs & sound design
+
+18. **Every member's CV PDF is missing.** Each of the 7 member pages now
+    has a "My CV — take it with you" section with a `Download`/`View`
+    button, but `public/cv/` is currently empty, so every page shows the
+    "CV coming soon" state instead. To add one: get the member's explicit
+    approval, then drop their approved PDF at
+    `public/cv/<slug>.pdf` (e.g. `public/cv/fedi-khouildi.pdf`) - the page
+    picks it up automatically on the next build, no code change needed.
+    See README "Add a member's CV".
+19. **No project screenshots, diagrams, prototype photos, or demo videos**
+    were supplied for any project (collective or individual), so no
+    project currently shows an image or video - only the text fields
+    already present in `src/data/people.ts` / `projects.ts`. Supplying
+    real images is the main way to make the project cards feel more like a
+    gallery; there's no field to invent a fake one in the meantime.
+20. **The skill/language charts use only verified data** - technical-skill
+    categories are a pure regrouping of each member's own stated skills
+    (see `src/lib/skillCategories.ts`), language bars use the member's own
+    stated CEFR level (a standard scale, not a guessed score - see
+    `src/lib/languageLevels.ts`), and the project-status donut is a literal
+    count of completed vs. in-progress projects. No numeric proficiency
+    (e.g. "Python: 90%") was invented anywhere, per the brief.
+21. **Sound is fully synthesized, not recorded** - there are no audio asset
+    files in this project yet (`public/sounds/` doesn't exist). Every UI
+    tone and the BU4 sonic signature are generated at runtime with the Web
+    Audio API (`src/lib/sound-manager.ts`). This was an explicit option in
+    the brief for when real assets aren't ready; if BU4 wants a more
+    produced/branded sound later, record or license short original clips
+    and swap them in - see README "Sound design" for exactly where.
+
 ## What this session could and couldn't verify
 
 - ✅ `npm run verify` passes end to end: content validation (including a
@@ -164,3 +195,37 @@ placeholder wherever one of these gaps exists.
   automated accessibility audit tool (e.g. axe) was run - only the manual
   checks and the contrast-ratio script described above.
 - ⚠️ Lighthouse/performance audit was not run.
+
+### This pass: member portfolios, CV section, charts, sound design
+
+- ✅ `npm run verify` passes end to end (content validation, contrast in
+  both themes, type check, a 72-file/29-page production build).
+- ✅ Checked every one of the 7 member pages (hero, stats, anchor nav,
+  skills/charts, project filters and expand/collapse, CV section) in the
+  browser - including the member with the most projects/tools (Nour
+  Lemjid, 5 projects/18 tool filters) and the one with the most
+  undefined/"pas encore" fields (Lina) - no console errors, no layout
+  breakage on sparse data, correct graceful omission of charts/sections
+  that don't have enough real data to be meaningful (e.g. no project
+  status donut when every project's status is unknown).
+- ✅ Verified interactivity via real DOM state (not just visual
+  inspection): the project tool filter actually hides/shows cards, project
+  `<details>` open/close, the sound toggle persists via localStorage across
+  navigation, the BU4 signature button correctly cycles through
+  Play → Stop → Replay states, and the clipboard-copy buttons call
+  `navigator.clipboard.writeText` with a genuine user gesture (the
+  automated browser pane used for testing has `clipboard-write` itself set
+  to `denied` at the OS/browser level, so the actual copy couldn't be
+  observed end-to-end in this environment - the code follows the standard
+  web API pattern and degrades gracefully, i.e. the channel's normal link
+  still works, if the clipboard call fails for any reason).
+- ✅ Re-checked 375px / 768px / 1280px on member pages, including the
+  heaviest one (5 projects, 3 charts, long filter list) - no horizontal
+  overflow at any width.
+- 🐛 Fixed during this pass: a mislabeled "Skills & languages" heading over
+  the personal-skills list (now "Personal skills" - the languages already
+  have their own chart just below it).
+- ⚠️ Not checked: a real screen reader pass over the new charts/filters
+  (they ship an `aria-label` summary and a `<details>` text-equivalent for
+  each chart, and the filters are plain buttons, but this wasn't verified
+  with actual assistive-tech software).

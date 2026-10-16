@@ -128,7 +128,7 @@ a generic CV, none of this was private to begin with (no phone numbers,
 home addresses or ID numbers were ever asked for in the form).
 
 Content is trimmed to professional fields and kept in both English and
-French (see §6): English is a trimmed translation, French keeps the
+French (see §4): English is a trimmed translation, French keeps the
 member's own original wording where their form had one, rather than being
 back-translated from the English copy. `npm run export:drafts` regenerates
 a readable `docs/content/members/<slug>.md` per person, showing EN/FR side
@@ -249,7 +249,85 @@ be mistaken for an actual photo or an invented name. Corners stayed square
 image-zoom-on-hover micro-interaction standing in for the "premium feel"
 instead of introducing rounded corners that would contradict that rule.
 
-## 7. Deployment
+## 7. Member portfolio pages
+
+`src/views/MemberView.astro` composes several focused components rather
+than one large page: `MemberHero` (photo, intro, real counts - never
+invented metrics - and CTA buttons that only render when there's something
+real to link to), `MemberSkills` (categorized technical badges + two
+charts), `MemberProjects` (filterable, expandable project list + a
+projects-by-status chart), and `CvSection`.
+
+**Engineering "case study" structure**: the brief asked for a
+Challenge/Approach/Implementation/Outcome/Lessons narrative per project.
+The actual source data (`MemberProject` in `src/data/people.ts`) is a
+single verified paragraph plus role/tools/result - there is no basis to
+split that into five invented sub-narratives without fabricating content,
+so each project instead renders the honest subset that exists: Overview
+(description), My contribution (role, when stated), Tools, and Result -
+exactly the fields already in the data model, just presented as an
+expandable `<details>` case-study card instead of a flat paragraph. No
+"Lessons learned" section exists anywhere, since no member ever supplied
+that content.
+
+**Charts** (`BarChart.astro`, `DonutChart.astro`) are hand-rolled - plain
+CSS bars and a CSS `conic-gradient` donut, no charting library - and only
+ever plot real, already-verified data:
+
+- *Languages*: each bar's length is the member's own stated CEFR level
+  (`src/lib/languageLevels.ts` maps A1-C2/native to its standard ordinal
+  position, 1-6) - not an invented proficiency score.
+- *Skills by category*: `src/lib/skillCategories.ts` purely regroups a
+  member's already-stated technical skills by keyword match (e.g.
+  "HTML"/"CSS" → Web development) - it never adds, removes, or scores a
+  skill. The donut's segments are real skill *counts*, not percentages.
+- *Projects by status*: a literal count of `completed` vs. `in-progress`
+  projects, only shown when both are non-zero (otherwise the chart would
+  imply a comparison that doesn't exist).
+
+Every chart renders an accessible `aria-label` plus a `<details>`
+text-equivalent list, and is driven by plain CSS custom properties so it
+reads correctly in both themes without any JS-side theme detection.
+
+**Project tool filters**: real filtering (hide/show via a `hidden`
+attribute), not decorative - only rendered when there are 2+ projects and
+2+ distinct tools, so a single-project member never sees a filter bar that
+can't do anything useful.
+
+**CV PDFs**: no data field to keep in sync - `src/lib/cv.ts` checks
+`public/cv/<slug>.pdf` with Node's `fs` at build time (Astro frontmatter
+runs server-side, even for a fully static site), so a missing file can
+never produce a broken button: the section simply renders "CV coming soon"
+instead. File size (shown next to the Download button) comes from
+`fs.statSync` - a real, verified number, not an estimate.
+
+## 8. Sound design
+
+No recorded audio assets exist in this project. Every sound - short UI
+tones (click/confirm/theme-toggle/whoosh) and the longer four-note BU4
+"sonic signature" - is synthesized at runtime with the Web Audio API in
+`src/lib/sound-manager.ts` (plain oscillators with a short gain envelope,
+no samples, no third-party audio library). This is the documented
+fallback the brief calls for when real assets aren't ready yet; swapping
+in recorded clips later only means changing the inside of each function in
+that one file (see README "Sound design") - every component already calls
+the same public API (`sound.click()`, etc.) and wouldn't need to change.
+
+Sound is off by default; `SoundToggle.astro` (next to the theme toggle)
+persists the visitor's choice to `localStorage['bu4-sound']`, read by
+`sound.init()` on every page load - the same pattern as the theme/language
+preferences, so it survives navigation without a server. A single
+delegated `click` listener in `BaseLayout.astro` triggers a sound for any
+element carrying `data-sound="click"` (used sparingly - major nav/CTA
+buttons only, not every link) so no component needs its own audio wiring.
+The BU4 signature (`SignaturePlayer.astro`, on the About page next to the
+slogan showcase) is a separate, always-available, user-triggered play
+button independent of that ambient toggle - the same reasoning that an
+embedded `<audio controls>` player isn't silenced by a page-wide mute
+setting - with its own Play/Stop/Replay state and a synced pulse animation
+that respects `prefers-reduced-motion`.
+
+## 9. Deployment
 
 Static Astro build, GitHub Pages via `.github/workflows/deploy.yml`.
 `site: 'https://elbacha-ux.github.io'`, `base: '/portfolio-bu4'` in
@@ -257,7 +335,7 @@ Static Astro build, GitHub Pages via `.github/workflows/deploy.yml`.
 If the repo moves, update both of those plus `public/robots.txt`'s sitemap
 URL.
 
-## 8. Known deviations / open questions
+## 10. Known deviations / open questions
 
 - No official JEENISo signature file (only the BU4-specific lockup) — see
   §1 Logo above.
@@ -266,9 +344,12 @@ URL.
   would mean adding a value to `locales` in `astro.config.mjs`, a new
   `src/pages/<locale>/` route tree (thin wrappers only), and filling in the
   new language in every `Localized` field and in `src/i18n/ui.ts`.
-- One real collective project is listed (`bu4-portfolio-website` — this
-  site itself, corroborated by two independent member submissions, and
-  crediting all seven members as the team's shared project). No other
-  BU4-wide (as opposed to individual academic/club) project could be
-  verified from the supplied material.
+- Two real collective projects are listed (`bu4-portfolio-website` and
+  `re-imaginelab-promo-video` — see §7). No other BU4-wide (as opposed to
+  individual academic/club) project could be verified from the supplied
+  material.
+- No member CV PDFs exist yet (`public/cv/` is empty) and no project
+  images/videos were supplied — every member page's CV section and every
+  project card render their honest empty/"coming soon" state — see §7-8.
+- Sound is entirely synthesized (Web Audio API), not recorded — see §8.
 - Full list of missing assets/approvals: see `MISSING_CONTENT.md`.

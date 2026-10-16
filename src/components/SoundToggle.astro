@@ -1,0 +1,98 @@
+---
+/**
+ * Global interface-sound toggle. Sound is off by default (see
+ * src/lib/sound-manager.ts) until the visitor clicks this button; the
+ * choice then persists via localStorage, same mechanism as the theme
+ * toggle. This button also doubles as the "clear way to mute all interface
+ * audio immediately" the brief asks for.
+ */
+import { ui } from '../i18n/ui';
+import type { Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+
+<button
+  id="sound-toggle"
+  class="sound-toggle"
+  type="button"
+  aria-label={t.nav.soundEnable}
+  aria-pressed="false"
+  data-label-enable={t.nav.soundEnable}
+  data-label-disable={t.nav.soundDisable}
+>
+  <svg class="icon icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M4 10v4h3.5L13 18V6L7.5 10H4Z" />
+    <path d="M16.2 9a4 4 0 0 1 0 6M18.8 6.5a7.5 7.5 0 0 1 0 11" />
+  </svg>
+  <svg class="icon icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M4 10v4h3.5L13 18V6L7.5 10H4Z" />
+    <path d="M16 9.5 20.5 14M20.5 9.5 16 14" />
+  </svg>
+</button>
+
+<script>
+  import { sound } from '../lib/sound-manager';
+
+  const toggle = document.getElementById('sound-toggle');
+
+  sound.init();
+
+  function reflect() {
+    const on = sound.isEnabled();
+    toggle?.setAttribute('aria-pressed', String(on));
+    toggle?.classList.toggle('is-on', on);
+    const label = on ? toggle?.dataset.labelDisable : toggle?.dataset.labelEnable;
+    if (label) toggle?.setAttribute('aria-label', label);
+  }
+
+  toggle?.addEventListener('click', () => {
+    sound.setEnabled(!sound.isEnabled());
+    reflect();
+  });
+
+  reflect();
+</script>
+
+<style>
+  .sound-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: border-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
+  }
+  .sound-toggle:hover {
+    border-color: var(--color-accent);
+  }
+  .sound-toggle:active {
+    transform: scale(0.92);
+  }
+  .sound-toggle.is-on {
+    color: var(--color-accent-strong);
+  }
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+  .icon-on {
+    display: none;
+  }
+  .sound-toggle.is-on .icon-on {
+    display: block;
+  }
+  .sound-toggle.is-on .icon-off {
+    display: none;
+  }
+</style>

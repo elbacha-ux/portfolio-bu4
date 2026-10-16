@@ -1,0 +1,169 @@
+---
+/**
+ * Portfolio hero for an individual member page. Reuses PhotoOverlay (same
+ * crop/fallback/wedge treatment as the rest of the site) and the faceted
+ * charter-palette background language introduced in SloganShowcase, toned
+ * down so it reads as a backdrop rather than competing with the content.
+ */
+import PhotoOverlay from './PhotoOverlay.astro';
+import { ui } from '../i18n/ui';
+import { pick } from '../i18n';
+import type { Lang } from '../i18n';
+import type { Member } from '../data/types';
+
+interface Props {
+  member: Member;
+  lang: Lang;
+  projectCount: number;
+  skillCount: number;
+  languageCount: number;
+  hasCv: boolean;
+}
+const { member, lang, projectCount, skillCount, languageCount, hasCv } = Astro.props;
+const t = ui[lang];
+const specialty = pick(member.specialty, lang);
+const intro = pick(member.intro, lang);
+
+const stats = [
+  projectCount > 0 && { value: projectCount, label: t.member.statProjects },
+  skillCount > 0 && { value: skillCount, label: t.member.statSkills },
+  languageCount > 0 && { value: languageCount, label: t.member.statLanguages },
+].filter((s): s is { value: number; label: string } => Boolean(s));
+---
+
+<header class="member-hero">
+  <div class="facets" aria-hidden="true">
+    <span class="facet f1"></span>
+    <span class="facet f2"></span>
+  </div>
+
+  <div class="container hero-grid">
+    <div class="photo-col reveal">
+      <PhotoOverlay src={member.photo} name={member.name} lang={lang} ratio="4 / 5" />
+    </div>
+
+    <div class="content-col reveal">
+      <h1>{member.name}</h1>
+      {specialty && <p class="specialty">{specialty}</p>}
+      {intro && <p class="intro">{intro}</p>}
+
+      {stats.length > 0 && (
+        <ul class="stats">
+          {stats.map((s) => (
+            <li><span class="stat-value">{s.value}</span><span class="stat-label">{s.label}</span></li>
+          ))}
+        </ul>
+      )}
+
+      <div class="hero-actions">
+        {projectCount > 0 && (
+          <a class="btn btn-primary" href="#projects" data-sound="click">{t.member.ctaExploreProjects}</a>
+        )}
+        {skillCount > 0 && (
+          <a class="btn btn-secondary" href="#skills" data-sound="click">{t.member.ctaViewSkills}</a>
+        )}
+        {hasCv && (
+          <a class="btn btn-secondary" href="#cv" data-sound="click">{t.member.ctaDownloadCv}</a>
+        )}
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .member-hero {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-accent-soft);
+    padding-block: var(--space-5) var(--space-6);
+    isolation: isolate;
+  }
+
+  .facets {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .facet {
+    position: absolute;
+    display: block;
+  }
+  .f1 {
+    width: 40%;
+    height: 160%;
+    top: -30%;
+    right: -10%;
+    background: var(--color-light-blue);
+    opacity: 0.18;
+    clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);
+  }
+  .f2 {
+    width: 18%;
+    height: 100%;
+    top: 0;
+    right: 22%;
+    background: var(--color-blue);
+    opacity: 0.12;
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  }
+
+  .hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .photo-col {
+    max-width: 280px;
+  }
+
+  .specialty {
+    color: var(--color-accent-strong);
+    font-weight: var(--fw-heading);
+    margin-top: -0.5rem;
+  }
+
+  .intro {
+    font-size: var(--fs-400);
+    max-width: 60ch;
+  }
+
+  .stats {
+    list-style: none;
+    display: flex;
+    gap: var(--space-4);
+    margin: var(--space-2) 0 var(--space-3);
+    padding: 0;
+  }
+  .stats li {
+    display: flex;
+    flex-direction: column;
+  }
+  .stat-value {
+    font-size: var(--fs-700);
+    font-weight: var(--fw-black);
+    color: var(--color-navy);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: var(--fs-100);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 0.25em;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  @media (min-width: 768px) {
+    .hero-grid {
+      grid-template-columns: 280px 1fr;
+      align-items: center;
+    }
+  }
+</style>
