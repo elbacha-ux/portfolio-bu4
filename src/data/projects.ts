@@ -35,6 +35,7 @@ export const projects: CollectiveProject[] = [
     link: null,
     image: null,
     imageAlt: null,
+    videoUrl: null,
   },
   {
     slug: 're-imaginelab-campaign',
@@ -59,5 +60,6 @@ export const projects: CollectiveProject[] = [
     link: 'https://ahmedbfg.github.io/Re-imagine-Lab/',
     image: null,
     imageAlt: null,
+    videoUrl: null,
   },
 ];

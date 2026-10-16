@@ -96,6 +96,8 @@ public/
   fonts/         # self-hosted Montserrat (woff2, variable, OFL licensed)
   images/brand/  # logo + favicon assets (derived from the approved logo)
   images/members/# member portraits (optimized JPEGs)
+  images/projects/<slug>/ # project gallery photos (see "Add project photos/video")
+  videos/        # project demo videos - public/videos/<slug>.mp4 (see "Add project photos/video")
   cv/            # member CV PDFs - public/cv/<slug>.pdf (see "Add a member's CV")
 docs/
   BU4-SPEC.md         # brand findings + implementation decisions (incl. i18n/dark mode)
@@ -170,6 +172,22 @@ placeholder photo.
    instead — never a broken link.
 4. **Get the member's explicit approval before adding their CV** - same
    privacy rule as everything else under `docs/content/`.
+
+### Add project photos/video
+
+Every collective project has its own detail page at `/projects/<slug>/`
+(linked from each project card's "View details →"), with Gallery and Video
+sections that show a "coming soon" state until real media exists.
+
+1. **Photos**: save any number of image files (`.jpg`, `.jpeg`, `.png` or
+   `.webp`) at `public/images/projects/<slug>/` (e.g.
+   `public/images/projects/re-imaginelab-campaign/01.jpg`). `src/lib/projectMedia.ts`
+   lists the folder at build time - no data file to edit, and a missing
+   folder just means an empty gallery, never a broken image.
+2. **Video**: either save an MP4 at `public/videos/<slug>.mp4` (checked the
+   same way), or, if the video is hosted elsewhere (YouTube, Instagram,
+   etc.), set that project's `videoUrl` in `src/data/projects.ts` to the
+   real link. A local file takes priority if both exist.
 
 ### Replace the logo
 

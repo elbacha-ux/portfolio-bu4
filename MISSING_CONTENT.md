@@ -160,11 +160,16 @@ placeholder wherever one of these gaps exists.
     picks it up automatically on the next build, no code change needed.
     See README "Add a member's CV".
 20. **No project screenshots, diagrams, prototype photos, or demo videos**
-    were supplied for any project (collective or individual), so no
-    project currently shows an image or video - only the text fields
-    already present in `src/data/people.ts` / `projects.ts`. Supplying
-    real images is the main way to make the project cards feel more like a
-    gallery; there's no field to invent a fake one in the meantime.
+    were supplied for either collective project, so each project's new
+    detail page (`/projects/<slug>/`, linked from every project card's
+    "View details →") shows a "coming soon" state in its Gallery and Video
+    sections instead of fabricated media. To add real photos: drop any
+    number of image files at `public/images/projects/<slug>/` (e.g.
+    `public/images/projects/re-imaginelab-campaign/01.jpg`) - picked up
+    automatically at build time, no code or data change needed. To add a
+    video: either drop an MP4 at `public/videos/<slug>.mp4`, or - if it
+    lives elsewhere (YouTube, Instagram, etc.) - set `videoUrl` on that
+    project in `src/data/projects.ts`.
 21. **The skill/language charts use only verified data** - technical-skill
     categories are a pure regrouping of each member's own stated skills
     (see `src/lib/skillCategories.ts`), language bars use the member's own
