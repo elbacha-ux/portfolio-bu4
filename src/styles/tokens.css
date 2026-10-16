@@ -1,8 +1,11 @@
 /*
   Design tokens verified against docs/brand/Charte-Graphique-1.pdf
   (JEENISo Identity Manual, Edition 1, 03.2018).
-  Every color below is taken directly from section 2.1/2.2 (Colors - Palette /
-  Secondary Palette) of that PDF. Do not add hues outside this set.
+  Every light-mode color below is taken directly from section 2.1/2.2
+  (Colors - Palette / Secondary Palette) of that PDF. Do not add hues
+  outside this set. Dark mode is a deliberate second composition using the
+  same hue family (not an automatic inversion) - see the semantic overrides
+  at the bottom of this file.
 */
 :root {
   /* ---- Brand colors (verified against the PDF) ---- */
@@ -20,17 +23,35 @@
   --color-navy-deep: #143b56;
   --color-white: #ffffff;
 
-  /* ---- Semantic roles ---- */
+  /* ---- Dark-mode surfaces (same blue/charcoal/navy family, deliberately
+     composed - not a CSS invert()) ---- */
+  --color-dark-bg: #14161a;
+  --color-dark-surface: #1c1f24;
+  --color-dark-surface-2: #262a31;
+  --color-dark-border: #343841;
+  --color-dark-text: #eef1f4;
+  --color-dark-text-muted: #aab1ba;
+  --color-dark-blue-tint: #152636;
+
+  /* ---- Semantic roles (redefined per theme below) ---- */
   --color-bg: var(--color-white);
   --color-bg-muted: var(--color-gray-tint);
   --color-bg-inverse: var(--color-navy);
+  --color-surface: var(--color-white);
+  --color-surface-hover: var(--color-gray-tint);
   --color-text: var(--color-charcoal);
   --color-text-muted: var(--color-cool-gray);
   --color-text-inverse: var(--color-white);
   --color-border: #e3e1e1;
   --color-accent: var(--color-blue);
+  --color-accent-strong: var(--color-navy);
   --color-accent-hover: var(--color-navy-deep);
+  --color-accent-soft: var(--color-blue-tint);
   --color-focus-ring: var(--color-navy);
+  --shadow-color: 26, 74, 107; /* navy, used as rgba(var(--shadow-color), alpha) */
+  --shadow-sm: 0 1px 2px rgba(var(--shadow-color), 0.06), 0 1px 1px rgba(var(--shadow-color), 0.04);
+  --shadow-md: 0 8px 20px -6px rgba(var(--shadow-color), 0.16), 0 2px 6px rgba(var(--shadow-color), 0.08);
+  --shadow-lg: 0 20px 40px -12px rgba(var(--shadow-color), 0.28), 0 4px 10px rgba(var(--shadow-color), 0.1);
 
   /* ---- Typography ---- */
   --font-primary: 'Montserrat', Arial, sans-serif;
@@ -69,12 +90,14 @@
   /* ---- Layout ---- */
   --container-max: 1200px;
   --container-gutter: 1.25rem;
-  --radius: 0; /* charter calls for square corners */
+  --radius: 0;      /* charter calls for square corners throughout */
+  --radius-pill: 999px; /* used only for small circular controls (theme toggle) */
   --rule-weight: 4px; /* split blue/gray rule under section headings, PDF p.11 */
   --border-weight: 1px;
 
   /* ---- Motion ---- */
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --duration-fast: 150ms;
   --duration-base: 250ms;
   --duration-slow: 450ms;
@@ -92,4 +115,55 @@
     --duration-base: 0ms;
     --duration-slow: 0ms;
   }
+}
+
+/* ======================================================================
+   Dark theme
+   Applies when the OS prefers dark AND the visitor hasn't explicitly
+   chosen light (data-theme="light"), or when the visitor explicitly chose
+   dark (data-theme="dark"). The inline script in BaseLayout sets
+   data-theme before first paint to avoid a flash of the wrong theme.
+   ====================================================================== */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-bg: var(--color-dark-bg);
+    --color-bg-muted: var(--color-dark-surface);
+    --color-bg-inverse: var(--color-navy-deep);
+    --color-surface: var(--color-dark-surface);
+    --color-surface-hover: var(--color-dark-surface-2);
+    --color-text: var(--color-dark-text);
+    --color-text-muted: var(--color-dark-text-muted);
+    --color-text-inverse: var(--color-dark-text);
+    --color-border: var(--color-dark-border);
+    --color-accent: var(--color-light-blue);
+    --color-accent-strong: var(--color-light-blue);
+    --color-accent-hover: #8ec4ea;
+    --color-accent-soft: var(--color-dark-blue-tint);
+    --color-focus-ring: var(--color-light-blue);
+    --shadow-color: 0, 0, 0;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 10px 24px -8px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 24px 48px -16px rgba(0, 0, 0, 0.7);
+  }
+}
+
+:root[data-theme='dark'] {
+  --color-bg: var(--color-dark-bg);
+  --color-bg-muted: var(--color-dark-surface);
+  --color-bg-inverse: var(--color-navy-deep);
+  --color-surface: var(--color-dark-surface);
+  --color-surface-hover: var(--color-dark-surface-2);
+  --color-text: var(--color-dark-text);
+  --color-text-muted: var(--color-dark-text-muted);
+  --color-text-inverse: var(--color-dark-text);
+  --color-border: var(--color-dark-border);
+  --color-accent: var(--color-light-blue);
+  --color-accent-strong: var(--color-light-blue);
+  --color-accent-hover: #8ec4ea;
+  --color-accent-soft: var(--color-dark-blue-tint);
+  --color-focus-ring: var(--color-light-blue);
+  --shadow-color: 0, 0, 0;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 10px 24px -8px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 24px 48px -16px rgba(0, 0, 0, 0.7);
 }

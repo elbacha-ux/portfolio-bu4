@@ -1,0 +1,12 @@
+---
+import MemberView from '../../../views/MemberView.astro';
+import { team } from '../../../data/team';
+
+export function getStaticPaths() {
+  return team.memberSlugs.map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+---
+
+<MemberView lang="fr" slug={slug as string} />

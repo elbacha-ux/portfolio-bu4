@@ -10,11 +10,15 @@ Live site (once deployed): https://elbacha-ux.github.io/portfolio-bu4/
 ## Tech stack
 
 - **Astro 7** (static output) + TypeScript (strict)
+- Bilingual: English at `/`, French at `/fr/` — plain static routes per
+  locale (see [Internationalization](#internationalization-enfr))
+- Light/dark theme, respects OS preference, no flash of wrong theme
 - Plain CSS with custom properties (design tokens) — no CSS framework
 - Self-hosted Montserrat variable font (the charter's required typeface)
 - `@astrojs/sitemap` for `sitemap-index.xml`
 - No backend, no database, no client-side framework — HTML/CSS with a
-  small amount of vanilla JS for the mobile menu
+  small amount of vanilla JS (mobile menu, theme toggle, language
+  persistence, scroll-reveal)
 
 ## Prerequisites
 
@@ -52,43 +56,44 @@ Run `npm run verify` before every deploy/PR.
 ```
 src/
   data/          # single source of truth for all content (typed)
-    types.ts     # shared TS interfaces (Member, CollectiveProject, Award, ...)
-    site.ts      # site name, JEENISo info, nav items, contact placeholder
+    types.ts     # shared TS interfaces + the Localized<T> = {en, fr} type and L() helper
+    site.ts      # site name, JEENISo info, nav routes, contact placeholder
     team.ts      # the 7 member slugs + the BUM slug
-    people.ts    # all person records (7 members + Nader Hlel/BUM)
-    projects.ts  # collective BU4 projects
-    awards.ts    # BU4 Awards categories (draft until the team confirms)
-    ui-strings.ts# every UI chrome string (for future i18n)
-  components/    # reusable .astro components (Logo, MemberCard, AwardCard, ...)
+    people.ts    # all person records (7 members + Nader Hlel/BUM), bilingual
+    projects.ts  # collective BU4 projects, bilingual
+    awards.ts    # BU4 Awards categories (draft until the team confirms), bilingual
+  i18n/
+    index.ts     # locale list, localePath()/swapLangInPath()/pick()/pickAll() helpers
+    ui.ts        # every UI chrome / page-copy string, in English AND French
+  components/    # reusable .astro components (Logo, MemberCard, AwardCard, ThemeToggle,
+                 # LanguageSwitcher, AwardIcon, ...) - each takes a `lang` prop
+  views/         # the actual page content, one file per route, lang-agnostic markup
+    HomeView.astro, AboutView.astro, TeamView.astro, MemberView.astro,
+    BumView.astro, ProjectsView.astro, AwardsView.astro, ContactView.astro
   layouts/
-    BaseLayout.astro   # <head>, header, footer, SEO meta
-  pages/
-    index.astro        # /
-    about.astro         # /about/
-    team/index.astro    # /team/
-    members/[slug].astro# /members/<slug>/  (7 static pages)
-    bum/index.astro      # /bum/
-    projects/index.astro # /projects/
-    awards/index.astro   # /awards/
-    contact/index.astro  # /contact/
-    404.astro
+    BaseLayout.astro   # <head>, header, footer, SEO meta, theme/lang blocking script
+  pages/               # thin routes - each just imports a View and passes lang="en"
+    index.astro, about.astro, team/, members/[slug].astro, bum/, projects/,
+    awards/, contact/, 404.astro
+    fr/                # same routes again, passing lang="fr" to the same Views
   styles/
-    tokens.css   # design tokens verified against the brand charter
-    global.css   # resets, base elements, buttons, cards, utilities
+    tokens.css   # design tokens verified against the brand charter + dark-theme overrides
+    global.css   # resets, base elements, buttons, cards, utilities, scroll-reveal
 scripts/
-  validate-content.ts      # build-time content integrity checks
-  check-contrast.ts        # contrast checker for the token palette
-  export-member-drafts.ts  # regenerates docs/content/members/*.md
+  validate-content.ts      # build-time content integrity checks (incl. EN+FR present)
+  check-contrast.ts        # contrast checker for the token palette, light AND dark
+  export-member-drafts.ts  # regenerates docs/content/members/*.md (EN/FR side by side)
 public/
   fonts/         # self-hosted Montserrat (woff2, variable, OFL licensed)
   images/brand/  # logo + favicon assets (derived from the approved logo)
+  images/members/# member portraits (optimized JPEGs)
 docs/
-  BU4-SPEC.md         # brand findings + implementation decisions
+  BU4-SPEC.md         # brand findings + implementation decisions (incl. i18n/dark mode)
   brand/              # the graphic charter PDF + approved logo (source assets)
   content/
     members/          # human-readable review drafts, generated from src/data/people.ts
     cvs/               # RAW CVs — kept out of git, see Privacy below
-    photos/             # approved photos go here once supplied
+    photos/             # original (pre-optimization) member photos, archived
     projects/            # supporting material for collective projects
 MISSING_CONTENT.md  # everything still needed from the team before launch
 ```
@@ -102,15 +107,19 @@ component to add a member, project or award.
 
 1. Add/edit an entry in `src/data/people.ts` (type-checked against
    `src/data/types.ts` — unknown fields should be `null`, not invented).
+   Every translatable field uses `L('English text', 'Texte français')`
+   instead of a plain string — both languages are required.
 2. If it's a new member, add their slug to `team.memberSlugs` in
    `src/data/team.ts` — the build fails unless there are **exactly 7**.
 3. Run `npm run export:drafts` to refresh their human-readable review file
-   in `docs/content/members/`.
-4. Run `npm run validate` to confirm the data is internally consistent.
+   (EN/FR side by side) in `docs/content/members/`.
+4. Run `npm run validate` to confirm the data is internally consistent and
+   that no `L(...)` call was left with an empty string.
 
 ### Add a project
 
-Add an entry to the `projects` array in `src/data/projects.ts`. Only add a
+Add an entry to the `projects` array in `src/data/projects.ts` (title,
+description, category, tools and outcome all use `L(en, fr)`). Only add a
 project here once it's genuinely a **collective BU4 project** (cross-checked
 across more than one source) — individual academic/club projects belong on
 that member's own `projects` array in `people.ts` instead.
@@ -119,15 +128,22 @@ that member's own `projects` array in `people.ts` instead.
 
 Edit `src/data/awards.ts`. An award is `status: 'draft'` until the team has
 actually voted/confirmed a category and winner — only then set
-`status: 'confirmed'` and add the winner's slug to `recipientSlugs`. The UI
-never shows a recipient unless they're listed there.
+`status: 'confirmed'` and add the winner's slug to `recipientSlugs`; the
+`/awards/` page will then automatically show that member's own profile
+photo on the card (via `image`, you can point it at a different photo
+instead). The UI never shows a recipient unless they're listed there — an
+unconfirmed award always renders a "winner to be announced" state, never a
+placeholder photo.
 
 ### Replace a photo
 
 1. Drop the approved image in `public/images/members/<slug>.jpg` (or
-   `public/images/projects/...` for a project image).
-2. Set `photo: '/portfolio-bu4/images/members/<slug>.jpg'` (and
-   `photoAlt: '...'`) on that person's record in `people.ts`.
+   `public/images/projects/...` for a project image). Convert HEIC/other
+   formats to JPEG first (most browsers can't render HEIC) — e.g. with
+   Python's `pillow-heif` + Pillow, resized to ~800px wide.
+2. Set `photo: '/portfolio-bu4/images/members/<slug>.jpg'` on that person's
+   record in `src/data/people.ts`. Alt text is generated automatically from
+   the name in both languages — no separate field to fill in.
 3. Members without a photo automatically get a neutral initials fallback —
    never a stock photo or a placeholder that looks like a real picture.
 
@@ -146,6 +162,25 @@ rotate or add a background behind the logo — see the brand rules in
 If the repo is ever renamed or moved to a different GitHub account, update
 `site` and `base` in `astro.config.mjs`, and the `Sitemap:` line in
 `public/robots.txt`.
+
+## Internationalization (EN/FR)
+
+English lives at the site root (`/`), French under `/fr/`. Every route
+exists as a thin file in both `src/pages/` and `src/pages/fr/`, each just
+rendering the same `src/views/*View.astro` with a different `lang` prop —
+there is exactly one copy of each page's markup. To add a UI string, add it
+to **both** the `en` and `fr` objects in `src/i18n/ui.ts` (TypeScript will
+refuse to build if one is missing). To add a translatable data field, wrap
+it in `L('English', 'Français')` from `src/data/types.ts` instead of a
+plain string.
+
+The visitor's language choice is remembered client-side
+(`localStorage['bu4-theme']` for theme, `localStorage['bu4-lang']` for
+language — GitHub Pages has no server to remember it for you) and a small
+blocking script in `BaseLayout.astro` redirects a returning visitor to the
+correct language version of whatever page they land on, and sets the
+light/dark theme before the page paints. See `docs/BU4-SPEC.md` §4-5 for
+the full mechanism.
 
 ## Deployment (GitHub Pages)
 

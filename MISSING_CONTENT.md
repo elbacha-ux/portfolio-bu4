@@ -63,10 +63,12 @@ placeholder wherever one of these gaps exists.
    `docs/content/photos/<slug>-original.{heic,jpeg}` as an archive rather
    than deleted. All 7 members now show real portraits — no placeholders
    left except Nader Hlel (BUM, item 5 below).
-9. Member bios/skills/projects were **translated from French to English**
-   and trimmed down from longer source forms. Each person should check
-   their own page against their generated review draft in
-   `docs/content/members/<slug>.md` and flag anything that reads wrong.
+9. Member bios/skills/projects are now bilingual: English is trimmed from
+   the original forms, and French uses the member's own original wording
+   where their form had one (not a back-translation of the English). Each
+   person should check both languages on their own page against the
+   generated review draft in `docs/content/members/<slug>.md` (shows EN/FR
+   side by side) and flag anything that reads wrong.
 10. Several of Nour Lemjid's projects (flight simulator, drowsiness
     detection, BMS, emergency-signal detection, AEB) have their "role"
     explicitly marked "pas encore" (not yet decided) in her form — shown
@@ -77,7 +79,9 @@ placeholder wherever one of these gaps exists.
 
 11. Only **one** collective BU4 project could be verified
     (`bu4-portfolio-website` — this site, corroborated by Fedi Khouildi's
-    and Rihab Trifi's forms both naming it). If BU4 has other completed or
+    and Rihab Trifi's forms both naming it). It now credits all seven
+    members as contributors (it's the team's shared site, not just the two
+    who happened to name it in their own CV). If BU4 has other completed or
     in-progress team projects, add them to `src/data/projects.ts`.
 12. No project images/screenshots were supplied for any project.
 
@@ -86,9 +90,13 @@ placeholder wherever one of these gaps exists.
 13. The 7 categories in `src/data/awards.ts` are the **illustrative
     examples from the original brief**, marked `status: 'draft'` — the
     team hasn't picked, renamed, or voted on any of them yet, and no
-    winner is assigned anywhere. Decide on final categories and, once
-    voted, set `status: 'confirmed'` and add the winner's slug to
-    `recipientSlugs`.
+    winner is assigned anywhere. The `/awards/` page now shows each as a
+    photo-card gallery with a "winner to be announced" state (a diagonal
+    pattern + the category icon - no photo, no invented name). Once the
+    team votes: set `status: 'confirmed'` and add the winner's slug to
+    `recipientSlugs` in `src/data/awards.ts` - the card will then
+    automatically show that member's own profile photo. To use a different
+    photo for the award itself, set the award's `image` field instead.
 
 ## Contact
 
@@ -109,18 +117,40 @@ placeholder wherever one of these gaps exists.
     complete the one-time "Settings → Pages → Source: GitHub Actions" step
     in the repo before the first push to `main` triggers a real deploy.
 
+## Language (EN/FR) and theme (light/dark)
+
+17. The site is now bilingual (English at `/`, French at `/fr/`) and
+    supports light/dark mode. Every page, nav label, button, and piece of
+    member/project/award data has both languages — see
+    `docs/BU4-SPEC.md` for how the routing and data model work. One
+    structural limitation: GitHub Pages serves a single `404.html`
+    site-wide, so a broken link under `/fr/...` still lands on the
+    English 404 page (no per-locale 404 is possible on static GH Pages
+    without a Functions/Worker layer).
+
 ## What this session could and couldn't verify
 
-- ✅ Build, type-check, content validation and contrast check all pass
-  (`npm run verify`).
-- ✅ Visually checked in the built-in browser at 375px, 768px and desktop
-  width: home, about, team, one member page, /bum, awards, contact, 404.
-  Found and fixed: an invisible button (navy-on-navy) in two places, a
-  broken footer logo (CSS invert on a non-transparent JPEG), and a member
-  grid that broke its 4+3 layout at tablet width because flexbox let long
-  names stretch columns unevenly.
+- ✅ `npm run verify` passes end to end: content validation (including a
+  check that every bilingual field has non-empty EN *and* FR text),
+  WCAG 2.2 AA contrast in both light and dark themes, `astro check` (0
+  errors), and a 29-page production build (14 EN + 14 FR + 1 shared 404).
+- ✅ Visually checked in the built-in browser: homepage, about, team,
+  several member pages, /bum, awards, contact — in both EN and FR, in both
+  light and dark mode, at 375px / 1024px / 1280px. Checked the language
+  switch stays on the same page when toggled, the saved-language redirect
+  (visiting the English URL with a saved French preference correctly
+  redirects to the French version of that same page), the theme toggle,
+  and the mobile menu (which now holds the language switch on narrow
+  screens instead of cramming it into the top bar).
+- 🐛 Found and fixed during this pass: a member-grid card overflowing its
+  column on mobile (name + specialty had been set to sit side-by-side in a
+  flex row that refused to shrink - reverted to stacked), a section heading
+  that could overflow on narrow screens with longer French text (added
+  `min-width: 0` on the flex content and `overflow-wrap: break-word` /
+  `overflow-x: hidden` site-wide as a backstop), and the oversized "04"-style
+  numerals were shrunk on mobile so they don't crowd out the heading text.
 - ⚠️ Not checked: real browser rendering outside this session's built-in
   browser pane (no Playwright/cross-browser testing was run), and no
-  automated accessibility audit tool (e.g. axe) was run — only the manual
+  automated accessibility audit tool (e.g. axe) was run - only the manual
   checks and the contrast-ratio script described above.
 - ⚠️ Lighthouse/performance audit was not run.

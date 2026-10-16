@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { site } from '../data/site';
+import { ui } from '../i18n/ui';
+import { localePath } from '../i18n';
+import type { Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+
+<BaseLayout lang={lang} title={t.contact.title} description={t.contact.note}>
+  <section class="container section">
+    <SectionHeading numeral="06" eyebrow={t.contact.eyebrow} title={t.contact.title} />
+
+    {site.contactEmail ? (
+      <p class="lead reveal">
+        {t.contact.hasEmailPrefix} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>.
+      </p>
+    ) : (
+      <p class="lead reveal">
+        {t.contact.noEmailPrefix}{' '}
+        {site.parentOrg} {t.contact.noEmailAtOrg} <a href={`mailto:${site.parentOrgEmail}`}>{site.parentOrgEmail}</a>,{' '}
+        {t.contact.noEmailOrContact}{' '}
+        <a href={localePath(lang, 'team/')}>{t.contact.noEmailLinkText}</a>.
+      </p>
+    )}
+
+    <p class="note">{t.contact.note}</p>
+  </section>
+</BaseLayout>
+
+<style>
+  .lead {
+    font-size: var(--fs-400);
+    max-width: 60ch;
+  }
+  .note {
+    margin-top: var(--space-3);
+    color: var(--color-text-muted);
+    font-size: var(--fs-200);
+    max-width: 60ch;
+  }
+</style>

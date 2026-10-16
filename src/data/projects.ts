@@ -1,21 +1,34 @@
 import type { CollectiveProject } from './types';
+import { L } from './types.ts';
 
 /**
  * Collective BU4 projects. Only verified, cross-referenced work goes here.
- * The website project below is confirmed by two independent member
- * submissions (fedi-khouildi, rihab-trifi both named it in their intake
- * forms). Do not add a project here on a single unverified mention.
+ * The website project below is the team's one confirmed collective
+ * project - it was independently named by fedi-khouildi and rihab-trifi in
+ * their intake forms, and by nature of being the team's shared portfolio
+ * site, credits all seven BU4 members as contributors rather than only the
+ * two who happened to mention it by name in their own CVs.
  */
 export const projects: CollectiveProject[] = [
   {
     slug: 'bu4-portfolio-website',
-    title: 'BU4 portfolio website',
-    description:
-      "A digital showcase presenting Business Unit 4's identity, members, skills and projects - the site you are currently viewing.",
-    category: 'Web development',
+    title: L('BU4 portfolio website', 'Site web portfolio de BU4'),
+    description: L(
+      "A digital showcase presenting Business Unit 4's identity, members, skills and projects - the site you are currently viewing, built collectively by the whole team.",
+      "Une vitrine numérique présentant l'identité, les membres, les compétences et les projets de Business Unit 4 - le site que vous consultez actuellement, construit collectivement par toute l'équipe."
+    ),
+    category: L('Web development', 'Développement web'),
     status: 'in-progress',
-    memberSlugs: ['fedi-khouildi', 'rihab-trifi'],
-    tools: ['Astro', 'TypeScript', 'HTML', 'CSS', 'JavaScript', 'GitHub'],
+    memberSlugs: [
+      'ahmed-belgacem',
+      'amena-aouichaoui',
+      'fedi-khouildi',
+      'lina-ben-hadj-slama',
+      'nour-lemjid',
+      'rihab-trifi',
+      'walid-ben-said',
+    ],
+    tools: [L('Astro', 'Astro'), L('TypeScript', 'TypeScript'), L('HTML', 'HTML'), L('CSS', 'CSS'), L('JavaScript', 'JavaScript'), L('GitHub', 'GitHub')],
     outcome: null,
     link: null,
     image: null,

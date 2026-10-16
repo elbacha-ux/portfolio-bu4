@@ -1,0 +1,96 @@
+---
+/**
+ * Light/dark toggle. The actual theme is set before first paint by the
+ * inline script in BaseLayout.astro (reads localStorage, falls back to
+ * prefers-color-scheme) - this component only needs to reflect and flip
+ * that state. Persists the explicit choice to localStorage so it survives
+ * between visits and overrides the OS preference from then on.
+ */
+import { ui } from '../i18n/ui';
+import type { Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+
+<button
+  id="theme-toggle"
+  class="theme-toggle"
+  type="button"
+  aria-label={t.nav.themeToggleLabel}
+  aria-pressed="false"
+>
+  <svg class="icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <circle cx="12" cy="12" r="4.5" />
+    <path d="M12 2.5v2.5M12 19v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M2.5 12H5M19 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8" stroke-linecap="round" />
+  </svg>
+  <svg class="icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z" stroke-linejoin="round" />
+  </svg>
+</button>
+
+<script>
+  const STORAGE_KEY = 'bu4-theme';
+  const toggle = document.getElementById('theme-toggle');
+
+  function currentTheme(): 'light' | 'dark' {
+    return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+  }
+
+  function reflect() {
+    const theme = currentTheme();
+    toggle?.setAttribute('aria-pressed', String(theme === 'dark'));
+  }
+
+  toggle?.addEventListener('click', () => {
+    const next = currentTheme() === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try {
+      localStorage.setItem(STORAGE_KEY, next);
+    } catch {
+      /* storage unavailable (private mode / disabled) - theme still applies for this page view */
+    }
+    reflect();
+  });
+
+  reflect();
+</script>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: border-color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
+  }
+  .theme-toggle:hover {
+    border-color: var(--color-accent);
+  }
+  .theme-toggle:active {
+    transform: scale(0.92);
+  }
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+  .icon-moon {
+    display: none;
+  }
+  :global([data-theme='dark']) .icon-sun {
+    display: none;
+  }
+  :global([data-theme='dark']) .icon-moon {
+    display: block;
+  }
+</style>

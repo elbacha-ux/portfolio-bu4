@@ -3,48 +3,54 @@ import type { Member } from '../data/types';
 import PhotoOverlay from './PhotoOverlay.astro';
 import Button from './Button.astro';
 import Placeholder from './Placeholder.astro';
-import { ui } from '../data/ui-strings';
+import { ui } from '../i18n/ui';
+import { pick, pickAll, localePath } from '../i18n';
+import type { Lang } from '../i18n';
 
 interface Props {
   bum: Member;
+  lang: Lang;
   /** Compact: homepage teaser with a link to /bum. Full: the /bum page itself. */
   variant?: 'compact' | 'full';
 }
-const { bum, variant = 'compact' } = Astro.props;
-const base = import.meta.env.BASE_URL;
+const { bum, lang, variant = 'compact' } = Astro.props;
+const t = ui[lang];
+const intro = pick(bum.intro, lang);
+const responsibilities = bum.leadership ? pickAll(bum.leadership.responsibilities, lang) : [];
+const philosophy = bum.leadership ? pick(bum.leadership.philosophy, lang) : null;
 ---
 
 <section class={`bum-spotlight ${variant}`}>
   <div class="photo-col">
-    <PhotoOverlay src={bum.photo} alt={bum.photoAlt} name={bum.name} ratio="1 / 1" />
+    <PhotoOverlay src={bum.photo} name={bum.name} lang={lang} ratio="1 / 1" />
   </div>
   <div class="content-col">
-    <p class="eyebrow">Business Unit Manager</p>
+    <p class="eyebrow">{t.bum.title}</p>
     <h2>{bum.name}</h2>
-    {bum.intro ? <p class="intro">{bum.intro}</p> : <p class="intro"><Placeholder label="BUM introduction" /></p>}
+    {intro ? <p class="intro">{intro}</p> : <p class="intro"><Placeholder label={t.bum.placeholderIntro} lang={lang} /></p>}
 
     {variant === 'full' && (
       <>
-        <h3>Responsibilities</h3>
-        {bum.leadership?.responsibilities.length ? (
+        <h3>{t.bum.responsibilitiesTitle}</h3>
+        {responsibilities.length ? (
           <ul>
-            {bum.leadership.responsibilities.map((r) => <li>{r}</li>)}
+            {responsibilities.map((r) => <li>{r}</li>)}
           </ul>
         ) : (
-          <p><Placeholder label="BUM responsibilities" /></p>
+          <p><Placeholder label={t.bum.placeholderResponsibilities} lang={lang} /></p>
         )}
 
-        {bum.leadership?.philosophy && (
+        {philosophy && (
           <>
-            <h3>Leadership philosophy</h3>
-            <p class="quote">&ldquo;{bum.leadership.philosophy}&rdquo;</p>
+            <h3>{t.bum.philosophyTitle}</h3>
+            <p class="quote">&ldquo;{philosophy}&rdquo;</p>
           </>
         )}
       </>
     )}
 
     {variant === 'compact' && (
-      <Button href={`${base}bum/`} variant="inverse">{ui.meetTheBum}</Button>
+      <Button href={localePath(lang, 'bum/')} variant="inverse">{t.common.meetTheBum}</Button>
     )}
   </div>
 </section>
@@ -56,6 +62,7 @@ const base = import.meta.env.BASE_URL;
     background: var(--color-navy);
     color: var(--color-text-inverse);
     padding: var(--space-4);
+    box-shadow: var(--shadow-md);
   }
   .photo-col {
     max-width: 320px;

@@ -1,26 +1,38 @@
 ---
 import Logo from './Logo.astro';
-import { nav } from '../data/site';
-import { ui } from '../data/ui-strings';
+import ThemeToggle from './ThemeToggle.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { navRoutes } from '../data/site';
+import { ui } from '../i18n/ui';
+import { localePath } from '../i18n';
+import type { Lang } from '../i18n';
 
-const currentPath = new URL(Astro.request.url).pathname;
-const base = import.meta.env.BASE_URL;
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+const currentPath = Astro.url.pathname;
+
+const navItems = navRoutes.map((item) => ({
+  href: localePath(lang, item.href),
+  label: t.nav[item.key],
+}));
 
 function isActive(href: string) {
-  const full = base + href.replace(/^\//, '');
-  return currentPath === full || currentPath === full.replace(/\/$/, '');
+  return currentPath === href || currentPath === href.replace(/\/$/, '');
 }
 ---
 
 <header class="site-header">
   <div class="container bar">
-    <Logo width={140} />
+    <Logo width={120} lang={lang} />
 
-    <nav class="primary-nav" aria-label="Primary">
+    <nav class="primary-nav" aria-label={t.nav.primaryLabel}>
       <ul>
-        {nav.map((item) => (
+        {navItems.map((item) => (
           <li>
-            <a href={`${base}${item.href.replace(/^\//, '')}`} aria-current={isActive(item.href) ? 'page' : undefined}>
+            <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
               {item.label}
             </a>
           </li>
@@ -28,22 +40,31 @@ function isActive(href: string) {
       </ul>
     </nav>
 
-    <a class="btn btn-primary cta-desktop" href={`${base}projects/`}>{ui.heroCta}</a>
+    <div class="controls">
+      <div class="lang-desktop">
+        <LanguageSwitcher lang={lang} />
+      </div>
+      <ThemeToggle lang={lang} />
+      <a class="btn btn-primary cta-desktop" href={localePath(lang, 'projects/')}>{t.common.heroCta}</a>
 
-    <button id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="mobile-menu">
-      <span class="visually-hidden">Menu</span>
-      <span class="burger" aria-hidden="true"></span>
-    </button>
+      <button id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="mobile-menu">
+        <span class="visually-hidden">{t.nav.menuLabel}</span>
+        <span class="burger" aria-hidden="true"></span>
+      </button>
+    </div>
   </div>
 
   <div id="mobile-menu" class="mobile-menu" hidden>
+    <div class="mobile-menu-lang">
+      <LanguageSwitcher lang={lang} />
+    </div>
     <ul>
-      {nav.map((item) => (
+      {navItems.map((item) => (
         <li>
-          <a href={`${base}${item.href.replace(/^\//, '')}`}>{item.label}</a>
+          <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a>
         </li>
       ))}
-      <li><a class="btn btn-primary" href={`${base}projects/`}>{ui.heroCta}</a></li>
+      <li><a class="btn btn-primary" href={localePath(lang, 'projects/')}>{t.common.heroCta}</a></li>
     </ul>
   </div>
 </header>
@@ -63,8 +84,9 @@ function isActive(href: string) {
     position: sticky;
     top: 0;
     z-index: 50;
-    background: var(--color-white);
+    background: var(--color-surface);
     border-bottom: 1px solid var(--color-border);
+    transition: background-color var(--duration-base) var(--ease-standard), border-color var(--duration-base) var(--ease-standard);
   }
 
   .bar {
@@ -88,17 +110,33 @@ function isActive(href: string) {
   }
 
   .primary-nav a {
-    color: var(--color-charcoal);
+    color: var(--color-text);
     font-weight: var(--fw-medium);
     text-decoration: none;
     padding: 0.5rem 0;
     border-bottom: 2px solid transparent;
+    position: relative;
+    white-space: nowrap;
   }
 
   .primary-nav a:hover,
   .primary-nav a[aria-current='page'] {
-    color: var(--color-navy);
+    color: var(--color-accent-strong);
     border-bottom-color: var(--color-blue);
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .lang-desktop {
+    display: none;
+  }
+
+  .mobile-menu-lang {
+    padding: var(--space-2) var(--container-gutter) 0;
   }
 
   .cta-desktop {
@@ -107,13 +145,14 @@ function isActive(href: string) {
 
   .menu-toggle {
     background: none;
-    border: 2px solid var(--color-charcoal);
+    border: 2px solid var(--color-text);
     width: 44px;
     height: 44px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    flex-shrink: 0;
   }
 
   .burger,
@@ -122,7 +161,7 @@ function isActive(href: string) {
     display: block;
     width: 20px;
     height: 2px;
-    background: var(--color-charcoal);
+    background: var(--color-text);
     position: relative;
   }
   .burger::before,
@@ -139,7 +178,7 @@ function isActive(href: string) {
 
   .mobile-menu {
     border-top: 1px solid var(--color-border);
-    background: var(--color-white);
+    background: var(--color-surface);
   }
 
   .mobile-menu ul {
@@ -154,14 +193,20 @@ function isActive(href: string) {
   .mobile-menu a {
     display: block;
     padding: 0.75rem 0;
-    color: var(--color-charcoal);
+    color: var(--color-text);
     text-decoration: none;
     font-weight: var(--fw-medium);
     min-height: 44px;
   }
+  .mobile-menu a[aria-current='page'] {
+    color: var(--color-accent-strong);
+  }
 
   @media (min-width: 1024px) {
     .primary-nav {
+      display: block;
+    }
+    .lang-desktop {
       display: block;
     }
     .cta-desktop {

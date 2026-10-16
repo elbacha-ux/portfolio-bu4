@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ProjectList from '../components/ProjectList.astro';
+import { projects } from '../data/projects';
+import { ui } from '../i18n/ui';
+import type { Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+
+<BaseLayout lang={lang} title={t.projects.title} description={t.projects.lead}>
+  <section class="container section">
+    <SectionHeading numeral="02" eyebrow={t.projects.eyebrow} title={t.projects.title} />
+    <p class="lead reveal">{t.projects.lead}</p>
+    <ProjectList projects={projects} lang={lang} />
+  </section>
+</BaseLayout>
+
+<style>
+  .lead {
+    max-width: 60ch;
+    margin-bottom: var(--space-4);
+    color: var(--color-text-muted);
+  }
+</style>

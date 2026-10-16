@@ -1,20 +1,23 @@
 ---
 import type { CollectiveProject } from '../data/types';
 import ProjectCard from './ProjectCard.astro';
-import { ui } from '../data/ui-strings';
+import { ui } from '../i18n/ui';
+import type { Lang } from '../i18n';
 
 interface Props {
   projects: CollectiveProject[];
+  lang: Lang;
 }
-const { projects } = Astro.props;
+const { projects, lang } = Astro.props;
+const t = ui[lang];
 ---
 
 {projects.length > 0 ? (
   <ul class="project-list">
-    {projects.map((p) => <li><ProjectCard project={p} /></li>)}
+    {projects.map((p) => <li><ProjectCard project={p} lang={lang} /></li>)}
   </ul>
 ) : (
-  <p class="empty-state">{ui.noProjectsYet}</p>
+  <p class="empty-state">{t.common.noProjectsYet}</p>
 )}
 
 <style>
@@ -37,7 +40,7 @@ const { projects } = Astro.props;
     }
   }
   .empty-state {
-    color: var(--color-cool-gray);
+    color: var(--color-text-muted);
     font-style: italic;
     padding: var(--space-4) 0;
   }

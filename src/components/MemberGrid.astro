@@ -1,16 +1,18 @@
 ---
 import type { Member } from '../data/types';
 import MemberCard from './MemberCard.astro';
+import type { Lang } from '../i18n';
 
 interface Props {
   members: Member[];
+  lang: Lang;
 }
-const { members } = Astro.props;
+const { members, lang } = Astro.props;
 ---
 
 <ul class="member-grid">
   {members.map((m) => (
-    <li><MemberCard member={m} /></li>
+    <li><MemberCard member={m} lang={lang} /></li>
   ))}
 </ul>
 
@@ -23,6 +25,9 @@ const { members } = Astro.props;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: var(--space-3);
+  }
+  .member-grid li {
+    min-width: 0;
   }
 
   /* Desktop: fixed 4-column grid (equal width regardless of text length) so
