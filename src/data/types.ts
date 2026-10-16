@@ -92,6 +92,9 @@ export interface CollectiveProject {
   status: 'completed' | 'in-progress' | null;
   memberSlugs: string[];
   tools: Localized<string>[];
+  /** Soft/craft skills the team exercised on this project (e.g. "Shooting",
+   * "Teamwork") - distinct from `tools`, which is technical tools/stacks. */
+  skills: Localized<string>[];
   outcome: Localized<string> | null;
   link: string | null;
   image: string | null;
@@ -100,6 +103,9 @@ export interface CollectiveProject {
    * page, used only when no local file exists at public/videos/<slug>.mp4.
    * Null until the team supplies a real link - never fabricated. */
   videoUrl: string | null;
+  /** Short intro shown above the Documents section, e.g. crediting who
+   * prepared a supporting PDF. Null when there's nothing to say. */
+  documentsNote: Localized<string> | null;
 }
 
 /** Small inline-SVG icon set rendered on award cards - purely decorative,

@@ -23,6 +23,8 @@ const description = pick(project.description, lang);
 const category = pick(project.category, lang);
 const outcome = pick(project.outcome, lang);
 const tools = pickAll(project.tools, lang);
+const skills = pickAll(project.skills, lang);
+const documentsNote = pick(project.documentsNote, lang);
 const members = project.memberSlugs.map((s) => people[s]).filter(Boolean);
 
 const gallery = projectGallery(slug);
@@ -83,6 +85,15 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
       </section>
     )}
 
+    {skills.length > 0 && (
+      <section class="reveal">
+        <h2>{t.projects.skillsTitle}</h2>
+        <div class="tag-group">
+          {skills.map((skill) => <Tag>{skill}</Tag>)}
+        </div>
+      </section>
+    )}
+
     {outcome && (
       <section class="reveal">
         <h2>{t.projects.outcomeTitle}</h2>
@@ -93,6 +104,7 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
     {documents.length > 0 && (
       <section class="reveal">
         <h2>{t.projects.documentsTitle}</h2>
+        {documentsNote && <p class="documents-note">{documentsNote}</p>}
         <ul class="documents-list">
           {documents.map((doc) => (
             <li>
@@ -109,9 +121,25 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
     <section id="gallery" class="reveal">
       <h2>{t.projects.galleryTitle}</h2>
       {gallery.length > 0 ? (
-        <div class="gallery-grid">
-          {gallery.map((src) => <img src={`${base}${src}`} alt={title} loading="lazy" />)}
-        </div>
+        <>
+          <div class="gallery-grid">
+            {gallery.map((src, i) => (
+              <button
+                type="button"
+                class="gallery-item"
+                data-full={`${base}${src}`}
+                data-sound="click"
+                aria-label={`${t.projects.galleryInspect} ${i + 1}/${gallery.length}`}
+              >
+                <img src={`${base}${src}`} alt={title} loading="lazy" />
+              </button>
+            ))}
+          </div>
+          <dialog class="lightbox" id="gallery-lightbox">
+            <button type="button" class="lightbox-close" data-sound="click" aria-label={t.common.close}>&times;</button>
+            <img class="lightbox-image" alt={title} />
+          </dialog>
+        </>
       ) : (
         <div class="media-placeholder">
           <p class="muted">{t.projects.galleryComingSoonBody}</p>
@@ -151,6 +179,25 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
     )}
   </article>
 </BaseLayout>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('#gallery-lightbox');
+  const lightboxImage = dialog?.querySelector<HTMLImageElement>('.lightbox-image');
+  if (dialog && lightboxImage) {
+    document.querySelectorAll<HTMLButtonElement>('.gallery-item').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const full = btn.dataset.full;
+        if (!full) return;
+        lightboxImage.src = full;
+        dialog.showModal();
+      });
+    });
+    dialog.querySelector('.lightbox-close')?.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+  }
+</script>
 
 <style>
   .project-hero {
@@ -262,6 +309,10 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
     gap: 0.5rem;
   }
 
+  .documents-note {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
   .documents-list {
     list-style: none;
     margin: 0;
@@ -288,10 +339,55 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
     gap: var(--space-2);
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   }
-  .gallery-grid img {
+  .gallery-item {
+    display: block;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: zoom-in;
+    width: 100%;
+  }
+  .gallery-item img {
+    display: block;
     width: 100%;
     aspect-ratio: 4 / 3;
     object-fit: cover;
+    transition: opacity var(--duration-fast) var(--ease-standard);
+  }
+  .gallery-item:hover img,
+  .gallery-item:focus-visible img {
+    opacity: 0.85;
+  }
+
+  .lightbox {
+    border: none;
+    padding: 0;
+    max-width: min(90vw, 1100px);
+    max-height: 90vh;
+    background: transparent;
+  }
+  .lightbox::backdrop {
+    background: rgba(10, 12, 16, 0.85);
+  }
+  .lightbox-image {
+    display: block;
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+  }
+  .lightbox-close {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    width: 2.25rem;
+    height: 2.25rem;
+    line-height: 1;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 50%;
+    background: rgba(10, 12, 16, 0.6);
+    color: var(--color-white);
+    cursor: pointer;
   }
 
   .project-video {

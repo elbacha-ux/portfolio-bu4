@@ -37,6 +37,7 @@ interface UiDict {
     backToProjects: string;
     otherMembers: string;
     comingSoon: string;
+    close: string;
     draftBadge: string;
     inProgress: string;
     noProjectsYet: string;
@@ -151,7 +152,9 @@ interface UiDict {
     aboutTitle: string;
     contributorsTitle: string;
     toolsTitle: string;
+    skillsTitle: string;
     galleryTitle: string;
+    galleryInspect: string;
     galleryComingSoonBody: string;
     videoTitle: string;
     videoComingSoonBody: string;
@@ -239,6 +242,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       backToProjects: '← Back to projects',
       otherMembers: 'Other members',
       comingSoon: 'Content coming soon.',
+      close: 'Close',
       draftBadge: 'Draft',
       inProgress: 'In progress',
       noProjectsYet: 'No projects published yet - check back soon.',
@@ -360,7 +364,9 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       aboutTitle: 'About this project',
       contributorsTitle: 'Contributors',
       toolsTitle: 'Tools & technologies',
+      skillsTitle: 'Skills used',
       galleryTitle: 'Gallery',
+      galleryInspect: 'View full-size photo',
       galleryComingSoonBody: 'Photos from this project will be added here once available.',
       videoTitle: 'Video',
       videoComingSoonBody: 'A video for this project will be added here once available.',
@@ -446,6 +452,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       backToProjects: '← Retour aux projets',
       otherMembers: 'Autres membres',
       comingSoon: 'Contenu à venir.',
+      close: 'Fermer',
       draftBadge: 'Brouillon',
       inProgress: 'En cours',
       noProjectsYet: 'Aucun projet publié pour le moment - revenez bientôt.',
@@ -567,7 +574,9 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       aboutTitle: 'À propos de ce projet',
       contributorsTitle: 'Contributeurs',
       toolsTitle: 'Outils et technologies',
+      skillsTitle: 'Compétences mobilisées',
       galleryTitle: 'Galerie',
+      galleryInspect: 'Voir la photo en pleine taille',
       galleryComingSoonBody: 'Les photos de ce projet seront ajoutées ici dès qu\'elles seront disponibles.',
       videoTitle: 'Vidéo',
       videoComingSoonBody: 'Une vidéo de ce projet sera ajoutée ici dès qu\'elle sera disponible.',
