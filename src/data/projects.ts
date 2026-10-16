@@ -3,11 +3,13 @@ import { L } from './types.ts';
 
 /**
  * Collective BU4 projects. Only verified, cross-referenced work goes here.
- * The website project below is the team's one confirmed collective
- * project - it was independently named by fedi-khouildi and rihab-trifi in
- * their intake forms, and by nature of being the team's shared portfolio
- * site, credits all seven BU4 members as contributors rather than only the
- * two who happened to mention it by name in their own CVs.
+ * - bu4-portfolio-website: independently named by fedi-khouildi and
+ *   rihab-trifi in their intake forms; credits all seven members since
+ *   it's the team's shared portfolio site, not just the two who happened
+ *   to mention it in their own CV.
+ * - re-imaginelab-campaign: confirmed by the team to involve all seven
+ *   members across video (script/execution/behind-the-scenes/editing),
+ *   the campaign website, and customer-acquisition strategy.
  */
 export const projects: CollectiveProject[] = [
   {
@@ -35,18 +37,26 @@ export const projects: CollectiveProject[] = [
     imageAlt: null,
   },
   {
-    slug: 're-imaginelab-promo-video',
-    title: L('Re-ImagineLab promotional video', 'Vidéo promotionnelle Re-ImagineLab'),
+    slug: 're-imaginelab-campaign',
+    title: L('Re-ImagineLab', 'Re-ImagineLab'),
     description: L(
-      'A promotional video for Re-ImagineLab, produced as a team effort: script by Nour Lemjid, on-set execution by Amena Aouichaoui, behind-the-scenes footage by Walid Ben Said, and video editing by Fedi Khouildi. The video and Amena’s promotional poster will be added once ready.',
-      'Une vidéo promotionnelle pour Re-ImagineLab, réalisée en équipe : scénario par Nour Lemjid, exécution sur le tournage par Amena Aouichaoui, images des coulisses par Walid Ben Said, et montage par Fedi Khouildi. La vidéo et l’affiche réalisée par Amena seront ajoutées dès qu’elles seront prêtes.'
+      "A promotional campaign for Re-ImagineLab, built as a whole-team effort: script by Nour Lemjid, on-set execution by Amena Aouichaoui (who also designed the poster), behind-the-scenes footage by Walid Ben Said, video editing by Fedi Khouildi, the website by Lina Ben Hadj Slama and Ahmed Belgacem, and customer-acquisition strategy by Rihab Trifi. The promotional video and poster will be added once ready.",
+      "Une campagne promotionnelle pour Re-ImagineLab, menée par toute l'équipe : scénario par Nour Lemjid, exécution sur le tournage par Amena Aouichaoui (qui a aussi conçu l'affiche), images des coulisses par Walid Ben Said, montage vidéo par Fedi Khouildi, le site web par Lina Ben Hadj Slama et Ahmed Belgacem, et la stratégie d'acquisition de clients par Rihab Trifi. La vidéo promotionnelle et l'affiche seront ajoutées dès qu'elles seront prêtes."
     ),
-    category: L('Video', 'Vidéo'),
+    category: L('Campaign', 'Campagne'),
     status: 'completed',
-    memberSlugs: ['fedi-khouildi', 'nour-lemjid', 'amena-aouichaoui', 'walid-ben-said'],
+    memberSlugs: [
+      'ahmed-belgacem',
+      'amena-aouichaoui',
+      'fedi-khouildi',
+      'lina-ben-hadj-slama',
+      'nour-lemjid',
+      'rihab-trifi',
+      'walid-ben-said',
+    ],
     tools: [],
     outcome: null,
-    link: null,
+    link: 'https://ahmedbfg.github.io/Re-imagine-Lab/',
     image: null,
     imageAlt: null,
   },

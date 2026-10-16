@@ -5,6 +5,7 @@ import ContactIcon from '../components/ContactIcon.astro';
 import { site } from '../data/site';
 import { ui } from '../i18n/ui';
 import { localePath } from '../i18n';
+import { formatPhone } from '../lib/phone';
 import type { Lang } from '../i18n';
 
 interface Props {
@@ -13,10 +14,7 @@ interface Props {
 const { lang } = Astro.props;
 const t = ui[lang];
 
-const phoneDigits = site.contactPhone ?? '';
-const phoneDisplay = phoneDigits
-  ? `+${phoneDigits.slice(1, 4)} ${phoneDigits.slice(4, 6)} ${phoneDigits.slice(6, 9)} ${phoneDigits.slice(9)}`
-  : '';
+const phoneDisplay = formatPhone(site.contactPhone) ?? '';
 
 interface Channel {
   icon: 'instagram' | 'phone' | 'mail' | 'globe';

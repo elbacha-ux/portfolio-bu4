@@ -81,15 +81,20 @@ placeholder wherever one of these gaps exists.
 ## Projects
 
 11. Two collective BU4 projects are now listed in `src/data/projects.ts`:
-    `bu4-portfolio-website` (crediting all seven members) and
-    `re-imaginelab-promo-video` (completed - script by Nour Lemjid, on-set
-    execution by Amena Aouichaoui, behind-the-scenes footage by Walid Ben
-    Said, editing by Fedi Khouildi). If BU4 has other completed or
-    in-progress team projects, add them to `src/data/projects.ts`.
+    `bu4-portfolio-website` and `re-imaginelab-campaign` — both now credit
+    all seven members (script by Nour Lemjid, on-set execution by Amena
+    Aouichaoui, behind-the-scenes footage by Walid Ben Said, video editing
+    by Fedi Khouildi, the campaign website by Lina Ben Hadj Slama and Ahmed
+    Belgacem — linked at https://ahmedbfg.github.io/Re-imagine-Lab/ — and
+    customer-acquisition strategy by Rihab Trifi). If BU4 has other
+    completed or in-progress team projects, add them to
+    `src/data/projects.ts`.
 12. **Re-ImagineLab video + poster pending**: the promotional video itself
     and Amena's poster ("affiche") are still being finalized. Once ready,
-    set `link` (e.g. a YouTube/Drive URL) and `image`/`imageAlt` on the
-    `re-imaginelab-promo-video` entry in `src/data/projects.ts`.
+    set `image`/`imageAlt` on the `re-imaginelab-campaign` entry in
+    `src/data/projects.ts` (the campaign website is already linked via
+    `link`; if the video gets its own separate URL, e.g. YouTube, that can
+    replace or sit alongside it).
 
 ## Awards
 
@@ -107,21 +112,27 @@ placeholder wherever one of these gaps exists.
 ## Contact
 
 14. **No official BU4 contact e-mail address was confirmed.** The
-    `/contact/` page falls back to JEENISo's general address
+    `/contact/` page and footer fall back to JEENISo's general address
     (`contact@jeeniso.com`, taken from the charter PDF footer) as the email
-    channel, and links to individual member profiles. Set
+    channel, and link to individual member profiles. Set
     `site.contactEmail` in `src/data/site.ts` once BU4 has (or wants) its
     own address.
 15. ~~No social links~~ — done: `/contact/` now shows a channel grid with
     Instagram (`@wearebu4`), a confirmed phone number, the email fallback
     above, and the JEENISo website — all set in `src/data/site.ts`
-    (`socials.instagram`, `contactPhone`, `jeenisoWebsite`). LinkedIn and
-    Facebook are still `null` — add them the same way if BU4 wants those
-    channels listed too.
+    (`socials.instagram`, `contactPhone`, `jeenisoWebsite`).
+16. ~~Footer didn't show the BU4 contact~~ — done: the footer's "Contact"
+    column now shows the same confirmed phone number and Instagram handle
+    (it previously only ever checked `site.contactEmail`, which is still
+    unconfirmed, so it always showed "pending confirmation" even after the
+    phone/Instagram were added to the Contact page). LinkedIn and Facebook
+    are still `null` in `site.socials` — add them the same way (in
+    `src/data/site.ts`) if BU4 wants those channels listed too; both the
+    Contact page and the footer will then pick them up automatically.
 
 ## Deployment
 
-16. The site assumes GitHub Pages at
+17. The site assumes GitHub Pages at
     `https://elbacha-ux.github.io/portfolio-bu4/`, matching the current git
     remote. Confirm this is where the team actually wants to publish, and
     complete the one-time "Settings → Pages → Source: GitHub Actions" step
@@ -129,7 +140,7 @@ placeholder wherever one of these gaps exists.
 
 ## Language (EN/FR) and theme (light/dark)
 
-17. The site is now bilingual (English at `/`, French at `/fr/`) and
+18. The site is now bilingual (English at `/`, French at `/fr/`) and
     supports light/dark mode. Every page, nav label, button, and piece of
     member/project/award data has both languages — see
     `docs/BU4-SPEC.md` for how the routing and data model work. One
@@ -140,7 +151,7 @@ placeholder wherever one of these gaps exists.
 
 ## Member portfolios, CV PDFs & sound design
 
-18. **Every member's CV PDF is missing.** Each of the 7 member pages now
+19. **Every member's CV PDF is missing.** Each of the 7 member pages now
     has a "My CV — take it with you" section with a `Download`/`View`
     button, but `public/cv/` is currently empty, so every page shows the
     "CV coming soon" state instead. To add one: get the member's explicit
@@ -148,20 +159,20 @@ placeholder wherever one of these gaps exists.
     `public/cv/<slug>.pdf` (e.g. `public/cv/fedi-khouildi.pdf`) - the page
     picks it up automatically on the next build, no code change needed.
     See README "Add a member's CV".
-19. **No project screenshots, diagrams, prototype photos, or demo videos**
+20. **No project screenshots, diagrams, prototype photos, or demo videos**
     were supplied for any project (collective or individual), so no
     project currently shows an image or video - only the text fields
     already present in `src/data/people.ts` / `projects.ts`. Supplying
     real images is the main way to make the project cards feel more like a
     gallery; there's no field to invent a fake one in the meantime.
-20. **The skill/language charts use only verified data** - technical-skill
+21. **The skill/language charts use only verified data** - technical-skill
     categories are a pure regrouping of each member's own stated skills
     (see `src/lib/skillCategories.ts`), language bars use the member's own
     stated CEFR level (a standard scale, not a guessed score - see
     `src/lib/languageLevels.ts`), and the project-status donut is a literal
     count of completed vs. in-progress projects. No numeric proficiency
     (e.g. "Python: 90%") was invented anywhere, per the brief.
-21. **Sound is fully synthesized, not recorded** - there are no audio asset
+22. **Sound is fully synthesized, not recorded** - there are no audio asset
     files in this project yet (`public/sounds/` doesn't exist). Every UI
     tone and the BU4 sonic signature are generated at runtime with the Web
     Audio API (`src/lib/sound-manager.ts`). This was an explicit option in

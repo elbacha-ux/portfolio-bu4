@@ -3,6 +3,7 @@ import Logo from './Logo.astro';
 import { navRoutes, site } from '../data/site';
 import { ui } from '../i18n/ui';
 import { localePath } from '../i18n';
+import { formatPhone } from '../lib/phone';
 import type { Lang } from '../i18n';
 
 interface Props {
@@ -12,6 +13,7 @@ const { lang } = Astro.props;
 const t = ui[lang];
 const year = new Date().getFullYear();
 const navItems = navRoutes.map((item) => ({ href: localePath(lang, item.href), label: t.nav[item.key] }));
+const phoneDisplay = formatPhone(site.contactPhone);
 ---
 
 <footer class="site-footer">
@@ -33,9 +35,18 @@ const navItems = navRoutes.map((item) => ({ href: localePath(lang, item.href), l
 
     <div class="footer-contact">
       <p class="label">{t.footer.contactLabel}</p>
-      {site.contactEmail ? (
-        <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
-      ) : (
+      <ul class="contact-list">
+        {site.contactPhone && (
+          <li><a href={`tel:${site.contactPhone}`}>{phoneDisplay}</a></li>
+        )}
+        {site.socials.instagram && (
+          <li><a href={site.socials.instagram} target="_blank" rel="noopener noreferrer">{t.contact.instagramHandle}</a></li>
+        )}
+        {site.contactEmail && (
+          <li><a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></li>
+        )}
+      </ul>
+      {!site.contactPhone && !site.socials.instagram && !site.contactEmail && (
         <p class="muted">{t.footer.noContact}</p>
       )}
       <p class="muted parent-email">
@@ -93,6 +104,14 @@ const navItems = navRoutes.map((item) => ({ href: localePath(lang, item.href), l
 
   .footer-contact a {
     color: var(--color-light-blue);
+  }
+
+  .contact-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.35rem;
   }
 
   .muted {
