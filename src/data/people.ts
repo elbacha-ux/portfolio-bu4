@@ -15,8 +15,8 @@ export const people: Record<string, Member> = {
     slug: 'ahmed-belgacem',
     name: 'Ahmed Belgacem',
     specialty: 'Applied Computer Science',
-    photo: null,
-    photoAlt: null,
+    photo: '/portfolio-bu4/images/members/ahmed-belgacem.jpg',
+    photoAlt: 'Portrait of Ahmed Belgacem',
     intro:
       "First-year engineering student in applied computer science at ENISo (École Nationale d'Ingénieurs de Sousse). Motivated by technological progress and by the drive to move things forward, he enjoys turning his ideas into concrete projects. Passionate about artificial intelligence, embedded systems, robotics and programming, he looks for continuous learning and new challenges.",
     education: {
@@ -98,8 +98,8 @@ export const people: Record<string, Member> = {
     slug: 'amena-aouichaoui',
     name: 'Amena Aouichaoui',
     specialty: 'Embedded Telecommunications Engineering',
-    photo: null,
-    photoAlt: null,
+    photo: '/portfolio-bu4/images/members/amena-aouichaoui.jpg',
+    photoAlt: 'Portrait of Amena Aouichaoui',
     intro:
       'Engineering student in embedded telecommunications at ENISo. A passionate, curious and motivated person, always looking for new opportunities to grow her skills and bring her ideas to life. She enjoys taking on new challenges, learning continuously and working on projects that let her creativity and know-how stand out.',
     education: {
@@ -167,8 +167,8 @@ export const people: Record<string, Member> = {
     slug: 'fedi-khouildi',
     name: 'Fedi Khouildi',
     specialty: 'Embedded Telecommunications Engineering (GTE)',
-    photo: null,
-    photoAlt: null,
+    photo: '/portfolio-bu4/images/members/fedi-khouildi.jpg',
+    photoAlt: 'Portrait of Fedi Khouildi',
     intro:
       "Engineering student at the École Nationale d'Ingénieurs de Sousse (ENISo), interested in programming, embedded systems and telecommunications. Aims to build technical skills through concrete projects while strengthening communication, teamwork and project-management abilities.",
     education: {
@@ -242,8 +242,8 @@ export const people: Record<string, Member> = {
     slug: 'lina-ben-hadj-slama',
     name: 'Lina Ben Hadj Slama',
     specialty: 'Applied Computer Science',
-    photo: null,
-    photoAlt: null,
+    photo: '/portfolio-bu4/images/members/lina-ben-hadj-slama.jpg',
+    photoAlt: 'Portrait of Lina Ben Hadj Slama',
     intro:
       'First-year engineering student in applied computer science. She completed secondary school at Lycée Pilote Sousse on the mathematics track, then spent two years in MP preparatory classes at IPEST. She is interested in crafts, reading, programming and discovery.',
     education: {
@@ -321,8 +321,8 @@ export const people: Record<string, Member> = {
     slug: 'nour-lemjid',
     name: 'Nour Lemjid',
     specialty: 'Automotive Software Engineering',
-    photo: null,
-    photoAlt: null,
+    photo: '/portfolio-bu4/images/members/nour-lemjid.jpg',
+    photoAlt: 'Portrait of Nour Lemjid',
     intro:
       'Interested in embedded systems and automotive/aeronautical electronics, combining hardware, software and safety. Her projects focus on active vehicle safety (automatic emergency braking, drowsiness detection), energy management (battery management systems), emergency-signal detection and flight simulation. Motivated by designing reliable systems that protect people and contribute to the mobility of tomorrow.',
     education: {
@@ -420,8 +420,8 @@ export const people: Record<string, Member> = {
     slug: 'rihab-trifi',
     name: 'Rihab Trifi',
     specialty: 'Industrial Electronics Engineering',
-    photo: null,
-    photoAlt: null,
+    photo: '/portfolio-bu4/images/members/rihab-trifi.jpg',
+    photoAlt: 'Portrait of Rihab Trifi',
     intro:
       'Passionate, curious and results-oriented, she puts her creativity and know-how to work on ambitious projects. Always looking to learn and take on new challenges, she strives to design tailored solutions that combine professional rigor with originality.',
     education: {

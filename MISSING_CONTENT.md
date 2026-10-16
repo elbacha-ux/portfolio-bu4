@@ -52,13 +52,17 @@ placeholder wherever one of these gaps exists.
 7. ~~Walid Ben Said's photo~~ — done: downloaded (with your confirmation)
    from the link in his intake form and saved to
    `public/images/members/walid-ben-said.jpg`.
-8. **No photos at all** were supplied for the other six members despite
-   two commit messages mentioning "photos" — only the CVs and the brand
-   assets were actually added to the repo. Every member currently shows a
-   neutral initials placeholder (navy/gray diagonal, charter tone-on-tone
-   colors) instead of a real portrait. Add approved photos to
-   `public/images/members/<slug>.jpg` and set `photo`/`photoAlt` in
-   `src/data/people.ts` (see README § "Replace a photo").
+8. ~~No photos for the other six members~~ — done: you added
+   `ahmedbelgacem.heic`, `amenaaouichaoui.heic`, `fedikhouildi.heic`,
+   `linabenhadjslama.heic`, `nourlemjid.jpeg` and `rihabtrifi.heic` to
+   `public/images/members/`. They were converted to optimized JPEGs
+   (EXIF-rotated, resized to 800px wide, same treatment as Walid's existing
+   photo) at `public/images/members/<slug>.jpg` and wired into
+   `src/data/people.ts`. The raw originals (HEIC isn't renderable by most
+   browsers, and were unused duplicates once converted) were moved to
+   `docs/content/photos/<slug>-original.{heic,jpeg}` as an archive rather
+   than deleted. All 7 members now show real portraits — no placeholders
+   left except Nader Hlel (BUM, item 5 below).
 9. Member bios/skills/projects were **translated from French to English**
    and trimmed down from longer source forms. Each person should check
    their own page against their generated review draft in
