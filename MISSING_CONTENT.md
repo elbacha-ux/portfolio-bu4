@@ -41,10 +41,13 @@ placeholder wherever one of these gaps exists.
 
 ## Team & leadership
 
-5. **Nader Hlel (BUM)**: only his name and title are known. Missing —
-   photo, personal introduction, responsibilities, leadership philosophy,
-   any confirmed projects, contact links. His `/bum/` page currently shows
-   "Content coming soon" for all of this.
+5. ~~Nader Hlel (BUM)~~ — done: photo, introduction and his four
+   responsibilities (team support, progress monitoring, guidance,
+   communication with the JEENISo Bureau) are now set in
+   `src/data/people.ts` and live on `/bum/` in both languages. Still
+   missing: a leadership philosophy/personal statement (`leadership.philosophy`
+   stays `null` until he provides one) and contact links
+   (`links.email`/`linkedin`/`github`, all still `null`).
 6. **`bumIsAmongSeven`** (`src/data/team.ts`) is currently set to `false`
    as an inference (there were exactly 7 "CV Portfolio Web" forms and none
    was Nader's) — please confirm explicitly whether Nader Hlel is formally
