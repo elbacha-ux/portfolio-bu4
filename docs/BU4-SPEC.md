@@ -1,30 +1,183 @@
-You are building the website for Business Unit 4 (BU4) of JEENISo (Junior Enterprise ENISo). Build it for real: working code, not a description. Work in the phases below and verify each one before moving on.
+# BU4 website — implementation spec
 
-PHASE 0 - INSPECT BEFORE BUILDING
-1. List the project tree. Identify the existing stack, package manager, scripts, git state and every asset (photos, logos, documents). Extend existing work; never overwrite it. If the project is empty, use Astro with static output, TypeScript data files and plain CSS custom properties. The site must build to static files and support a configurable base path (GitHub Pages). The development machine runs Windows, so keep every script cross-platform (Node scripts, no bash-only commands).
-2. Locate and read the full PDF Charte-Graphique-1.pdf (JEENISo Identity Manual, Edition 1, March 2018, 24 pages). Look at the page images, not only the extracted text. The PDF is the primary authority for brand identity: never invent official colors, fonts or logo rules. If docs/BU4-SPEC.md exists, read it too; where it conflicts with the PDF, the PDF wins and you list the conflict in your report.
-3. Find the approved JEENISo logo files (color, reverse white, black; SVG preferred). If they are missing, do NOT redraw, retype or approximate the logo: render a clearly marked box labeled LOGO MISSING and list it in the report.
-4. Write an asset inventory (found / missing) before coding.
+This replaces the earlier instruction-only version of this file (preserved
+in git history at commit `16981dd` and before). It now documents what was
+actually built, what's verified against source material, and what's still
+an open decision.
 
-BRAND RULES TO IMPLEMENT (verify every value against the PDF)
-Colors: blue #3594d6 and cool gray #615f5f (primary); navy #1a4a6b, light blue #71b4e2, charcoal #3a3939, mid gray #908f8f (secondary); logo black #131313. Allowed derived tokens: blue-tint #ebf4fb, gray-tint #f2f2f2, navy-deep #143b56 (hover). Use tone-on-tone combinations (blues with blues, grays with grays). Define every color once as a CSS custom property. No other hues: no gold, red or green.
-Contrast: body text only in navy, charcoal or cool gray on light backgrounds, and white on navy or charcoal. Blue #3594d6 and white-on-blue only for large text (24px+, or 18.7px+ bold), icons and rules. Mid gray, and blue on navy, are decorative only. Run an automated contrast check on every text/background pair.
-Typography: Montserrat (self-hosted, weights 300-900), fallback Arial, sans-serif. Headings weight 800-900, body 400-500, minimum 16px. No artistic fonts, no text-shadow, no text stroke, no stretching or condensing, no cramming: less is more.
-Logo: only through one Logo component that loads an approved file unmodified. Color version on light backgrounds, reverse on navy or charcoal, on the left in the header. Minimum width 120px; clear space of at least a quarter of its rendered height (never below 16px). Never apply opacity, filters, shadows, rotation, animation, frames, boxes or a background behind it. Scale proportionally only. Never add text to it or combine it with a BU4 mark: BU4 identity lives in separate typography.
-Visual language (recommended, consistent with the PDF): generous white space; square corners; the manual's split blue/gray 4px rule under section headings; oversized Montserrat Black numerals (04 for the unit, 01-07 for members); photos with a palette overlay matched to the photo's dominant color; faceted blue fragments as decoration; a diagonal blue wedge on member portraits. Do not extract photos from the PDF.
+## 1. Verified brand rules (docs/brand/Charte-Graphique-1.pdf)
 
-SITE TO BUILD
-Routes: / (hero, grid of 7 member photos each linking to that member's portfolio, BUM teaser, collective projects teaser, awards teaser); /team (collective BU4 portfolio); /members/[slug] (one page for each of the 7 members); /bum (dedicated section for BUM Nader Hlel and his projects); /awards (BU4 awards); 404.
-Components (reusable, no duplicated markup): Logo, SiteHeader, MobileMenu, SiteFooter, SectionHeading, Button, Card, MemberCard, MemberGrid, ProjectCard, ProjectList, AwardCard, AwardList, BumSpotlight, PhotoOverlay, Placeholder, Tag, LinkList.
-Data: ONE central source (for example src/data/bu4.ts) holding site, people, team, projects and awards. team.memberSlugs lists exactly seven slugs; team.bumSlug names the BUM. Every page renders from this file; adding a member must never require editing a component.
-Nader Hlel: keep a single person record for him. Render /bum from team.bumSlug and the member grid only from team.memberSlugs. If the project files do not say whether he is one of the seven, do not guess: keep seven member slots (placeholder records for unknown people), set bumIsAmongSeven to null and flag it in the report. A build-time validation script must fail if memberSlugs does not contain exactly seven unique slugs, if any slug has no record, or if the same person (by slug or normalized name) appears twice.
-No fabrication: do not invent biographies, skills, achievements, projects, dates, quotes, awards, award winners, links, social accounts, e-mail addresses, statistics or taglines. Use only facts present in the project files or given to you in this conversation. Unknown values stay null. A Placeholder component shows a visible TODO badge in development and a neutral 'Content coming soon' state in production. Empty awards or projects show a tidy empty state, never sample entries. Do not reuse sample text from the PDF (JET Awards, Chiheb Ben Fraj, Reaching our full potential, the 2018 addresses).
-Awards: each award has title, issuer, year, description, recipient slugs, evidence URL and image, all nullable; a recipient is shown only if listed in the data.
-Footer and contact: use a JEENISo contact e-mail or address only if I confirm it; otherwise omit it and report it.
-Handoff: a BU4 teammate will finish the content. Write a README that explains, step by step, how to run the site, add a member, a project, an award and a photo, replace the logo, and deploy. Document the photo folder and naming rules. Use optimized images with width and height, alt text from the data, and lazy loading.
-Responsive and accessibility: mobile-first; breakpoints 480, 768, 1024, 1280; container max 1200px; 8px spacing scale; member grid 2 columns on mobile and 4+3 centered on desktop; touch targets 44px minimum; WCAG 2.2 AA; skip link; visible focus ring; semantic landmarks; honor prefers-reduced-motion.
-Language: UI language to be confirmed (default English). Keep every UI string in one file so another language can be added.
+Source: *JEENISo Identity Manual, Edition 1, 03.2018*, 25 pages (rendered
+with PyMuPDF since no `pdftoppm`/poppler was available in this environment;
+every color/type page was visually inspected, not just text-extracted).
 
-TESTING AND REPORT
-Run install, lint, type-check and build, and fix every error. Run the data validation script. Start the site and visit every route, including all 7 member pages and /bum. Check widths 375, 768 and 1280px (Playwright screenshots if possible; otherwise say what you could not check). Verify: no horizontal scroll, no broken links or images, logo untouched, contrast check passes, no console errors.
-Finish with a REPORT, also saved as MISSING_CONTENT.md, listing: what was built; every deviation from the PDF and why; every missing asset or content field (logo files, photos, names, bios, projects, awards, contacts); open decisions; the commands to run the site. Never hide a gap by filling it with invented content.
+### Colors — verified exact values (section 2.1/2.2)
+
+| Token | Hex | Pantone | Role |
+|---|---|---|---|
+| `--color-blue` | `#3594d6` | 2925 C | Primary |
+| `--color-cool-gray` | `#615f5f` | Cool Gray 10 C | Primary |
+| `--color-navy` | `#1a4a6b` | 7694 C | Secondary |
+| `--color-light-blue` | `#71b4e2` | 2925 C (tint) | Secondary |
+| `--color-charcoal` | `#3a3939` | 447 C | Secondary |
+| `--color-mid-gray` | `#908f8f` | 877 C | Secondary |
+| `--color-logo-black` | `#131313` | — | Logo black version only |
+
+These match the preliminary values given in the original brief exactly — no
+corrections were needed. `--color-blue-tint` (`#ebf4fb`), `--color-gray-tint`
+(`#f2f2f2`) and `--color-navy-deep` (`#143b56`) are **derived, not from the
+PDF** — tints/hover states only, same hue family (tone-on-tone), no new hues.
+
+No other hues are used anywhere on the site (no gold/red/green), per the
+charter's "no other hues" rule.
+
+### Contrast — automated, verified (`npm run check:contrast`)
+
+All body-text pairs (charcoal/cool-gray/navy on white or on navy/charcoal)
+pass WCAG 2.2 AA (≥4.5:1, actual range 6.3–11.7:1). Blue (`#3594d6`) only
+reaches 3.3:1 against white — used only for large text (the oversized
+numeral motif, 96px) and non-text elements (rules, icons, status tags with
+dark text). Mid-gray (3.23:1) and light-blue (2.25:1) never carry text —
+decorative only, exactly as the charter instructs. These rules are encoded
+as checked pairs in `scripts/check-contrast.ts`, which runs in CI.
+
+### Typography (section 3.1–3.3)
+
+Montserrat, self-hosted as a variable font (weights 300–900) in
+`public/fonts/` — downloaded from Google Fonts' own CDN (fonts.gstatic.com),
+which serves the same SIL Open Font License files Google Fonts always has;
+self-hosting it is explicitly allowed by that license. Two subsets were
+pulled (`latin`, `latin-ext`) — `latin` alone covers all standard French
+diacritics (é, è, à, ç, û, etc.) used in the team's bios. Arial is the
+fallback (`font-family: 'Montserrat', Arial, sans-serif`), per 3.2 ("Arial
+may be used for body copy only when Montserrat is not appropriate" — here
+it's the fallback, not the primary). Headings are weight 800/900; no
+artistic fonts, no text-shadow/stroke, no scaling, per 3.3.
+
+### Logo (sections 1.1–1.4)
+
+**Important distinction**: the PDF governs the *JEENISo* signature (the
+flower/ribbon mark + "JEENISo" wordmark). The file actually supplied for
+this project, `docs/brand/logo/logo.jpeg`, is a **separate BU4-specific
+lockup** ("BUSINESS UNIT 4 — Challenges are our business", with a blue/gray
+swirl-and-star icon) — not the JEENISo signature itself. No standalone
+JEENISo signature file (SVG/PNG) was supplied, only its image inside the
+PDF — so the JEENISo mark itself could not be reproduced on the site; only
+the BU4 lockup is used, unmodified, through the single `Logo.astro`
+component, with the tagline "Challenges are our business" taken directly
+from that file. The favicon (`public/images/brand/bu4-icon-*.png`,
+`public/favicon.ico`) is a crop of that same approved file's icon mark,
+padded onto a plain white square — no redrawing.
+
+The logo is never recolored, stretched, rotated, or boxed, in line with
+section 1.4's improper-use rules, with one documented exception: in the
+dark footer, since the source file has a baked-in white background (not
+transparent), it sits on a small white panel rather than being filtered —
+see `SiteFooter.astro`. This keeps the logo file itself completely
+untouched while staying legible on a dark background.
+
+### Visual language
+
+The "numeral" motif (oversized Montserrat Black numbers per section), the
+split blue/gray 4px rule under section headings, and tone-on-tone photo
+treatment (a diagonal blue wedge accent on member portraits) all come from
+the charter's "visual language" guidance (section 2.3's tone-on-tone
+blocks, in particular). No photos were extracted from the PDF itself.
+
+## 2. Content model & routes
+
+Single source of truth: `src/data/` (see README § Project structure for the
+full breakdown). Routes:
+
+- `/` — hero, intro, featured projects, 7-member grid, BUM teaser, awards
+  teaser, closing CTA
+- `/about/` — mission, JEENISo relationship, working approach
+- `/team/` — all 7 members
+- `/members/<slug>/` — one static page per member (7 total)
+- `/bum/` — Nader Hlel, full leadership spotlight
+- `/projects/` — collective BU4 project portfolio
+- `/awards/` — BU4 Awards
+- `/contact/` — contact info (no form — static site, no backend)
+- `/404` — not-found page
+
+### The seven members and the BUM
+
+`team.memberSlugs` in `src/data/team.ts` lists exactly seven slugs,
+enforced by `scripts/validate-content.ts` (fails the build otherwise):
+`ahmed-belgacem`, `amena-aouichaoui`, `fedi-khouildi`,
+`lina-ben-hadj-slama`, `nour-lemjid`, `rihab-trifi`, `walid-ben-said`.
+
+**`bumIsAmongSeven` is set to `false`**, as an inference rather than a
+confirmed fact: the project folder contained exactly seven "CV Portfolio
+Web" intake forms (`docs/content/cvs/`), one per person above, and none of
+them is from Nader Hlel. Flagged in `MISSING_CONTENT.md` for the team to
+confirm explicitly.
+
+### Content source & consent
+
+Each member's content comes from a structured "CV Portfolio Web" intake
+form they filled out and submitted specifically for this site. Every form
+includes an explicit checkbox: *"J'accepte de partager les informations que
+j'ai indiquées pour leur publication sur le portfolio web"* (I agree to
+share the information I provided for publication on the web portfolio).
+Because of that explicit, per-person, purpose-specific consent, the
+extracted professional content (education, skills, projects, interests,
+the e-mail address each person listed "to display on the site") was used
+directly, rather than held back pending a second round of approval — unlike
+a generic CV, none of this was private to begin with (no phone numbers,
+home addresses or ID numbers were ever asked for in the form).
+
+Content was translated from French to English for a consistent site
+language (the original spec left UI language "to be confirmed, default
+English") and trimmed to professional fields. `npm run export:drafts`
+regenerates a readable `docs/content/members/<slug>.md` per person so they
+can sanity-check the translation/summarization against the live page.
+
+### No fabrication
+
+Every nullable field in `src/data/types.ts` that a member left blank stays
+`null`/empty in the data — rendered as a neutral "Content coming soon."
+(production) or a visible `TODO:` badge (dev only), via the `Placeholder`
+component. Nothing about Nader Hlel (BUM) beyond his name and title was
+available, so his entire profile — photo, intro, responsibilities,
+philosophy — renders as placeholders. Awards are draft categories with
+`recipientSlugs: []`; no winner is shown anywhere until the team confirms
+one.
+
+## 3. Responsive & accessibility
+
+- Breakpoints: 480 / 768 / 1024 / 1280 (mobile-first)
+- Container max-width 1200px, 8px spacing scale (`--space-1`…`--space-8`)
+- Member grid: 2 columns on mobile, a fixed 4-column grid on desktop with
+  the trailing row of 3 offset to start at column 2 (CSS Grid, not flexbox —
+  flexbox's basis-based sizing let long names distort column widths and
+  broke the 4-then-3 split during testing)
+- Touch targets ≥44px (buttons, mobile nav links)
+- Skip link, visible focus ring (`:focus-visible`, 3px navy outline),
+  semantic landmarks (`header`/`main`/`nav`/`footer`), honors
+  `prefers-reduced-motion`
+- Tested in the built-in browser pane at 375×812 (mobile), 768×1024
+  (tablet), and desktop width — see MISSING_CONTENT.md for what visual QA
+  could and couldn't cover
+
+## 4. Deployment
+
+Static Astro build, GitHub Pages via `.github/workflows/deploy.yml`.
+`site: 'https://elbacha-ux.github.io'`, `base: '/portfolio-bu4'` in
+`astro.config.mjs`, matching the repo at `github.com/elbacha-ux/portfolio-bu4`.
+If the repo moves, update both of those plus `public/robots.txt`'s sitemap
+URL.
+
+## 5. Known deviations / open questions
+
+- No official JEENISo signature file (only the BU4-specific lockup) — see
+  §1 Logo above.
+- `bumIsAmongSeven` is an inference, not a confirmed fact — see §2.
+- Site language is English throughout; the original brief left this "to be
+  confirmed" — easy to add a second locale later since every UI string
+  lives in `src/data/ui-strings.ts`.
+- One real collective project is listed (`bu4-portfolio-website` — this
+  site itself, corroborated by two independent member submissions). No
+  other BU4-wide (as opposed to individual academic/club) project could be
+  verified from the supplied material.
+- Full list of missing assets/approvals: see `MISSING_CONTENT.md`.

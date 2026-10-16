@@ -1,0 +1,39 @@
+---
+import type { Member } from '../data/types';
+import MemberCard from './MemberCard.astro';
+
+interface Props {
+  members: Member[];
+}
+const { members } = Astro.props;
+---
+
+<ul class="member-grid">
+  {members.map((m) => (
+    <li><MemberCard member={m} /></li>
+  ))}
+</ul>
+
+<style>
+  /* Mobile: simple 2-column grid. */
+  .member-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+
+  /* Desktop: fixed 4-column grid (equal width regardless of text length) so
+     a trailing row of 3 can be offset to sit centered under columns 2-4. */
+  @media (min-width: 768px) {
+    .member-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+    }
+    .member-grid li:nth-child(5) {
+      grid-column-start: 2;
+    }
+  }
+</style>
