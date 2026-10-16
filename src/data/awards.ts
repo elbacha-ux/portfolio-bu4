@@ -98,6 +98,21 @@ export const awards: Award[] = [
     status: 'confirmed',
   },
   {
+    slug: 'chaotic-collaboration',
+    title: L('The Chaotic Collaboration Award', 'Le Prix de la Collaboration Chaotique'),
+    issuer: null,
+    year: null,
+    description: L(
+      'Pure friction somehow producing results.',
+      'Pure friction qui finit, on ne sait trop comment, par donner des résultats.'
+    ),
+    recipientSlugs: ['amena-aouichaoui', 'lina-ben-hadj-slama'],
+    evidenceUrl: null,
+    image: '/portfolio-bu4/images/awards/chaotic-collaboration.jpg',
+    icon: 'heart',
+    status: 'confirmed',
+  },
+  {
     slug: 'unnecessary-comments',
     title: L('The CEO of Unnecessary Comments', 'La PDG des Commentaires Inutiles'),
     issuer: null,

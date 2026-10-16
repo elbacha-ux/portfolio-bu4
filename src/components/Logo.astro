@@ -1,11 +1,12 @@
 ---
 /**
  * Loads the approved BU4 signature file (docs/brand/logo/logo.jpeg is the
- * untouched original, archived as-is) with its background made transparent
- * (public/images/brand/bu4-logo.png) so it sits directly on the page in
- * both themes instead of showing a white box. Never recolor, stretch,
- * rotate or otherwise redraw the mark itself - see
- * docs/brand/Charte-Graphique-1.pdf section 1.4.
+ * untouched original, archived as-is). public/images/brand/bu4-logo-mark.png
+ * is the icon mark only (the "4" swirl + star), cropped from the
+ * transparent full lockup (public/images/brand/bu4-logo.png) with no
+ * redrawing - same transparent background, same colors, just without the
+ * "BUSINESS UNIT 4" wordmark. Never recolor, stretch, rotate or otherwise
+ * redraw the mark itself - see docs/brand/Charte-Graphique-1.pdf section 1.4.
  */
 import { localePath } from '../i18n';
 import type { Lang } from '../i18n';
@@ -21,10 +22,10 @@ const { width = 160, class: className, lang = 'en' } = Astro.props;
 
 <a href={localePath(lang)} class={`bu4-logo ${className ?? ''}`} aria-label="BU4 home">
   <img
-    src={`${import.meta.env.BASE_URL}images/brand/bu4-logo.png`}
-    alt="Business Unit 4 - Challenges are our business"
+    src={`${import.meta.env.BASE_URL}images/brand/bu4-logo-mark.png`}
+    alt="Business Unit 4"
     width={width}
-    height={Math.round(width * 0.34)}
+    height={Math.round(width * (136 / 126))}
     style={`width:${width}px; height:auto;`}
   />
 </a>

@@ -1,0 +1,214 @@
+---
+/**
+ * Homepage awards teaser: an infinite, swipeable carousel of every award
+ * (not just a fixed "first 4") - the full list lives on /awards/ as a
+ * regular grid (see AwardList.astro). The track is the award list rendered
+ * twice back to back; autoplay scrolls continuously and silently rewinds by
+ * exactly one set width when it crosses into the second copy, so the loop
+ * never visibly cuts. Dragging/swiping always wins over autoplay, and
+ * autoplay stops entirely under prefers-reduced-motion.
+ */
+import type { Award } from '../data/types';
+import AwardCard from './AwardCard.astro';
+import { ui } from '../i18n/ui';
+import type { Lang } from '../i18n';
+
+interface Props {
+  awards: Award[];
+  lang: Lang;
+}
+const { awards, lang } = Astro.props;
+const t = ui[lang];
+const loop = [...awards, ...awards];
+---
+
+{awards.length > 0 ? (
+  <div class="award-carousel" data-award-carousel>
+    <button type="button" class="carousel-arrow arrow-prev" data-dir="-1" data-sound="click" aria-label={t.common.carouselPrev}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6" /></svg>
+    </button>
+    <ul class="carousel-track" data-track tabindex="0" aria-label={t.awards.title}>
+      {loop.map((a, i) => (
+        <li class="carousel-item" inert={i >= awards.length ? true : undefined}>
+          <AwardCard award={a} lang={lang} />
+        </li>
+      ))}
+    </ul>
+    <button type="button" class="carousel-arrow arrow-next" data-dir="1" data-sound="click" aria-label={t.common.carouselNext}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
+    </button>
+  </div>
+) : (
+  <p class="empty-state">{t.common.noAwardsYet}</p>
+)}
+
+<script>
+  const AUTOPLAY_PX_PER_SEC = 34;
+  const RESUME_DELAY_MS = 2500;
+
+  document.querySelectorAll<HTMLElement>('[data-award-carousel]').forEach((root) => {
+    const track = root.querySelector<HTMLUListElement>('[data-track]');
+    if (!track) return;
+
+    const trackEl = track;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const halfWidth = () => trackEl.scrollWidth / 2;
+
+    let paused = false;
+    let resumeTimer: number | undefined;
+    let lastTs: number | null = null;
+    let dragging = false;
+    let dragStartX = 0;
+    let dragStartScroll = 0;
+    let moved = false;
+
+    function pauseFor(ms: number) {
+      paused = true;
+      window.clearTimeout(resumeTimer);
+      resumeTimer = window.setTimeout(() => {
+        paused = false;
+        lastTs = null;
+      }, ms);
+    }
+
+    function normalize() {
+      const half = halfWidth();
+      if (half <= 0) return;
+      if (trackEl.scrollLeft >= half) trackEl.scrollLeft -= half;
+      else if (trackEl.scrollLeft < 0) trackEl.scrollLeft += half;
+    }
+
+    function tick(ts: number) {
+      if (!paused && !dragging && !reduceMotion) {
+        if (lastTs !== null) {
+          const dt = (ts - lastTs) / 1000;
+          trackEl.scrollLeft += AUTOPLAY_PX_PER_SEC * dt;
+          normalize();
+        }
+        lastTs = ts;
+      } else {
+        lastTs = null;
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    root.querySelectorAll<HTMLButtonElement>('.carousel-arrow').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const dir = Number(btn.dataset.dir ?? '1');
+        const cardWidth = track.querySelector('.carousel-item')?.clientWidth ?? 280;
+        track.scrollBy({ left: dir * (cardWidth + 16), behavior: 'smooth' });
+        pauseFor(RESUME_DELAY_MS);
+      });
+    });
+
+    track.addEventListener('pointerdown', (e) => {
+      dragging = true;
+      moved = false;
+      dragStartX = e.clientX;
+      dragStartScroll = track.scrollLeft;
+      track.setPointerCapture(e.pointerId);
+      paused = true;
+    });
+    track.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - dragStartX;
+      if (Math.abs(dx) > 3) moved = true;
+      track.scrollLeft = dragStartScroll - dx;
+    });
+    function endDrag() {
+      if (!dragging) return;
+      dragging = false;
+      normalize();
+      pauseFor(RESUME_DELAY_MS);
+    }
+    track.addEventListener('pointerup', endDrag);
+    track.addEventListener('pointercancel', endDrag);
+    track.addEventListener('click', (e) => {
+      if (moved) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
+
+    track.addEventListener('wheel', () => pauseFor(RESUME_DELAY_MS), { passive: true });
+    root.addEventListener('mouseenter', () => { paused = true; });
+    root.addEventListener('mouseleave', () => { if (!dragging) { window.clearTimeout(resumeTimer); paused = false; lastTs = null; } });
+    track.addEventListener('focusin', () => pauseFor(RESUME_DELAY_MS));
+
+    requestAnimationFrame(() => { track.scrollLeft = 1; });
+  });
+</script>
+
+<style>
+  .award-carousel {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .carousel-track {
+    list-style: none;
+    margin: 0;
+    padding: var(--space-1) 0 var(--space-2);
+    display: flex;
+    gap: var(--space-3);
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    cursor: grab;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .carousel-track:active {
+    cursor: grabbing;
+  }
+  .carousel-track::-webkit-scrollbar {
+    display: none;
+  }
+  .carousel-item {
+    flex: 0 0 240px;
+    scroll-snap-align: start;
+  }
+  @media (min-width: 640px) {
+    .carousel-item {
+      flex-basis: 260px;
+    }
+  }
+
+  .carousel-arrow {
+    flex-shrink: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: border-color var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
+  }
+  .carousel-arrow:hover {
+    border-color: var(--color-accent);
+  }
+  .carousel-arrow:active {
+    transform: scale(0.92);
+  }
+  .carousel-arrow svg {
+    width: 20px;
+    height: 20px;
+  }
+  @media (min-width: 768px) {
+    .carousel-arrow {
+      display: inline-flex;
+    }
+  }
+
+  .empty-state {
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+</style>
