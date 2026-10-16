@@ -152,8 +152,8 @@ export const people: Record<string, Member> = {
         L('Autonomy and sense of responsibility', 'Autonomie et sens des responsabilités'),
       ],
       languages: [
-        { name: L('English', 'Anglais'), level: null },
-        { name: L('French', 'Français'), level: null },
+        { name: L('English', 'Anglais'), level: L('B2', 'B2') },
+        { name: L('French', 'Français'), level: L('B2', 'B2') },
         { name: L('German', 'Allemand'), level: L('basic', 'notions de base') },
       ],
     },
@@ -246,6 +246,7 @@ export const people: Record<string, Member> = {
         { name: L('Arabic', 'Arabe'), level: L('native', 'langue maternelle') },
         { name: L('French', 'Français'), level: L('B2', 'B2') },
         { name: L('English', 'Anglais'), level: L('B2', 'B2') },
+        { name: L('German', 'Allemand'), level: L('A1', 'A1') },
       ],
     },
     interests: [
