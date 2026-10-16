@@ -34,6 +34,7 @@ interface UiDict {
     meetTheBum: string;
     contactUs: string;
     backToTeam: string;
+    backToProjects: string;
     otherMembers: string;
     comingSoon: string;
     draftBadge: string;
@@ -145,6 +146,17 @@ interface UiDict {
     title: string;
     lead: string;
     contributorsPrefix: string;
+    visitSite: string;
+    viewDetails: string;
+    aboutTitle: string;
+    contributorsTitle: string;
+    toolsTitle: string;
+    galleryTitle: string;
+    galleryComingSoonBody: string;
+    videoTitle: string;
+    videoComingSoonBody: string;
+    outcomeTitle: string;
+    otherProjectsTitle: string;
   };
   awards: {
     eyebrow: string;
@@ -222,6 +234,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       meetTheBum: 'Meet our BUM',
       contactUs: 'Get in touch',
       backToTeam: '← Back to team',
+      backToProjects: '← Back to projects',
       otherMembers: 'Other members',
       comingSoon: 'Content coming soon.',
       draftBadge: 'Draft',
@@ -340,6 +353,17 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       title: 'Collective projects',
       lead: "Work the team has taken on together, as BU4. Individual academic and club projects live on each member's own page.",
       contributorsPrefix: 'By',
+      visitSite: 'Visit site',
+      viewDetails: 'View details →',
+      aboutTitle: 'About this project',
+      contributorsTitle: 'Contributors',
+      toolsTitle: 'Tools & technologies',
+      galleryTitle: 'Gallery',
+      galleryComingSoonBody: 'Photos from this project will be added here once available.',
+      videoTitle: 'Video',
+      videoComingSoonBody: 'A video for this project will be added here once available.',
+      outcomeTitle: 'Outcome',
+      otherProjectsTitle: 'Other projects',
     },
     awards: {
       eyebrow: 'Team culture',
@@ -415,6 +439,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       meetTheBum: 'Découvrir notre BUM',
       contactUs: 'Nous contacter',
       backToTeam: "← Retour à l'équipe",
+      backToProjects: '← Retour aux projets',
       otherMembers: 'Autres membres',
       comingSoon: 'Contenu à venir.',
       draftBadge: 'Brouillon',
@@ -533,6 +558,17 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       title: 'Projets collectifs',
       lead: "Les projets menés ensemble, en tant que BU4. Les projets académiques et associatifs individuels se trouvent sur la page de chaque membre.",
       contributorsPrefix: 'Par',
+      visitSite: 'Voir le site',
+      viewDetails: 'Voir les détails →',
+      aboutTitle: 'À propos de ce projet',
+      contributorsTitle: 'Contributeurs',
+      toolsTitle: 'Outils et technologies',
+      galleryTitle: 'Galerie',
+      galleryComingSoonBody: 'Les photos de ce projet seront ajoutées ici dès qu\'elles seront disponibles.',
+      videoTitle: 'Vidéo',
+      videoComingSoonBody: 'Une vidéo de ce projet sera ajoutée ici dès qu\'elle sera disponible.',
+      outcomeTitle: 'Résultat',
+      otherProjectsTitle: 'Autres projets',
     },
     awards: {
       eyebrow: "Esprit d'équipe",

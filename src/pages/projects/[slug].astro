@@ -1,0 +1,12 @@
+---
+import ProjectView from '../../views/ProjectView.astro';
+import { projects } from '../../data/projects';
+
+export function getStaticPaths() {
+  return projects.map((p) => ({ params: { slug: p.slug } }));
+}
+
+const { slug } = Astro.params;
+---
+
+<ProjectView lang="en" slug={slug as string} />

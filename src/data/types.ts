@@ -96,6 +96,10 @@ export interface CollectiveProject {
   link: string | null;
   image: string | null;
   imageAlt: Localized<string> | null;
+  /** External video embed (e.g. YouTube/Instagram) for the project's detail
+   * page, used only when no local file exists at public/videos/<slug>.mp4.
+   * Null until the team supplies a real link - never fabricated. */
+  videoUrl: string | null;
 }
 
 /** Small inline-SVG icon set rendered on award cards - purely decorative,
