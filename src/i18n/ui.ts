@@ -38,6 +38,8 @@ interface UiDict {
     otherMembers: string;
     comingSoon: string;
     close: string;
+    carouselPrev: string;
+    carouselNext: string;
     draftBadge: string;
     inProgress: string;
     noProjectsYet: string;
@@ -243,6 +245,8 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       otherMembers: 'Other members',
       comingSoon: 'Content coming soon.',
       close: 'Close',
+      carouselPrev: 'Previous award',
+      carouselNext: 'Next award',
       draftBadge: 'Draft',
       inProgress: 'In progress',
       noProjectsYet: 'No projects published yet - check back soon.',
@@ -453,6 +457,8 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       otherMembers: 'Autres membres',
       comingSoon: 'Contenu à venir.',
       close: 'Fermer',
+      carouselPrev: 'Récompense précédente',
+      carouselNext: 'Récompense suivante',
       draftBadge: 'Brouillon',
       inProgress: 'En cours',
       noProjectsYet: 'Aucun projet publié pour le moment - revenez bientôt.',

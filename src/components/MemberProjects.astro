@@ -67,9 +67,9 @@ const showStatusChart = projects.length > 1 && completedCount > 0 && inProgressC
     <>
       {showFilters && (
         <div class="filters" role="group" aria-label={t.member.filterByTool}>
-          <button type="button" class="filter-chip is-active" data-filter="">{t.member.filterAll}</button>
+          <button type="button" class="filter-chip is-active" data-filter="" data-sound="click">{t.member.filterAll}</button>
           {allTools.map((tool) => (
-            <button type="button" class="filter-chip" data-filter={toolSlug(tool)}>{tool}</button>
+            <button type="button" class="filter-chip" data-filter={toolSlug(tool)} data-sound="click">{tool}</button>
           ))}
         </div>
       )}

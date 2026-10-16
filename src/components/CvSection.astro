@@ -43,7 +43,7 @@ const href = `${base}cv/${slug}.pdf`;
           <p class="cv-meta">{name} · PDF · {formatFileSize(fileSize)}</p>
           <div class="cv-actions">
             <a class="btn btn-primary" href={href} download={`${slug}.pdf`} data-sound="confirm">{t.member.cvDownload}</a>
-            <a class="btn btn-secondary" href={href} target="_blank" rel="noopener noreferrer">{t.member.cvView}</a>
+            <a class="btn btn-secondary" href={href} target="_blank" rel="noopener noreferrer" data-sound="click">{t.member.cvView}</a>
           </div>
         </>
       ) : (

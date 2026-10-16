@@ -4,7 +4,7 @@ import SectionHeading from '../components/SectionHeading.astro';
 import Button from '../components/Button.astro';
 import MemberGrid from '../components/MemberGrid.astro';
 import ProjectList from '../components/ProjectList.astro';
-import AwardList from '../components/AwardList.astro';
+import AwardCarousel from '../components/AwardCarousel.astro';
 import BumSpotlight from '../components/BumSpotlight.astro';
 import { site } from '../data/site';
 import { ui } from '../i18n/ui';
@@ -24,7 +24,6 @@ const t = ui[lang];
 const members = team.memberSlugs.map((slug) => people[slug]);
 const bum = people[team.bumSlug];
 const featuredProjects = projects.slice(0, 3);
-const featuredAwards = awards.slice(0, 4);
 const description = site.description[lang];
 ---
 
@@ -77,7 +76,7 @@ const description = site.description[lang];
   <section class="container section">
     <SectionHeading numeral="05" eyebrow={t.home.awardsEyebrow} title={t.home.awardsTitle} />
     <p class="intro-copy reveal">{t.home.awardsLead}</p>
-    <AwardList awards={featuredAwards} lang={lang} />
+    <AwardCarousel awards={awards} lang={lang} />
     <div class="section-cta"><Button href={localePath(lang, 'awards/')} variant="secondary">{t.common.seeAllAwards}</Button></div>
   </section>
 

@@ -99,9 +99,10 @@ placeholder wherever one of these gaps exists.
 ## Awards
 
 13. ~~The 7 categories in `src/data/awards.ts` were illustrative
-    examples~~ — done: replaced with 7 team-picked "personality" awards,
+    examples~~ — done: replaced with 8 team-picked "personality" awards,
     all `status: 'confirmed'` with a real winner (or two, for the "Team
-    Spirit" duo award) and a real candid photo in
+    Spirit" and "Chaotic Collaboration" duo awards) and a real candid
+    photo in
     `public/images/awards/<slug>.jpg` (sourced from `docs/awards/`,
     cropped/rotated/resized to match the site's other image assets). To
     add, retire, or re-pick a category: edit `src/data/awards.ts` directly
@@ -151,14 +152,11 @@ placeholder wherever one of these gaps exists.
 
 ## Member portfolios, CV PDFs & sound design
 
-19. **Every member's CV PDF is missing.** Each of the 7 member pages now
-    has a "My CV — take it with you" section with a `Download`/`View`
-    button, but `public/cv/` is currently empty, so every page shows the
-    "CV coming soon" state instead. To add one: get the member's explicit
-    approval, then drop their approved PDF at
-    `public/cv/<slug>.pdf` (e.g. `public/cv/fedi-khouildi.pdf`) - the page
-    picks it up automatically on the next build, no code change needed.
-    See README "Add a member's CV".
+19. ~~Every member's CV PDF is missing~~ — done: all 7 are now at
+    `public/cv/<slug>.pdf`, each page's "My CV — take it with you" section
+    shows the real Download/View buttons. To replace one, get the
+    member's explicit approval and overwrite that file - see README "Add
+    a member's CV".
 20. **No project screenshots, diagrams, prototype photos, or demo videos**
     were supplied for either collective project, so each project's new
     detail page (`/projects/<slug>/`, linked from every project card's
