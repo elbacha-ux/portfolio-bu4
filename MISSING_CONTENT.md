@@ -77,13 +77,16 @@ placeholder wherever one of these gaps exists.
 
 ## Projects
 
-11. Only **one** collective BU4 project could be verified
-    (`bu4-portfolio-website` — this site, corroborated by Fedi Khouildi's
-    and Rihab Trifi's forms both naming it). It now credits all seven
-    members as contributors (it's the team's shared site, not just the two
-    who happened to name it in their own CV). If BU4 has other completed or
+11. Two collective BU4 projects are now listed in `src/data/projects.ts`:
+    `bu4-portfolio-website` (crediting all seven members) and
+    `re-imaginelab-promo-video` (completed - script by Nour Lemjid, on-set
+    execution by Amena Aouichaoui, behind-the-scenes footage by Walid Ben
+    Said, editing by Fedi Khouildi). If BU4 has other completed or
     in-progress team projects, add them to `src/data/projects.ts`.
-12. No project images/screenshots were supplied for any project.
+12. **Re-ImagineLab video + poster pending**: the promotional video itself
+    and Amena's poster ("affiche") are still being finalized. Once ready,
+    set `link` (e.g. a YouTube/Drive URL) and `image`/`imageAlt` on the
+    `re-imaginelab-promo-video` entry in `src/data/projects.ts`.
 
 ## Awards
 
@@ -100,14 +103,18 @@ placeholder wherever one of these gaps exists.
 
 ## Contact
 
-14. **No official BU4 contact e-mail or address was confirmed.** The
-    `/contact/` page currently falls back to JEENISo's general address
-    (`contact@jeeniso.com`, taken from the charter PDF footer) and links to
-    individual member profiles. Set `site.contactEmail` in
-    `src/data/site.ts` once BU4 has (or wants) its own address.
-15. No social links (LinkedIn page, Instagram, Facebook) were supplied for
-    BU4 as an organization — `src/data/site.ts` has `socials` set to `null`
-    across the board.
+14. **No official BU4 contact e-mail address was confirmed.** The
+    `/contact/` page falls back to JEENISo's general address
+    (`contact@jeeniso.com`, taken from the charter PDF footer) as the email
+    channel, and links to individual member profiles. Set
+    `site.contactEmail` in `src/data/site.ts` once BU4 has (or wants) its
+    own address.
+15. ~~No social links~~ — done: `/contact/` now shows a channel grid with
+    Instagram (`@wearebu4`), a confirmed phone number, the email fallback
+    above, and the JEENISo website — all set in `src/data/site.ts`
+    (`socials.instagram`, `contactPhone`, `jeenisoWebsite`). LinkedIn and
+    Facebook are still `null` — add them the same way if BU4 wants those
+    channels listed too.
 
 ## Deployment
 

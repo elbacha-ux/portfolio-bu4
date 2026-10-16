@@ -1,8 +1,11 @@
 ---
 /**
- * Loads the approved BU4 signature file unmodified (docs/brand/logo/logo.jpeg,
- * mirrored to public/images/brand/). Never recolor, stretch, rotate or add a
- * background behind it - see docs/brand/Charte-Graphique-1.pdf section 1.4.
+ * Loads the approved BU4 signature file (docs/brand/logo/logo.jpeg is the
+ * untouched original, archived as-is) with its background made transparent
+ * (public/images/brand/bu4-logo.png) so it sits directly on the page in
+ * both themes instead of showing a white box. Never recolor, stretch,
+ * rotate or otherwise redraw the mark itself - see
+ * docs/brand/Charte-Graphique-1.pdf section 1.4.
  */
 import { localePath } from '../i18n';
 import type { Lang } from '../i18n';
@@ -18,7 +21,7 @@ const { width = 160, class: className, lang = 'en' } = Astro.props;
 
 <a href={localePath(lang)} class={`bu4-logo ${className ?? ''}`} aria-label="BU4 home">
   <img
-    src={`${import.meta.env.BASE_URL}images/brand/bu4-logo.jpg`}
+    src={`${import.meta.env.BASE_URL}images/brand/bu4-logo.png`}
     alt="Business Unit 4 - Challenges are our business"
     width={width}
     height={Math.round(width * 0.34)}
