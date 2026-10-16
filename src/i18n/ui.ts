@@ -156,6 +156,8 @@ interface UiDict {
     videoTitle: string;
     videoComingSoonBody: string;
     outcomeTitle: string;
+    documentsTitle: string;
+    downloadDocument: string;
     otherProjectsTitle: string;
   };
   awards: {
@@ -363,6 +365,8 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       videoTitle: 'Video',
       videoComingSoonBody: 'A video for this project will be added here once available.',
       outcomeTitle: 'Outcome',
+      documentsTitle: 'Documents',
+      downloadDocument: 'Download',
       otherProjectsTitle: 'Other projects',
     },
     awards: {
@@ -568,6 +572,8 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       videoTitle: 'Vidéo',
       videoComingSoonBody: 'Une vidéo de ce projet sera ajoutée ici dès qu\'elle sera disponible.',
       outcomeTitle: 'Résultat',
+      documentsTitle: 'Documents',
+      downloadDocument: 'Télécharger',
       otherProjectsTitle: 'Autres projets',
     },
     awards: {

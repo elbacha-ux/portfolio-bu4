@@ -6,7 +6,8 @@ import { people } from '../data/people';
 import { projects } from '../data/projects';
 import { ui } from '../i18n/ui';
 import { pick, pickAll, localePath } from '../i18n';
-import { projectGallery, hasProjectVideo } from '../lib/projectMedia';
+import { projectGallery, hasProjectVideo, projectDocuments } from '../lib/projectMedia';
+import { formatFileSize } from '../lib/cv';
 import type { Lang } from '../i18n';
 
 interface Props {
@@ -26,6 +27,7 @@ const members = project.memberSlugs.map((s) => people[s]).filter(Boolean);
 
 const gallery = projectGallery(slug);
 const hasVideo = hasProjectVideo(slug);
+const documents = projectDocuments(slug);
 const base = import.meta.env.BASE_URL;
 const videoSrc = hasVideo ? `${base}videos/${slug}.mp4` : null;
 
@@ -85,6 +87,22 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
       <section class="reveal">
         <h2>{t.projects.outcomeTitle}</h2>
         <p>{outcome}</p>
+      </section>
+    )}
+
+    {documents.length > 0 && (
+      <section class="reveal">
+        <h2>{t.projects.documentsTitle}</h2>
+        <ul class="documents-list">
+          {documents.map((doc) => (
+            <li>
+              <a class="document-link" href={`${base}${doc.path}`} target="_blank" rel="noopener noreferrer" data-sound="click">
+                {t.projects.downloadDocument}: {doc.label}
+                <span class="muted document-size">({formatFileSize(doc.sizeBytes)})</span>
+              </a>
+            </li>
+          ))}
+        </ul>
       </section>
     )}
 
@@ -242,6 +260,27 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+  }
+
+  .documents-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+  .document-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    font-weight: var(--fw-heading);
+    text-decoration: none;
+    border-bottom: 2px solid var(--color-blue);
+    width: fit-content;
+  }
+  .document-size {
+    font-weight: var(--fw-regular);
+    font-size: var(--fs-200);
   }
 
   .gallery-grid {
