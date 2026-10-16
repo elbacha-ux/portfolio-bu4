@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { site } from '../data/site';
+import { ui } from '../i18n/ui';
+import { localePath } from '../i18n';
+import type { Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+const lead = t.about.leadTemplate
+  .replace('{fullName}', site.fullName)
+  .replace('{parentOrg}', site.parentOrg)
+  .replace('{parentOrgFull}', site.parentOrgFull);
+---
+
+<BaseLayout lang={lang} title={t.about.title} description={lead}>
+  <section class="container section">
+    <SectionHeading numeral="04" eyebrow={t.about.eyebrow} title={t.about.title} />
+    <p class="lead reveal">{lead}</p>
+  </section>
+
+  <section class="container section grid-2">
+    <div class="reveal">
+      <h2>{t.about.whatTitle}</h2>
+      <p>{t.about.whatBody}</p>
+    </div>
+    <div class="reveal">
+      <h2>{t.about.relationTitle}</h2>
+      <p>{t.about.relationBody}</p>
+    </div>
+  </section>
+
+  <section class="container section grid-2">
+    <div class="reveal">
+      <h2>{t.about.howTitle}</h2>
+      <p>{t.about.howBody}</p>
+    </div>
+    <div class="reveal">
+      <h2>{t.about.whereTitle}</h2>
+      <p>
+        {t.about.whereBodyPrefix}{' '}
+        <a href={localePath(lang, 'projects/')}>{t.about.whereBodyLink}</a>{' '}
+        {t.about.whereBodySuffix}
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lead {
+    font-size: var(--fs-400);
+    max-width: 65ch;
+  }
+  .grid-2 {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .grid-2 h2 {
+    font-size: var(--fs-600);
+  }
+  @media (min-width: 768px) {
+    .grid-2 {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-5);
+    }
+  }
+</style>

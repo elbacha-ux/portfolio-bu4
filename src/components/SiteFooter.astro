@@ -1,51 +1,58 @@
 ---
 import Logo from './Logo.astro';
-import { nav, site } from '../data/site';
-import { ui } from '../data/ui-strings';
+import { navRoutes, site } from '../data/site';
+import { ui } from '../i18n/ui';
+import { localePath } from '../i18n';
+import type { Lang } from '../i18n';
 
-const base = import.meta.env.BASE_URL;
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
 const year = new Date().getFullYear();
+const navItems = navRoutes.map((item) => ({ href: localePath(lang, item.href), label: t.nav[item.key] }));
 ---
 
 <footer class="site-footer">
   <div class="container footer-grid">
     <div class="footer-brand">
-      <Logo width={140} />
+      <Logo width={140} lang={lang} />
       <p class="affiliation">
-        {ui.footerAffiliation} <strong>{site.parentOrg}</strong> ({site.parentOrgFull}).
+        {t.footer.affiliation} <strong>{site.parentOrg}</strong> ({site.parentOrgFull}).
       </p>
     </div>
 
-    <nav aria-label="Footer">
+    <nav aria-label={t.nav.footerLabel}>
       <ul>
-        {nav.map((item) => (
-          <li><a href={`${base}${item.href.replace(/^\//, '')}`}>{item.label}</a></li>
+        {navItems.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
         ))}
       </ul>
     </nav>
 
     <div class="footer-contact">
-      <p class="label">Contact</p>
+      <p class="label">{t.footer.contactLabel}</p>
       {site.contactEmail ? (
         <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
       ) : (
-        <p class="muted">Official BU4 contact pending confirmation.</p>
+        <p class="muted">{t.footer.noContact}</p>
       )}
       <p class="muted parent-email">
-        {site.parentOrg} general inquiries: <a href={`mailto:${site.parentOrgEmail}`}>{site.parentOrgEmail}</a>
+        {site.parentOrg} {t.footer.parentInquiries} <a href={`mailto:${site.parentOrgEmail}`}>{site.parentOrgEmail}</a>
       </p>
     </div>
   </div>
 
   <div class="container legal">
-    <p>&copy; {year} {site.fullName} · {site.parentOrg}. {ui.footerRights}</p>
+    <p>&copy; {year} {site.fullName} · {site.parentOrg}. {t.footer.rights}</p>
   </div>
 </footer>
 
 <style>
   .site-footer {
     background: var(--color-charcoal);
-    color: var(--color-text-inverse);
+    color: var(--color-dark-text);
     margin-top: var(--space-7);
   }
 
@@ -79,7 +86,7 @@ const year = new Date().getFullYear();
   }
 
   nav a {
-    color: var(--color-text-inverse);
+    color: var(--color-dark-text);
     text-decoration: none;
   }
   nav a:hover {

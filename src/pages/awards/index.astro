@@ -1,25 +1,5 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import SectionHeading from '../../components/SectionHeading.astro';
-import AwardList from '../../components/AwardList.astro';
-import { awards } from '../../data/awards';
+import AwardsView from '../../views/AwardsView.astro';
 ---
 
-<BaseLayout title="Awards" description="BU4 Awards - a friendly, honest way to recognize the team.">
-  <section class="container section">
-    <SectionHeading numeral="05" eyebrow="Team culture" title="BU4 Awards" />
-    <p class="lead">
-      Lighthearted categories celebrating how the team actually works together. These are draft
-      ideas until the team votes on winners - no recipient is shown until confirmed.
-    </p>
-    <AwardList awards={awards} />
-  </section>
-</BaseLayout>
-
-<style>
-  .lead {
-    max-width: 65ch;
-    margin-bottom: var(--space-4);
-    color: var(--color-cool-gray);
-  }
-</style>
+<AwardsView lang="en" />

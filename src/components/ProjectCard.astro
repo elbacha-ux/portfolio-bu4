@@ -2,36 +2,44 @@
 import type { CollectiveProject } from '../data/types';
 import { people } from '../data/people';
 import Tag from './Tag.astro';
+import { ui } from '../i18n/ui';
+import { pick, pickAll, localePath } from '../i18n';
+import type { Lang } from '../i18n';
 
 interface Props {
   project: CollectiveProject;
+  lang: Lang;
 }
-const { project } = Astro.props;
-const base = import.meta.env.BASE_URL;
+const { project, lang } = Astro.props;
+const t = ui[lang];
 const members = project.memberSlugs.map((s) => people[s]).filter(Boolean);
+const title = pick(project.title, lang);
+const description = pick(project.description, lang);
+const category = pick(project.category, lang);
+const tools = pickAll(project.tools, lang);
 ---
 
-<article class="project-card card">
-  {project.image && <img src={project.image} alt={project.imageAlt ?? ''} loading="lazy" width="480" height="300" />}
+<article class="project-card card reveal">
+  {project.image && <img src={project.image} alt={project.imageAlt ? pick(project.imageAlt, lang) ?? '' : ''} loading="lazy" width="480" height="300" />}
   <div class="body">
     <div class="meta">
-      {project.category && <Tag>{project.category}</Tag>}
-      {project.status === 'in-progress' && <Tag class="status-tag">In progress</Tag>}
+      {category && <Tag>{category}</Tag>}
+      {project.status === 'in-progress' && <Tag class="status-tag">{t.common.inProgress}</Tag>}
     </div>
-    <h3>{project.link ? <a href={project.link} target="_blank" rel="noopener noreferrer">{project.title}</a> : project.title}</h3>
-    {project.description && <p>{project.description}</p>}
+    <h3>{project.link ? <a href={project.link} target="_blank" rel="noopener noreferrer">{title}</a> : title}</h3>
+    {description && <p>{description}</p>}
     {members.length > 0 && (
       <p class="contributors">
-        By {members.map((m, i) => (
+        {t.projects.contributorsPrefix} {members.map((m, i) => (
           <>
-            <a href={`${base}members/${m.slug}/`}>{m.name}</a>{i < members.length - 1 ? ', ' : ''}
+            <a href={localePath(lang, `members/${m.slug}/`)}>{m.name}</a>{i < members.length - 1 ? ', ' : ''}
           </>
         ))}
       </p>
     )}
-    {project.tools.length > 0 && (
+    {tools.length > 0 && (
       <ul class="tools">
-        {project.tools.map((t) => <li>{t}</li>)}
+        {tools.map((tool) => <li>{tool}</li>)}
       </ul>
     )}
   </div>
@@ -54,8 +62,8 @@ const members = project.memberSlugs.map((s) => people[s]).filter(Boolean);
     margin-bottom: var(--space-2);
   }
   .status-tag {
-    background: var(--color-blue-tint);
-    color: var(--color-navy);
+    background: var(--color-accent-soft);
+    color: var(--color-accent-strong);
   }
   h3 {
     font-size: var(--fs-500);
@@ -67,7 +75,7 @@ const members = project.memberSlugs.map((s) => people[s]).filter(Boolean);
   }
   .contributors {
     font-size: var(--fs-200);
-    color: var(--color-cool-gray);
+    color: var(--color-text-muted);
   }
   .tools {
     list-style: none;
@@ -79,8 +87,8 @@ const members = project.memberSlugs.map((s) => people[s]).filter(Boolean);
   }
   .tools li {
     font-size: var(--fs-100);
-    color: var(--color-cool-gray);
-    background: var(--color-gray-tint);
+    color: var(--color-text-muted);
+    background: var(--color-bg-muted);
     padding: 0.2em 0.5em;
   }
 </style>

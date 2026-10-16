@@ -25,7 +25,7 @@
 }
 
 html {
-  color-scheme: light;
+  color-scheme: light dark;
   scroll-behavior: smooth;
 }
 
@@ -52,6 +52,15 @@ body {
   font-size: var(--fs-300);
   line-height: var(--lh-normal);
   -webkit-font-smoothing: antialiased;
+  overflow-wrap: break-word;
+  transition: background-color var(--duration-base) var(--ease-standard), color var(--duration-base) var(--ease-standard);
+}
+
+/* Belt-and-suspenders: never allow a single element to force page-wide
+   horizontal scroll (long French compound words, unbroken URLs, etc.). */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -59,8 +68,9 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: var(--fw-heading);
   line-height: var(--lh-tight);
   margin: 0 0 var(--space-2);
-  color: var(--color-charcoal);
+  color: var(--color-text);
   text-wrap: balance;
+  overflow-wrap: break-word;
 }
 
 h1 { font-size: var(--fs-900); }
@@ -74,9 +84,10 @@ p {
 }
 
 a {
-  color: var(--color-navy);
+  color: var(--color-accent-strong);
   text-decoration-thickness: 1.5px;
   text-underline-offset: 0.2em;
+  transition: color var(--duration-fast) var(--ease-standard);
 }
 
 a:hover {
@@ -167,6 +178,7 @@ button {
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5em;
   padding: 0.85em 1.6em;
   font-weight: var(--fw-heading);
@@ -177,8 +189,14 @@ button {
   text-decoration: none;
   transition: background-color var(--duration-fast) var(--ease-standard),
     color var(--duration-fast) var(--ease-standard),
-    border-color var(--duration-fast) var(--ease-standard);
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
   min-height: 44px;
+}
+
+.btn:active {
+  transform: scale(0.97);
 }
 
 .btn-primary {
@@ -188,16 +206,17 @@ button {
 .btn-primary:hover {
   background: var(--color-navy-deep);
   color: var(--color-white);
+  box-shadow: var(--shadow-md);
 }
 
 .btn-secondary {
   background: transparent;
-  color: var(--color-navy);
-  border-color: var(--color-navy);
+  color: var(--color-accent-strong);
+  border-color: var(--color-accent-strong);
 }
 .btn-secondary:hover {
-  background: var(--color-blue-tint);
-  color: var(--color-navy);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-strong);
 }
 
 .btn-inverse {
@@ -206,6 +225,7 @@ button {
 }
 .btn-inverse:hover {
   background: var(--color-blue-tint);
+  box-shadow: var(--shadow-md);
 }
 
 /* ---- Tag ---- */
@@ -216,21 +236,51 @@ button {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: 0.3em 0.7em;
-  background: var(--color-gray-tint);
-  color: var(--color-charcoal);
+  background: var(--color-bg-muted);
+  color: var(--color-text);
 }
 
 /* ---- Card ---- */
 .card {
-  background: var(--color-white);
+  background: var(--color-surface);
   border: var(--border-weight) solid var(--color-border);
   padding: var(--space-3);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-standard);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+  border-color: var(--color-accent);
 }
 
 /* ---- Grid ---- */
 .grid {
   display: grid;
   gap: var(--space-3);
+}
+
+/* ---- Scroll-reveal (progressive enhancement) ----
+   Visible by default (no-JS / JS-failure = fully visible content). The
+   blocking head script adds `js` to <html> before first paint, which is
+   the only thing that arms the hidden starting state; a deferred
+   IntersectionObserver (ScrollReveal.astro) then adds `is-visible` as each
+   element scrolls into view. */
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity var(--duration-slow) var(--ease-out), transform var(--duration-slow) var(--ease-out);
+}
+html.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.js .reveal {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @media (min-width: 768px) {

@@ -5,13 +5,16 @@
  * neutral initials fallback when no approved photo exists yet - never a
  * stock photo or a random substitute.
  */
+import type { Lang } from '../i18n';
+
 interface Props {
   src: string | null;
-  alt: string | null;
   name: string;
   ratio?: string;
+  lang?: Lang;
 }
-const { src, alt, name, ratio = '4 / 5' } = Astro.props;
+const { src, name, ratio = '4 / 5', lang = 'en' } = Astro.props;
+const alt = lang === 'fr' ? `Portrait de ${name}` : `Portrait of ${name}`;
 const initials = name
   .split(' ')
   .map((p) => p[0])
@@ -22,9 +25,9 @@ const initials = name
 
 <div class="photo-frame" style={`aspect-ratio: ${ratio};`}>
   {src ? (
-    <img src={src} alt={alt ?? name} loading="lazy" width="480" height="600" />
+    <img src={src} alt={alt} loading="lazy" width="480" height="600" />
   ) : (
-    <div class="fallback" role="img" aria-label={`Portrait placeholder for ${name}`}>
+    <div class="fallback" role="img" aria-label={alt}>
       <span>{initials}</span>
     </div>
   )}
@@ -35,7 +38,7 @@ const initials = name
   .photo-frame {
     position: relative;
     overflow: hidden;
-    background: var(--color-gray-tint);
+    background: var(--color-bg-muted);
   }
   .photo-frame img {
     width: 100%;

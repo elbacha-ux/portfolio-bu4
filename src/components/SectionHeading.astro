@@ -13,7 +13,7 @@ const Tag = level;
 
 <div class={`section-heading align-${align}`}>
   {numeral && <span class="numeral" aria-hidden="true">{numeral}</span>}
-  <div>
+  <div class="heading-content">
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <div class="rule-split"><span></span><span></span></div>
     <Tag><slot name="title">{title}</slot></Tag>
@@ -25,7 +25,7 @@ const Tag = level;
   .section-heading {
     display: flex;
     align-items: flex-start;
-    gap: var(--space-3);
+    gap: var(--space-2);
     margin-bottom: var(--space-4);
   }
   .section-heading.align-center {
@@ -38,13 +38,25 @@ const Tag = level;
   }
   .numeral {
     flex-shrink: 0;
+    font-size: 3rem;
+  }
+  .heading-content {
+    min-width: 0;
+  }
+  @media (min-width: 768px) {
+    .section-heading {
+      gap: var(--space-3);
+    }
+    .numeral {
+      font-size: var(--fs-numeral);
+    }
   }
   .eyebrow {
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-weight: var(--fw-heading);
     font-size: var(--fs-200);
-    color: var(--color-cool-gray);
+    color: var(--color-text-muted);
     margin: 0 0 var(--space-1);
   }
 </style>

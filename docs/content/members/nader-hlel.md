@@ -10,8 +10,10 @@ _Not provided._
 _Not provided._
 
 ## Skills
-- Technical: —
-- Personal: —
+- Technical:
+_Not provided._
+- Personal:
+_Not provided._
 - Languages: —
 
 ## Interests
@@ -23,8 +25,10 @@ _Not provided._
 _Not provided._
 
 ## Goals
-- Short term: —
-- Long term: —
+- Short term:
+  _Not provided._
+- Long term:
+  _Not provided._
 
 ## Links
 - Email: —
@@ -32,4 +36,4 @@ _Not provided._
 - GitHub: —
 
 ---
-_Source: the "CV Portfolio Web" intake form this person submitted (docs/content/cvs/, not tracked in git), which included a checkbox consenting to publish the stated information. Translated from French to English and trimmed to professional fields only - no phone numbers, addresses or ID numbers were collected in the original form. Review this file against the live page at /members/nader-hlel/ and flag anything to correct._
+_Source: the "CV Portfolio Web" intake form this person submitted (docs/content/cvs/, not tracked in git), which included a checkbox consenting to publish the stated information. English content is trimmed to professional fields only; French content comes from the original French submission where that wording exists, not a back-translation. No phone numbers, addresses or ID numbers were collected in the original form. Review this file against the live page at /members/nader-hlel/ (and /fr/members/nader-hlel/) and flag anything to correct._

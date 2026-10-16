@@ -1,25 +1,5 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import SectionHeading from '../../components/SectionHeading.astro';
-import ProjectList from '../../components/ProjectList.astro';
-import { projects } from '../../data/projects';
+import ProjectsView from '../../views/ProjectsView.astro';
 ---
 
-<BaseLayout title="Projects" description="BU4's collective project portfolio.">
-  <section class="container section">
-    <SectionHeading numeral="02" eyebrow="Our work" title="Collective projects" />
-    <p class="lead">
-      Work the team has taken on together, as BU4. Individual academic and club projects live on
-      each member's own page.
-    </p>
-    <ProjectList projects={projects} />
-  </section>
-</BaseLayout>
-
-<style>
-  .lead {
-    max-width: 60ch;
-    margin-bottom: var(--space-4);
-    color: var(--color-cool-gray);
-  }
-</style>
+<ProjectsView lang="en" />

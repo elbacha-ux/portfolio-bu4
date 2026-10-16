@@ -2,10 +2,13 @@
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { site } from '../data/site';
-import { ui } from '../data/ui-strings';
+import { ui } from '../i18n/ui';
+import { swapLangInPath, otherLang } from '../i18n';
+import type { Lang } from '../i18n';
 import '../styles/global.css';
 
 interface Props {
+  lang: Lang;
   title: string;
   description?: string;
   /** Set true on the homepage so the title isn't duplicated with the site name. */
@@ -13,19 +16,22 @@ interface Props {
   noindex?: boolean;
 }
 
-const { title, description = site.description, isHome = false, noindex = false } = Astro.props;
+const { lang, title, description = site.description[lang], isHome = false, noindex = false } = Astro.props;
+const t = ui[lang];
 const pageTitle = isHome ? `${site.fullName} - ${site.parentOrg}` : `${title} - ${site.fullName}`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const altPath = swapLangInPath(Astro.url.pathname, otherLang(lang));
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
+    <link rel="alternate" hreflang={otherLang(lang)} href={new URL(altPath, Astro.site)} />
     {noindex && <meta name="robots" content="noindex" />}
 
     <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.ico`} sizes="any" />
@@ -39,13 +45,61 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="twitter:card" content="summary" />
 
     <meta name="generator" content={Astro.generator} />
+
+    <script is:inline define:vars={{ lang, altPath }}>
+      // Runs synchronously before first paint: sets the theme (no flash of
+      // the wrong theme) and the js class (arms scroll-reveal), and
+      // redirects to the visitor's saved language if it differs from this
+      // page's language - preserving the exact same page, not just home.
+      (function () {
+        document.documentElement.classList.add('js');
+        try {
+          var savedTheme = localStorage.getItem('bu4-theme');
+          var theme = savedTheme === 'light' || savedTheme === 'dark'
+            ? savedTheme
+            : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          document.documentElement.dataset.theme = theme;
+        } catch (e) {
+          /* storage/matchMedia unavailable - CSS prefers-color-scheme fallback still applies */
+        }
+        try {
+          var savedLang = localStorage.getItem('bu4-lang');
+          if (savedLang && savedLang !== lang && (savedLang === 'en' || savedLang === 'fr')) {
+            location.replace(altPath);
+          }
+        } catch (e) {
+          /* storage unavailable - stay on the default-locale page */
+        }
+      })();
+    </script>
   </head>
   <body>
-    <a href="#main" class="skip-link">{ui.skipToContent}</a>
-    <SiteHeader />
+    <a href="#main" class="skip-link">{t.common.skipToContent}</a>
+    <SiteHeader lang={lang} />
     <main id="main">
       <slot />
     </main>
-    <SiteFooter />
+    <SiteFooter lang={lang} />
+    <script>
+      // Scroll-reveal: progressive enhancement only - .reveal elements are
+      // fully visible without this (see the html.js gate in global.css).
+      const items = document.querySelectorAll<HTMLElement>('.reveal');
+      if (items.length && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+        );
+        items.forEach((item) => io.observe(item));
+      } else {
+        items.forEach((item) => item.classList.add('is-visible'));
+      }
+    </script>
   </body>
 </html>

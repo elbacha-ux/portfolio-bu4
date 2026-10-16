@@ -1,20 +1,24 @@
 ---
 import type { Member } from '../data/types';
 import PhotoOverlay from './PhotoOverlay.astro';
+import { pick, localePath } from '../i18n';
+import type { Lang } from '../i18n';
 
 interface Props {
   member: Member;
+  lang: Lang;
 }
-const { member } = Astro.props;
-const base = import.meta.env.BASE_URL;
+const { member, lang } = Astro.props;
+const specialty = pick(member.specialty, lang);
 ---
 
-<a class="member-card" href={`${base}members/${member.slug}/`}>
-  <PhotoOverlay src={member.photo} alt={member.photoAlt} name={member.name} />
+<a class="member-card reveal" href={localePath(lang, `members/${member.slug}/`)}>
+  <PhotoOverlay src={member.photo} name={member.name} lang={lang} />
   <div class="info">
     <h3>{member.name}</h3>
-    {member.specialty && <p class="specialty">{member.specialty}</p>}
+    {specialty && <p class="specialty">{specialty}</p>}
   </div>
+  <span class="card-arrow" aria-hidden="true">→</span>
 </a>
 
 <style>
@@ -22,16 +26,23 @@ const base = import.meta.env.BASE_URL;
     display: block;
     text-decoration: none;
     color: inherit;
-    transition: transform var(--duration-fast) var(--ease-standard);
+    position: relative;
+    min-width: 0;
+    transition: transform var(--duration-base) var(--ease-out);
   }
   .member-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px);
   }
   .member-card:hover .specialty {
-    color: var(--color-navy);
+    color: var(--color-accent-strong);
+  }
+  .member-card:hover .card-arrow {
+    opacity: 1;
+    transform: translateX(0);
   }
   .info {
     padding-top: var(--space-2);
+    min-width: 0;
   }
   .info h3 {
     font-size: var(--fs-500);
@@ -39,8 +50,25 @@ const base = import.meta.env.BASE_URL;
   }
   .specialty {
     margin: 0;
-    color: var(--color-cool-gray);
+    color: var(--color-text-muted);
     font-size: var(--fs-200);
     font-weight: var(--fw-medium);
+    transition: color var(--duration-fast) var(--ease-standard);
+  }
+  .card-arrow {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-white);
+    color: var(--color-navy);
+    font-weight: var(--fw-heading);
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out);
   }
 </style>

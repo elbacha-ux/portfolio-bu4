@@ -96,7 +96,42 @@ for (const award of awards) {
   }
 }
 
-// 7. Private source material must never be shipped.
+// 7. Every Localized<string> value (anywhere in people/projects/awards) has
+//    non-empty English AND French text - catches a missed translation.
+function isLocalizedPair(value: unknown): value is { en: string; fr: string } {
+  return (
+    !!value &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    typeof (value as Record<string, unknown>).en === 'string' &&
+    typeof (value as Record<string, unknown>).fr === 'string' &&
+    Object.keys(value as object).length === 2
+  );
+}
+
+function walkForLocalized(value: unknown, path: string) {
+  if (value === null || value === undefined) return;
+  if (isLocalizedPair(value)) {
+    if (!value.en.trim()) errors.push(`Missing English text at ${path}.`);
+    if (!value.fr.trim()) errors.push(`Missing French text at ${path}.`);
+    return;
+  }
+  if (Array.isArray(value)) {
+    value.forEach((item, i) => walkForLocalized(item, `${path}[${i}]`));
+    return;
+  }
+  if (typeof value === 'object') {
+    for (const [key, v] of Object.entries(value)) {
+      walkForLocalized(v, `${path}.${key}`);
+    }
+  }
+}
+
+walkForLocalized(people, 'people');
+walkForLocalized(projects, 'projects');
+walkForLocalized(awards, 'awards');
+
+// 8. Private source material must never be shipped.
 const repoRoot = fileURLToPath(new URL('..', import.meta.url));
 if (existsSync(`${repoRoot}public/docs`) || existsSync(`${repoRoot}dist/docs`)) {
   errors.push('A docs/ folder was found under public/ or dist/ - private source material must never be published.');

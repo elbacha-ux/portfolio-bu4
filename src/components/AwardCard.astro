@@ -1,69 +1,182 @@
 ---
+/**
+ * Award card gallery item. Shows the confirmed winner's own member photo
+ * (reusing PhotoOverlay, same crop/fallback treatment as the rest of the
+ * site) when one exists; otherwise a polished "winner to be announced"
+ * state - never a stock photo, an invented name, or a card that implies a
+ * decision has been made.
+ */
 import type { Award } from '../data/types';
 import { people } from '../data/people';
+import PhotoOverlay from './PhotoOverlay.astro';
+import AwardIcon from './AwardIcon.astro';
 import Tag from './Tag.astro';
-import { ui } from '../data/ui-strings';
+import { ui } from '../i18n/ui';
+import { pick, localePath } from '../i18n';
+import type { Lang } from '../i18n';
 
 interface Props {
   award: Award;
+  lang: Lang;
 }
-const { award } = Astro.props;
-const base = import.meta.env.BASE_URL;
+const { award, lang } = Astro.props;
+const t = ui[lang];
+const title = pick(award.title, lang);
+const description = pick(award.description, lang);
 const recipients = award.recipientSlugs.map((s) => people[s]).filter(Boolean);
+const winner = award.status === 'confirmed' ? recipients[0] : null;
 ---
 
-<article class="award-card card">
-  <div class="top">
-    <h3>{award.title}</h3>
-    {award.status === 'draft' && <Tag class="draft-tag">{ui.draftBadge}</Tag>}
+<article class="award-card reveal">
+  <div class="photo-zone">
+    {winner ? (
+      <PhotoOverlay src={award.image ?? winner.photo} name={winner.name} lang={lang} ratio="1 / 1" />
+    ) : (
+      <div class="pending-photo">
+        <AwardIcon name={award.icon} />
+        <span>{t.awards.winnerPending}</span>
+      </div>
+    )}
+    <span class="icon-badge"><AwardIcon name={award.icon} /></span>
+    {award.status === 'draft' && <Tag class="draft-tag">{t.common.draftBadge}</Tag>}
   </div>
-  {award.description && <p>{award.description}</p>}
-  {recipients.length > 0 ? (
-    <p class="recipient">
-      Awarded to {recipients.map((r, i) => (
-        <>
-          <a href={`${base}members/${r.slug}/`}>{r.name}</a>{i < recipients.length - 1 ? ', ' : ''}
-        </>
-      ))}
-    </p>
-  ) : (
-    <p class="recipient pending">Winner to be confirmed by the team.</p>
-  )}
+
+  <div class="body">
+    <h3>{title}</h3>
+    {winner ? (
+      <p class="winner-name">{winner.name}</p>
+    ) : (
+      <p class="winner-name pending">{t.awards.winnerPending}</p>
+    )}
+    {description && <p class="description">{description}</p>}
+    {award.year && <p class="edition">{award.year}</p>}
+    {winner && (
+      <a class="profile-link" href={localePath(lang, `members/${winner.slug}/`)}>
+        {t.awards.awardedTo} {winner.name} →
+      </a>
+    )}
+  </div>
 </article>
 
 <style>
   .award-card {
-    height: 100%;
-  }
-  .top {
     display: flex;
-    align-items: start;
-    justify-content: space-between;
-    gap: var(--space-2);
-    margin-bottom: var(--space-1);
+    flex-direction: column;
+    background: var(--color-surface);
+    border: var(--border-weight) solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition: box-shadow var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-standard);
   }
-  h3 {
+  .award-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+    border-color: var(--color-accent);
+  }
+
+  .photo-zone {
+    position: relative;
+  }
+  .photo-zone :global(.photo-frame img) {
+    transition: transform var(--duration-slow) var(--ease-out);
+  }
+  .award-card:hover .photo-zone :global(.photo-frame img) {
+    transform: scale(1.05);
+  }
+
+  .pending-photo {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    background: repeating-linear-gradient(
+      135deg,
+      var(--color-bg-muted),
+      var(--color-bg-muted) 10px,
+      var(--color-surface) 10px,
+      var(--color-surface) 20px
+    );
+    color: var(--color-text-muted);
+    border-bottom: var(--border-weight) solid var(--color-border);
+  }
+  .pending-photo :global(.award-icon) {
+    width: 32px;
+    height: 32px;
+    opacity: 0.6;
+  }
+  .pending-photo span {
+    font-size: var(--fs-100);
+    font-weight: var(--fw-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .icon-badge {
+    position: absolute;
+    top: var(--space-2);
+    left: var(--space-2);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-navy);
+    color: var(--color-white);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .draft-tag {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .body {
+    padding: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex: 1;
+  }
+  .body h3 {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-weight: var(--fw-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: var(--fs-100);
+  }
+  .winner-name {
     font-size: var(--fs-500);
+    font-weight: var(--fw-heading);
+    color: var(--color-text);
     margin: 0;
   }
-  .draft-tag {
-    background: var(--color-gray-tint);
-    color: var(--color-cool-gray);
-    flex-shrink: 0;
-  }
-  .recipient {
-    font-size: var(--fs-200);
-    font-weight: var(--fw-medium);
-    color: var(--color-navy);
-    margin-top: var(--space-2);
-    margin-bottom: 0;
-  }
-  .recipient.pending {
-    color: var(--color-cool-gray);
-    font-weight: var(--fw-regular);
+  .winner-name.pending {
+    color: var(--color-text-muted);
     font-style: italic;
+    font-weight: var(--fw-medium);
   }
-  .recipient a {
-    color: var(--color-navy);
+  .description {
+    color: var(--color-text-muted);
+    font-size: var(--fs-200);
+    margin: 0;
+  }
+  .edition {
+    color: var(--color-text-muted);
+    font-size: var(--fs-100);
+    margin: 0;
+  }
+  .profile-link {
+    margin-top: var(--space-1);
+    font-size: var(--fs-200);
+    font-weight: var(--fw-heading);
+    text-decoration: none;
+    color: var(--color-accent-strong);
   }
 </style>

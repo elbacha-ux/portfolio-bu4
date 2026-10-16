@@ -1,0 +1,81 @@
+---
+/**
+ * EN / FR switch. Always links to the exact equivalent of the current page
+ * in the other language (never just the homepage) via swapLangInPath, so
+ * switching language never drops the visitor onto the wrong page. Clicking
+ * also persists the choice to localStorage - read by the blocking script in
+ * BaseLayout.astro on the next visit to redirect to the saved language.
+ */
+import { locales, swapLangInPath } from '../i18n';
+import { ui } from '../i18n/ui';
+import type { Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+const pathname = Astro.url.pathname;
+---
+
+<div class="lang-switch" role="group" aria-label={t.nav.langSwitchLabel}>
+  {locales.map((l) => (
+    <a
+      href={swapLangInPath(pathname, l)}
+      class="lang-link"
+      aria-current={l === lang ? 'true' : undefined}
+      data-lang={l}
+    >
+      {l.toUpperCase()}
+    </a>
+  ))}
+</div>
+
+<script>
+  const STORAGE_KEY = 'bu4-lang';
+  document.querySelectorAll<HTMLAnchorElement>('.lang-link').forEach((link) => {
+    link.addEventListener('click', () => {
+      const lang = link.dataset.lang;
+      if (!lang) return;
+      try {
+        localStorage.setItem(STORAGE_KEY, lang);
+      } catch {
+        /* storage unavailable - navigation still proceeds normally */
+      }
+    });
+  });
+</script>
+
+<style>
+  .lang-switch {
+    display: inline-flex;
+    border: 2px solid var(--color-border);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .lang-link {
+    padding: 0.4em 0.7em;
+    font-size: var(--fs-100);
+    font-weight: var(--fw-heading);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    color: var(--color-text-muted);
+    min-width: 40px;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
+  }
+  .lang-link + .lang-link {
+    border-left: 2px solid var(--color-border);
+  }
+  .lang-link:hover {
+    background: var(--color-bg-muted);
+    color: var(--color-text);
+  }
+  .lang-link[aria-current='true'] {
+    background: var(--color-navy);
+    color: var(--color-white);
+  }
+</style>

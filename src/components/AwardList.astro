@@ -1,20 +1,23 @@
 ---
 import type { Award } from '../data/types';
 import AwardCard from './AwardCard.astro';
-import { ui } from '../data/ui-strings';
+import { ui } from '../i18n/ui';
+import type { Lang } from '../i18n';
 
 interface Props {
   awards: Award[];
+  lang: Lang;
 }
-const { awards } = Astro.props;
+const { awards, lang } = Astro.props;
+const t = ui[lang];
 ---
 
 {awards.length > 0 ? (
   <ul class="award-list">
-    {awards.map((a) => <li><AwardCard award={a} /></li>)}
+    {awards.map((a) => <li><AwardCard award={a} lang={lang} /></li>)}
   </ul>
 ) : (
-  <p class="empty-state">{ui.noAwardsYet}</p>
+  <p class="empty-state">{t.common.noAwardsYet}</p>
 )}
 
 <style>
@@ -23,9 +26,9 @@ const { awards } = Astro.props;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: var(--space-3);
+    gap: var(--space-4);
   }
-  @media (min-width: 768px) {
+  @media (min-width: 640px) {
     .award-list {
       grid-template-columns: repeat(2, 1fr);
     }
@@ -35,8 +38,13 @@ const { awards } = Astro.props;
       grid-template-columns: repeat(3, 1fr);
     }
   }
+  @media (min-width: 1280px) {
+    .award-list {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
   .empty-state {
-    color: var(--color-cool-gray);
+    color: var(--color-text-muted);
     font-style: italic;
   }
 </style>

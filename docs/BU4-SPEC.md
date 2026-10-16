@@ -127,11 +127,12 @@ directly, rather than held back pending a second round of approval — unlike
 a generic CV, none of this was private to begin with (no phone numbers,
 home addresses or ID numbers were ever asked for in the form).
 
-Content was translated from French to English for a consistent site
-language (the original spec left UI language "to be confirmed, default
-English") and trimmed to professional fields. `npm run export:drafts`
-regenerates a readable `docs/content/members/<slug>.md` per person so they
-can sanity-check the translation/summarization against the live page.
+Content is trimmed to professional fields and kept in both English and
+French (see §6): English is a trimmed translation, French keeps the
+member's own original wording where their form had one, rather than being
+back-translated from the English copy. `npm run export:drafts` regenerates
+a readable `docs/content/members/<slug>.md` per person, showing EN/FR side
+by side, so they can sanity-check both against the live pages.
 
 ### No fabrication
 
@@ -160,7 +161,95 @@ one.
   (tablet), and desktop width — see MISSING_CONTENT.md for what visual QA
   could and couldn't cover
 
-## 4. Deployment
+## 4. Internationalization (English / French)
+
+Routing uses plain Astro static routes, not a dynamic `[locale]` segment:
+every page exists twice, once under `src/pages/` (English, unprefixed - so
+existing English URLs/bookmarks/SEO stay valid) and once under
+`src/pages/fr/` (French). Both route files are a few lines that import a
+shared `src/views/*View.astro` component and pass it `lang="en"` or
+`lang="fr"` - the actual markup lives once in the view, never duplicated.
+`astro.config.mjs` sets `i18n: { defaultLocale: 'en', locales: ['en','fr'],
+routing: { prefixDefaultLocale: false } }` for correct `hreflang`/sitemap
+behavior; the hand-written helpers in `src/i18n/index.ts`
+(`localePath`, `swapLangInPath`) build every internal link so the base path
+and `/fr` prefix are never hand-concatenated in a component.
+
+Translatable content uses a `Localized<T> = { en: T; fr: T }` type (see
+`src/data/types.ts`) directly on each field - e.g.
+`intro: Localized<string> | null` - authored with a terse `L('English',
+'Français')` helper. Proper nouns (names, institutions, e-mails, URLs,
+CEFR codes like "B2") stay plain strings, never wrapped. This keeps one
+member record per person (no parallel `people.fr.ts` file to drift out of
+sync) and lets `scripts/validate-content.ts` walk the whole data tree at
+build time to confirm every `Localized` value has non-empty text in both
+languages.
+
+UI chrome and page copy (nav labels, buttons, headings, the About/Contact
+prose, etc.) live in `src/i18n/ui.ts` as a single typed `{ en: UiDict; fr:
+UiDict }` object - a missing French string is a TypeScript error, not a
+silent fallback to English.
+
+**Remembering the visitor's language** (GitHub Pages is static, so this is
+client-side): clicking the language switcher writes `localStorage['bu4-lang']`.
+A small blocking script in `BaseLayout.astro`'s `<head>` (`is:inline`, runs
+before first paint) compares that saved value to the current page's actual
+language and, if they differ, `location.replace()`s to the *same page* in
+the saved language via a server-computed `altPath` - never just the
+homepage. The language switcher itself (`LanguageSwitcher.astro`) always
+links to the exact equivalent of the current URL for the same reason.
+
+**Known limitation**: GitHub Pages serves one `404.html` for the whole
+site, so a broken link under `/fr/...` still shows the English 404 page -
+there's no server to pick a per-locale 404 on static hosting.
+
+## 5. Dark mode
+
+Built on the semantic token layer that already existed (`--color-bg`,
+`--color-text`, `--color-surface`, etc. in `src/styles/tokens.css`) rather
+than a blanket CSS `invert()` - dark values are a deliberately composed
+second palette in the same blue/charcoal/navy family (e.g. page background
+`#14161a`, card surface `#1c1f24`, accent brightens from `--color-blue` to
+`--color-light-blue` for better contrast on dark). Applied via
+`:root[data-theme='dark']` (explicit choice) or
+`@media (prefers-color-scheme: dark) :root:not([data-theme='light'])` (OS
+default, only when the visitor hasn't overridden it). Three sections
+(footer, BUM spotlight, the homepage closing CTA) are deliberately
+theme-invariant - navy/charcoal backgrounds with literal white text,
+the same pattern a book might use for a "pull quote" band - rather than
+being forced through the light/dark token swap; they already read as a
+distinct dark section in light mode, so there's nothing to invert.
+
+**Avoiding the flash of wrong theme**: the same blocking inline script that
+handles language persistence also resolves the theme (`localStorage['bu4-theme']`,
+falling back to `matchMedia('(prefers-color-scheme: dark)')`) and sets
+`data-theme` on `<html>` before first paint - no flash, no layout shift.
+`ThemeToggle.astro` is a real `<button aria-pressed>` with sun/moon SVG
+icons swapped via CSS, keyboard-operable, labelled via `src/i18n/ui.ts`.
+
+Every approved text/background pair in both themes is checked by
+`scripts/check-contrast.ts` (19 pairs total - see §1 for the light-mode
+ones; the dark-mode ones all clear WCAG 2.2 AA with margin, 6.85:1 to
+15.98:1).
+
+## 6. Awards page redesign
+
+`src/data/awards.ts` gained an `icon: AwardIconName` field (a small
+hand-drawn inline-SVG set in `AwardIcon.astro` - clock, scissors, shield,
+megaphone, magnifier, wrench, heart) and the `Award.image` field is now
+documented as an explicit override; `AwardCard.astro` was rewritten as a
+photo-card: a confirmed winner (`status: 'confirmed'` and a non-empty
+`recipientSlugs`) shows their own member photo via the same `PhotoOverlay`
+component (and crop/fallback treatment) used everywhere else on the site,
+linked to their profile. Everything else - which, honestly, is every award
+right now, since none are confirmed - shows a diagonal-striped "winner to
+be announced" panel with the category icon, never a placeholder that could
+be mistaken for an actual photo or an invented name. Corners stayed square
+(the verified charter rule from §1), with shadow/hover lift and an
+image-zoom-on-hover micro-interaction standing in for the "premium feel"
+instead of introducing rounded corners that would contradict that rule.
+
+## 7. Deployment
 
 Static Astro build, GitHub Pages via `.github/workflows/deploy.yml`.
 `site: 'https://elbacha-ux.github.io'`, `base: '/portfolio-bu4'` in
@@ -168,16 +257,18 @@ Static Astro build, GitHub Pages via `.github/workflows/deploy.yml`.
 If the repo moves, update both of those plus `public/robots.txt`'s sitemap
 URL.
 
-## 5. Known deviations / open questions
+## 8. Known deviations / open questions
 
 - No official JEENISo signature file (only the BU4-specific lockup) — see
   §1 Logo above.
 - `bumIsAmongSeven` is an inference, not a confirmed fact — see §2.
-- Site language is English throughout; the original brief left this "to be
-  confirmed" — easy to add a second locale later since every UI string
-  lives in `src/data/ui-strings.ts`.
+- Site is bilingual (EN/FR) as of this revision — see §4. A third locale
+  would mean adding a value to `locales` in `astro.config.mjs`, a new
+  `src/pages/<locale>/` route tree (thin wrappers only), and filling in the
+  new language in every `Localized` field and in `src/i18n/ui.ts`.
 - One real collective project is listed (`bu4-portfolio-website` — this
-  site itself, corroborated by two independent member submissions). No
-  other BU4-wide (as opposed to individual academic/club) project could be
+  site itself, corroborated by two independent member submissions, and
+  crediting all seven members as the team's shared project). No other
+  BU4-wide (as opposed to individual academic/club) project could be
   verified from the supplied material.
 - Full list of missing assets/approvals: see `MISSING_CONTENT.md`.

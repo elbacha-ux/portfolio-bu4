@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import MemberGrid from '../components/MemberGrid.astro';
+import Button from '../components/Button.astro';
+import { people } from '../data/people';
+import { team } from '../data/team';
+import { ui } from '../i18n/ui';
+import { localePath } from '../i18n';
+import type { Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+const members = team.memberSlugs.map((slug) => people[slug]);
+const bum = people[team.bumSlug];
+---
+
+<BaseLayout lang={lang} title={t.team.title} description={t.team.lead}>
+  <section class="container section">
+    <SectionHeading numeral="03" eyebrow={t.team.eyebrow} title={t.team.title} />
+    <p class="lead reveal">{t.team.lead}</p>
+    <MemberGrid members={members} lang={lang} />
+  </section>
+
+  <section class="container section bum-teaser reveal">
+    <p>{t.team.ledByPrefix} <strong>{bum.name}</strong>, {t.team.bumTitle}.</p>
+    <Button href={localePath(lang, 'bum/')} variant="secondary">{t.common.meetTheBum}</Button>
+  </section>
+</BaseLayout>
+
+<style>
+  .lead {
+    max-width: 60ch;
+    margin-bottom: var(--space-4);
+    color: var(--color-text-muted);
+  }
+  .bum-teaser {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    padding-top: 0;
+  }
+  .bum-teaser p {
+    margin: 0;
+  }
+</style>

@@ -37,6 +37,11 @@ const colors = {
   white: '#ffffff',
   grayTint: '#f2f2f2',
   blueTint: '#ebf4fb',
+  darkBg: '#14161a',
+  darkSurface: '#1c1f24',
+  darkText: '#eef1f4',
+  darkTextMuted: '#aab1ba',
+  darkBlueTint: '#152636',
 };
 
 interface Pair {
@@ -62,6 +67,16 @@ const pairs: Pair[] = [
   // Large-text / icon / rule-only pairs (3:1 minimum per WCAG 2.2 AA for 24px+ or 18.7px+ bold).
   { name: 'blue large text on white', fg: colors.blue, bg: colors.white, minRatio: 3, usage: 'numeral motif, large headings only' },
   { name: 'white large text on blue', fg: colors.white, bg: colors.blue, minRatio: 3, usage: 'large text/icons on blue only' },
+
+  // ---- Dark theme ([data-theme='dark'] / prefers-color-scheme: dark) ----
+  { name: '[dark] text on dark-bg', fg: colors.darkText, bg: colors.darkBg, minRatio: 4.5, usage: 'body copy' },
+  { name: '[dark] text-muted on dark-bg', fg: colors.darkTextMuted, bg: colors.darkBg, minRatio: 4.5, usage: 'muted/secondary text' },
+  { name: '[dark] light-blue (accent) on dark-bg', fg: colors.lightBlue, bg: colors.darkBg, minRatio: 4.5, usage: 'links, headings' },
+  { name: '[dark] text on dark-surface', fg: colors.darkText, bg: colors.darkSurface, minRatio: 4.5, usage: 'cards' },
+  { name: '[dark] text-muted on dark-surface', fg: colors.darkTextMuted, bg: colors.darkSurface, minRatio: 4.5, usage: 'card secondary text' },
+  { name: '[dark] light-blue on dark-blue-tint', fg: colors.lightBlue, bg: colors.darkBlueTint, minRatio: 4.5, usage: 'status tags, hero' },
+  { name: '[dark] white text on navy', fg: colors.white, bg: colors.navy, minRatio: 4.5, usage: 'BUM spotlight, closing CTA (theme-invariant section)' },
+  { name: '[dark] white text on charcoal', fg: colors.white, bg: colors.charcoal, minRatio: 4.5, usage: 'footer (theme-invariant section)' },
 ];
 
 let failed = false;

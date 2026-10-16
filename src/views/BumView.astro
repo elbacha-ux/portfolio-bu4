@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import BumSpotlight from '../components/BumSpotlight.astro';
+import { people } from '../data/people';
+import { team } from '../data/team';
+import { ui } from '../i18n/ui';
+import type { Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+const bum = people[team.bumSlug];
+---
+
+<BaseLayout lang={lang} title={t.bum.title} description={`${bum.name}, ${t.bum.title} - BU4.`}>
+  <section class="container section">
+    <SectionHeading numeral="" eyebrow={t.bum.eyebrow} title={t.bum.title} />
+    <BumSpotlight bum={bum} lang={lang} variant="full" />
+  </section>
+</BaseLayout>

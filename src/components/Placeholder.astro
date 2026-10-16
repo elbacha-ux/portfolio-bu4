@@ -1,19 +1,22 @@
 ---
 /** Dev: visible TODO badge. Prod: a neutral "coming soon" state - never a
  * fabricated value standing in for missing content. */
-import { ui } from '../data/ui-strings';
+import { ui } from '../i18n/ui';
+import type { Lang } from '../i18n';
 
 interface Props {
   label?: string;
+  lang?: Lang;
 }
-const { label } = Astro.props;
+const { label, lang = 'en' } = Astro.props;
 const isDev = import.meta.env.DEV;
+const t = ui[lang];
 ---
 
 {isDev ? (
   <span class="placeholder-dev">TODO: {label ?? 'missing content'}</span>
 ) : (
-  <span class="placeholder-prod">{ui.comingSoon}</span>
+  <span class="placeholder-prod">{t.common.comingSoon}</span>
 )}
 
 <style>
@@ -27,7 +30,7 @@ const isDev = import.meta.env.DEV;
     border: 1px dashed #b8860b;
   }
   .placeholder-prod {
-    color: var(--color-cool-gray);
+    color: var(--color-text-muted);
     font-style: italic;
   }
 </style>
