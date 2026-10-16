@@ -688,8 +688,11 @@ export const people: Record<string, Member> = {
     slug: 'nader-hlel',
     name: 'Nader Hlel',
     specialty: null,
-    photo: null,
-    intro: null,
+    photo: '/portfolio-bu4/images/members/nader-hlel.jpg',
+    intro: L(
+      'A dedicated and supportive individual, currently pursuing 2nd-year GTE and Master 1 GT, always ready to share his knowledge and support others.',
+      'Une personne dévouée et bienveillante, actuellement en 2e année de GTE et en Master 1 GT, toujours prête à partager ses connaissances et à soutenir les autres.'
+    ),
     education: null,
     skills: { technical: [], personal: [], languages: [] },
     interests: [],
@@ -700,7 +703,24 @@ export const people: Record<string, Member> = {
     goals: { shortTerm: null, longTerm: null },
     isBum: true,
     leadership: {
-      responsibilities: [],
+      responsibilities: [
+        L(
+          "Team Support: Encourage collaboration and ensure alignment with the BU's objectives.",
+          "Soutien à l'équipe : encourager la collaboration et veiller à l'alignement avec les objectifs de la BU."
+        ),
+        L(
+          "Progress Monitoring: Follow up on the team's progress and deadlines.",
+          "Suivi de l'avancement : suivre la progression de l'équipe et le respect des délais."
+        ),
+        L(
+          'Guidance: Support the team throughout its challenges and activities.',
+          "Accompagnement : soutenir l'équipe tout au long de ses défis et activités."
+        ),
+        L(
+          'Communication: Facilitate communication between BU4 and the JEENISo Bureau.',
+          'Communication : faciliter la communication entre BU4 et le Bureau de JEENISo.'
+        ),
+      ],
       philosophy: null,
     },
   },
