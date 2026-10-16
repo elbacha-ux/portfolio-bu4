@@ -12,15 +12,18 @@ export const site = {
     "Business Unit 4 est une équipe de sept membres au sein de JEENISo, la Junior Entreprise de l'ENISo, qui travaille sur des projets d'ingénierie, de systèmes embarqués et de développement web."
   ),
   /**
-   * No official BU4 contact channel was confirmed for this site at build
+   * No official BU4 e-mail address was confirmed for this site at build
    * time. Replace with a real address before launch - see MISSING_CONTENT.md.
    */
   contactEmail: null as string | null,
+  /** Confirmed by the team - displayed as tel: + formatted for reading. */
+  contactPhone: '+21622211774' as string | null,
   socials: {
     linkedin: null as string | null,
-    instagram: null as string | null,
+    instagram: 'https://www.instagram.com/wearebu4/' as string | null,
     facebook: null as string | null,
   },
+  jeenisoWebsite: 'https://www.jeeniso.com' as string | null,
 };
 
 /** Route paths are locale-independent (relative to a locale root); labels

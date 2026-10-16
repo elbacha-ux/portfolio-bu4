@@ -1,0 +1,243 @@
+---
+/**
+ * Interactive showcase for the BU4 tagline "Challenges are our business"
+ * (verified text: docs/brand/logo/logo.jpeg). The faceted colored shards
+ * use only approved charter hues (blue/light-blue/navy/cool-gray/mid-gray -
+ * see docs/brand/Charte-Graphique-1.pdf section 2.3, "faceted blue
+ * fragments" was listed as allowed decoration in the original brief) - no
+ * colors outside that set. The "why" explanation is a real <details>
+ * disclosure: keyboard-accessible, works with no JS, no fake controls.
+ */
+import { ui } from '../i18n/ui';
+import type { Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+
+<section class="slogan-showcase reveal">
+  <div class="facets" aria-hidden="true">
+    <span class="facet f1"></span>
+    <span class="facet f2"></span>
+    <span class="facet f3"></span>
+    <span class="facet f4"></span>
+    <span class="facet f5"></span>
+    <span class="facet f6"></span>
+  </div>
+
+  <div class="container showcase-inner">
+    <p class="eyebrow">{t.about.sloganEyebrow}</p>
+    <p class="slogan-text">
+      <span class="word w1">{t.about.sloganWord1}</span>
+      <span class="word w2">{t.about.sloganWord2}</span>
+      <span class="word w3">{t.about.sloganWord3}</span>
+    </p>
+
+    <details class="why">
+      <summary>
+        <span class="plus" aria-hidden="true"></span>
+        {t.about.sloganToggle}
+      </summary>
+      <p class="why-body">{t.about.sloganBody}</p>
+    </details>
+  </div>
+</section>
+
+<style>
+  .slogan-showcase {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-navy);
+    padding-block: var(--space-7);
+    isolation: isolate;
+  }
+
+  .facets {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .facet {
+    position: absolute;
+    display: block;
+  }
+  .f1 {
+    width: 46%;
+    height: 140%;
+    top: -20%;
+    left: -12%;
+    background: var(--color-navy-deep);
+    clip-path: polygon(0 0, 70% 0, 40% 100%, 0% 100%);
+  }
+  .f2 {
+    width: 30%;
+    height: 120%;
+    top: -10%;
+    left: 8%;
+    background: var(--color-blue);
+    opacity: 0.5;
+    clip-path: polygon(20% 0, 100% 0, 60% 100%, 0 100%);
+  }
+  .f3 {
+    width: 36%;
+    height: 160%;
+    top: -30%;
+    right: -14%;
+    background: var(--color-light-blue);
+    opacity: 0.35;
+    clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);
+  }
+  .f4 {
+    width: 22%;
+    height: 90%;
+    bottom: -10%;
+    right: 10%;
+    background: var(--color-cool-gray);
+    opacity: 0.3;
+    clip-path: polygon(0 0, 100% 20%, 80% 100%, 0% 100%);
+  }
+  .f5 {
+    width: 18%;
+    height: 70%;
+    bottom: -5%;
+    left: 30%;
+    background: var(--color-mid-gray);
+    opacity: 0.2;
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  }
+  .f6 {
+    width: 14%;
+    height: 50%;
+    top: 10%;
+    right: 28%;
+    background: var(--color-blue);
+    opacity: 0.25;
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  }
+
+  .showcase-inner {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: var(--fw-heading);
+    font-size: var(--fs-200);
+    color: var(--color-light-blue);
+    margin-bottom: var(--space-2);
+  }
+
+  .slogan-text {
+    margin: 0 0 var(--space-4);
+    font-family: var(--font-primary);
+    font-weight: var(--fw-black);
+    line-height: 1.05;
+    font-size: clamp(2rem, 7vw, 4.5rem);
+  }
+
+  .word {
+    display: inline-block;
+    padding: 0 0.15em;
+    transition: transform var(--duration-base) var(--ease-out), color var(--duration-base) var(--ease-standard);
+    cursor: default;
+  }
+  .word:hover,
+  .word:focus-visible {
+    transform: translateY(-0.06em) scale(1.04);
+  }
+  .w1 {
+    color: var(--color-white);
+  }
+  .w1:hover {
+    color: var(--color-light-blue);
+  }
+  .w2 {
+    color: var(--color-mid-gray);
+  }
+  .w2:hover {
+    color: var(--color-white);
+  }
+  .w3 {
+    color: var(--color-light-blue);
+  }
+  .w3:hover {
+    color: var(--color-white);
+  }
+
+  .why {
+    display: inline-block;
+    text-align: left;
+    max-width: 56ch;
+  }
+
+  .why summary {
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+    font-weight: var(--fw-heading);
+    color: var(--color-white);
+    border: 2px solid var(--color-white);
+    padding: 0.7em 1.4em;
+    margin-inline: auto;
+    width: fit-content;
+    transition: background-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
+  }
+  .why summary::-webkit-details-marker {
+    display: none;
+  }
+  .why summary:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .plus {
+    position: relative;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+  .plus::before,
+  .plus::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+    transition: transform var(--duration-fast) var(--ease-standard);
+  }
+  .plus::before {
+    left: 0;
+    top: 6px;
+    width: 14px;
+    height: 2px;
+  }
+  .plus::after {
+    left: 6px;
+    top: 0;
+    width: 2px;
+    height: 14px;
+  }
+  details[open] .plus::after {
+    transform: scaleY(0);
+  }
+
+  .why-body {
+    margin: var(--space-3) auto 0;
+    color: #e7edf2;
+    font-size: var(--fs-400);
+    max-width: 50ch;
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .why summary,
+    .why-body {
+      margin-inline: auto;
+    }
+  }
+</style>

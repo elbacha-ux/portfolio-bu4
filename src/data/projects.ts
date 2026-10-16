@@ -34,4 +34,20 @@ export const projects: CollectiveProject[] = [
     image: null,
     imageAlt: null,
   },
+  {
+    slug: 're-imaginelab-promo-video',
+    title: L('Re-ImagineLab promotional video', 'Vidéo promotionnelle Re-ImagineLab'),
+    description: L(
+      'A promotional video for Re-ImagineLab, produced as a team effort: script by Nour Lemjid, on-set execution by Amena Aouichaoui, behind-the-scenes footage by Walid Ben Said, and video editing by Fedi Khouildi. The video and Amena’s promotional poster will be added once ready.',
+      'Une vidéo promotionnelle pour Re-ImagineLab, réalisée en équipe : scénario par Nour Lemjid, exécution sur le tournage par Amena Aouichaoui, images des coulisses par Walid Ben Said, et montage par Fedi Khouildi. La vidéo et l’affiche réalisée par Amena seront ajoutées dès qu’elles seront prêtes.'
+    ),
+    category: L('Video', 'Vidéo'),
+    status: 'completed',
+    memberSlugs: ['fedi-khouildi', 'nour-lemjid', 'amena-aouichaoui', 'walid-ben-said'],
+    tools: [],
+    outcome: null,
+    link: null,
+    image: null,
+    imageAlt: null,
+  },
 ];

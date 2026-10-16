@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
+import ContactIcon from '../components/ContactIcon.astro';
 import { site } from '../data/site';
 import { ui } from '../i18n/ui';
 import { localePath } from '../i18n';
@@ -11,20 +12,61 @@ interface Props {
 }
 const { lang } = Astro.props;
 const t = ui[lang];
+
+const phoneDigits = site.contactPhone ?? '';
+const phoneDisplay = phoneDigits
+  ? `+${phoneDigits.slice(1, 4)} ${phoneDigits.slice(4, 6)} ${phoneDigits.slice(6, 9)} ${phoneDigits.slice(9)}`
+  : null;
+
+const channels = [
+  site.socials.instagram && {
+    icon: 'instagram' as const,
+    label: t.contact.instagramLabel,
+    value: t.contact.instagramHandle,
+    href: site.socials.instagram,
+  },
+  site.contactPhone && {
+    icon: 'phone' as const,
+    label: t.contact.phoneLabel,
+    value: phoneDisplay,
+    href: `tel:${site.contactPhone}`,
+  },
+  {
+    icon: 'mail' as const,
+    label: t.contact.emailLabel,
+    value: site.contactEmail ?? site.parentOrgEmail,
+    href: `mailto:${site.contactEmail ?? site.parentOrgEmail}`,
+  },
+  site.jeenisoWebsite && {
+    icon: 'globe' as const,
+    label: t.contact.websiteLabel,
+    value: site.jeenisoWebsite.replace(/^https?:\/\//, ''),
+    href: site.jeenisoWebsite,
+  },
+].filter((c): c is { icon: 'instagram' | 'phone' | 'mail' | 'globe'; label: string; value: string; href: string } => Boolean(c));
 ---
 
-<BaseLayout lang={lang} title={t.contact.title} description={t.contact.note}>
+<BaseLayout lang={lang} title={t.contact.title} description={t.contact.lead}>
   <section class="container section">
     <SectionHeading numeral="06" eyebrow={t.contact.eyebrow} title={t.contact.title} />
+    <p class="lead reveal">{t.contact.lead}</p>
 
-    {site.contactEmail ? (
-      <p class="lead reveal">
-        {t.contact.hasEmailPrefix} <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>.
-      </p>
-    ) : (
-      <p class="lead reveal">
-        {t.contact.noEmailPrefix}{' '}
-        {site.parentOrg} {t.contact.noEmailAtOrg} <a href={`mailto:${site.parentOrgEmail}`}>{site.parentOrgEmail}</a>,{' '}
+    <ul class="channel-grid">
+      {channels.map((c, i) => (
+        <li class="reveal" style={`transition-delay: ${i * 60}ms`}>
+          <a class="channel-card card" href={c.href} target={c.href.startsWith('http') ? '_blank' : undefined} rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined}>
+            <span class="channel-icon"><ContactIcon name={c.icon} /></span>
+            <span class="channel-text">
+              <span class="channel-label">{c.label}</span>
+              <span class="channel-value">{c.value}</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    {!site.contactEmail && (
+      <p class="fallback-note">
         {t.contact.noEmailOrContact}{' '}
         <a href={localePath(lang, 'team/')}>{t.contact.noEmailLinkText}</a>.
       </p>
@@ -38,11 +80,79 @@ const t = ui[lang];
   .lead {
     font-size: var(--fs-400);
     max-width: 60ch;
+    margin-bottom: var(--space-4);
   }
+
+  .channel-grid {
+    list-style: none;
+    margin: 0 0 var(--space-3);
+    padding: 0;
+    display: grid;
+    gap: var(--space-3);
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .channel-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+  }
+
+  .channel-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-accent-soft);
+    color: var(--color-accent-strong);
+    transition: background-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
+  }
+
+  .channel-card:hover .channel-icon {
+    background: var(--color-navy);
+    color: var(--color-white);
+  }
+
+  .channel-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .channel-label {
+    font-size: var(--fs-100);
+    font-weight: var(--fw-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+  }
+
+  .channel-value {
+    font-weight: var(--fw-heading);
+    color: var(--color-text);
+    word-break: break-word;
+  }
+
+  .fallback-note {
+    color: var(--color-text-muted);
+    max-width: 60ch;
+  }
+
   .note {
     margin-top: var(--space-3);
     color: var(--color-text-muted);
     font-size: var(--fs-200);
     max-width: 60ch;
+  }
+
+  @media (min-width: 640px) {
+    .channel-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 </style>

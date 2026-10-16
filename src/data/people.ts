@@ -218,8 +218,11 @@ export const people: Record<string, Member> = {
     education: {
       program: L('Embedded Telecommunications Engineering (GTE)', 'Génie des Télécommunications Embarquées (GTE)'),
       institution: 'ENISo',
-      years: '2026-2029 (engineering cycle); preparatory classes at IPEIM (2025)',
-      degrees: [L('Baccalauréat in mathematics (2024)', 'Baccalauréat en mathématiques (2024)')],
+      years: '2026-2029',
+      degrees: [
+        L('Baccalauréat in mathematics (2024)', 'Baccalauréat en mathématiques (2024)'),
+        L('Preparatory classes in mathematics and physics - IPEIM (2025)', 'Classes préparatoires en mathématiques et physique - IPEIM (2025)'),
+      ],
       certifications: [L('In progress', "En cours d'acquisition")],
     },
     skills: {

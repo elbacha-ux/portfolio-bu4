@@ -72,6 +72,12 @@ interface UiDict {
     whereBodyPrefix: string;
     whereBodyLink: string;
     whereBodySuffix: string;
+    sloganEyebrow: string;
+    sloganWord1: string;
+    sloganWord2: string;
+    sloganWord3: string;
+    sloganToggle: string;
+    sloganBody: string;
   };
   team: {
     eyebrow: string;
@@ -122,12 +128,18 @@ interface UiDict {
   contact: {
     eyebrow: string;
     title: string;
+    lead: string;
     hasEmailPrefix: string;
     noEmailPrefix: string;
     noEmailAtOrg: string;
     noEmailOrContact: string;
     noEmailLinkText: string;
     note: string;
+    instagramLabel: string;
+    instagramHandle: string;
+    phoneLabel: string;
+    emailLabel: string;
+    websiteLabel: string;
   };
   footer: {
     affiliation: string;
@@ -179,8 +191,8 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       backToHome: 'Back to home',
     },
     home: {
-      heroEyebrow: 'Seven engineers, one business unit',
-      heroTitle: 'Seven engineers at ENISo, one business unit.',
+      heroEyebrow: 'Seven engineering students, one business unit',
+      heroTitle: 'Seven engineering students at ENISo, one business unit.',
       heroLeadSuffix:
         "We build, learn and ship projects together - from embedded electronics to the web platform you're reading this on.",
       section1Eyebrow: 'Who we are',
@@ -217,6 +229,13 @@ export const ui: Record<'en' | 'fr', UiDict> = {
         "Individually, members are working toward internships, certifications and specializations in fields like ADAS, embedded AI, IoT and web development. As BU4, the team is still early in establishing its collective project track record - see the",
       whereBodyLink: 'Projects',
       whereBodySuffix: "page for what's been confirmed so far.",
+      sloganEyebrow: 'Our slogan',
+      sloganWord1: 'Challenges',
+      sloganWord2: 'are',
+      sloganWord3: 'our business',
+      sloganToggle: 'Why this slogan?',
+      sloganBody:
+        "We chose “Challenges are our business” because that's exactly who we are: a team that's eager to take on every challenge and give it everything we've got.",
     },
     team: {
       eyebrow: 'The team',
@@ -267,12 +286,18 @@ export const ui: Record<'en' | 'fr', UiDict> = {
     contact: {
       eyebrow: 'Get in touch',
       title: 'Contact BU4',
+      lead: "Reach the team directly, or follow along on Instagram.",
       hasEmailPrefix: 'Reach the team directly at',
       noEmailPrefix: 'BU4 does not yet have a dedicated public contact address. In the meantime, you can reach',
       noEmailAtOrg: 'at',
       noEmailOrContact: 'or contact a member directly through the links on their',
       noEmailLinkText: 'team profile',
-      note: 'This page intentionally has no contact form: the site is static and has no backend to receive submissions. Use the e-mail links above instead.',
+      note: 'This page intentionally has no contact form: the site is static and has no backend to receive submissions. Use the links above instead.',
+      instagramLabel: 'Instagram',
+      instagramHandle: '@wearebu4',
+      phoneLabel: 'Phone',
+      emailLabel: 'Email',
+      websiteLabel: 'JEENISo website',
     },
     footer: {
       affiliation: 'Business Unit 4 is part of',
@@ -322,8 +347,8 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       backToHome: "Retour à l'accueil",
     },
     home: {
-      heroEyebrow: 'Sept ingénieurs, une business unit',
-      heroTitle: "Sept ingénieurs de l'ENISo, une seule business unit.",
+      heroEyebrow: 'Sept élèves-ingénieurs, une business unit',
+      heroTitle: "Sept élèves-ingénieurs de l'ENISo, une seule business unit.",
       heroLeadSuffix:
         "Nous construisons, apprenons et menons des projets ensemble - des systèmes embarqués à la plateforme web que vous consultez en ce moment.",
       section1Eyebrow: 'Qui sommes-nous',
@@ -360,6 +385,13 @@ export const ui: Record<'en' | 'fr', UiDict> = {
         "Individuellement, les membres visent des stages, des certifications et des spécialisations dans des domaines comme l'ADAS, l'IA embarquée ou le développement web. En tant que BU4, l'équipe en est encore aux débuts de son parcours de projets collectifs - consultez la page",
       whereBodyLink: 'Projets',
       whereBodySuffix: 'pour voir ce qui a été confirmé jusqu’ici.',
+      sloganEyebrow: 'Notre devise',
+      sloganWord1: 'Les défis',
+      sloganWord2: 'sont',
+      sloganWord3: 'notre métier',
+      sloganToggle: 'Pourquoi cette devise ?',
+      sloganBody:
+        'Nous avons choisi « Les défis sont notre métier » parce que c’est exactement qui nous sommes : une équipe prête à relever chaque défi et à tout donner.',
     },
     team: {
       eyebrow: "L'équipe",
@@ -410,12 +442,18 @@ export const ui: Record<'en' | 'fr', UiDict> = {
     contact: {
       eyebrow: 'Contact',
       title: 'Contacter BU4',
+      lead: "Contactez l'équipe directement, ou suivez-nous sur Instagram.",
       hasEmailPrefix: "Contactez l'équipe directement à",
       noEmailPrefix: "BU4 n'a pas encore d'adresse de contact publique dédiée. En attendant, vous pouvez contacter",
       noEmailAtOrg: 'à',
       noEmailOrContact: "ou contacter un membre directement via les liens sur son",
       noEmailLinkText: 'profil',
-      note: "Cette page ne contient volontairement aucun formulaire de contact : le site est statique et ne dispose pas de serveur pour recevoir des messages. Utilisez les liens e-mail ci-dessus.",
+      note: "Cette page ne contient volontairement aucun formulaire de contact : le site est statique et ne dispose pas de serveur pour recevoir des messages. Utilisez les liens ci-dessus.",
+      instagramLabel: 'Instagram',
+      instagramHandle: '@wearebu4',
+      phoneLabel: 'Téléphone',
+      emailLabel: 'E-mail',
+      websiteLabel: 'Site de JEENISo',
     },
     footer: {
       affiliation: 'Business Unit 4 fait partie de',
