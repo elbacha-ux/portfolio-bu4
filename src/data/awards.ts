@@ -2,27 +2,40 @@ import type { Award } from './types';
 import { L } from './types.ts';
 
 /**
- * BU4 Awards. All entries below are DRAFT category ideas only - nobody has
- * been confirmed as a winner. Do not add a recipientSlugs entry without an
- * explicit team decision; the UI will only ever render a recipient listed
- * here, and shows a "winner to be announced" state otherwise. See
- * MISSING_CONTENT.md for how to confirm a category and its winner.
+ * BU4 Awards. Confirmed, team-picked "personality" awards - real photos,
+ * real winners, nothing invented. See MISSING_CONTENT.md for how a new
+ * category gets added or retired.
  */
 export const awards: Award[] = [
   {
-    slug: 'five-minutes-away',
-    title: L('The 5 Minutes Away Award', 'Le prix "5 minutes et j’arrive"'),
+    slug: 'chill-guy',
+    title: L('The Chill Guy Award', 'Le Prix du Mec Zen'),
     issuer: null,
     year: null,
     description: L(
-      'For the teammate who is reliably "almost there."',
-      'Pour le ou la coéquipier·ère toujours "presque arrivé·e."'
+      'For staying so calm, no matter what is going on around him.',
+      'Pour rester si calme, peu importe ce qui se passe autour de lui.'
     ),
-    recipientSlugs: [],
+    recipientSlugs: ['ahmed-belgacem'],
     evidenceUrl: null,
-    image: null,
-    icon: 'clock',
-    status: 'draft',
+    image: '/portfolio-bu4/images/awards/chill-guy.jpg',
+    icon: 'shield',
+    status: 'confirmed',
+  },
+  {
+    slug: 'guys-focus',
+    title: L('The "Guys, Focus!" Award', 'Le Prix « Les Gars, Concentrez-vous ! »'),
+    issuer: null,
+    year: null,
+    description: L(
+      'For trying (valiantly) to bring the team back to business.',
+      "Pour avoir tenté (vaillamment) de ramener l'équipe au travail."
+    ),
+    recipientSlugs: ['amena-aouichaoui'],
+    evidenceUrl: null,
+    image: '/portfolio-bu4/images/awards/guys-focus.jpg',
+    icon: 'wrench',
+    status: 'confirmed',
   },
   {
     slug: 'editing-wizard',
@@ -33,26 +46,26 @@ export const awards: Award[] = [
       'For standout skills turning raw footage into something sharable.',
       'Pour un talent remarquable à transformer des rushs bruts en contenu partageable.'
     ),
-    recipientSlugs: [],
+    recipientSlugs: ['fedi-khouildi'],
     evidenceUrl: null,
-    image: null,
+    image: '/portfolio-bu4/images/awards/editing-wizard.jpg',
     icon: 'scissors',
-    status: 'draft',
+    status: 'confirmed',
   },
   {
-    slug: 'crisis-manager',
-    title: L('The Crisis Manager', 'Le·la Gestionnaire de Crise'),
+    slug: 'team-spirit',
+    title: L('The Team Spirit Award', "Le prix de l'Esprit d'Équipe"),
     issuer: null,
     year: null,
     description: L(
-      'For staying calm and getting things back on track when plans fall apart.',
-      'Pour garder son calme et remettre les choses sur les rails quand les plans tombent à l’eau.'
+      'For bringing the team back together and keeping things professional and serious when it counts.',
+      "Pour avoir ressoudé l'équipe et gardé les choses professionnelles et sérieuses quand il le fallait."
     ),
-    recipientSlugs: [],
+    recipientSlugs: ['amena-aouichaoui', 'fedi-khouildi'],
     evidenceUrl: null,
-    image: null,
-    icon: 'shield',
-    status: 'draft',
+    image: '/portfolio-bu4/images/awards/team-spirit.jpg',
+    icon: 'heart',
+    status: 'confirmed',
   },
   {
     slug: 'pitch-master',
@@ -63,55 +76,40 @@ export const awards: Award[] = [
       'For making any idea sound like the obvious next step.',
       'Pour rendre n’importe quelle idée évidente dès qu’il·elle en parle.'
     ),
-    recipientSlugs: [],
+    recipientSlugs: ['nour-lemjid'],
     evidenceUrl: null,
-    image: null,
+    image: '/portfolio-bu4/images/awards/pitch-master.jpg',
     icon: 'megaphone',
-    status: 'draft',
+    status: 'confirmed',
   },
   {
-    slug: 'detail-detective',
-    title: L('The Detail Detective', 'Le·la Détective du Détail'),
+    slug: 'memory-keeper',
+    title: L('The BU4 Memory Keeper', 'Le·la Gardien·ne des Souvenirs de BU4'),
     issuer: null,
     year: null,
     description: L(
-      'For catching the one thing everyone else missed.',
-      'Pour repérer la seule chose que tout le monde avait manquée.'
+      'For making sure the moments are never forgotten.',
+      'Pour veiller à ce que les moments ne soient jamais oubliés.'
     ),
-    recipientSlugs: [],
+    recipientSlugs: ['walid-ben-said'],
     evidenceUrl: null,
-    image: null,
+    image: '/portfolio-bu4/images/awards/memory-keeper.jpg',
+    icon: 'clock',
+    status: 'confirmed',
+  },
+  {
+    slug: 'unnecessary-comments',
+    title: L('The CEO of Unnecessary Comments', 'La PDG des Commentaires Inutiles'),
+    issuer: null,
+    year: null,
+    description: L(
+      'For the teammate who can turn any serious meeting into a comedy show.',
+      "Pour la personne capable de transformer n'importe quelle réunion sérieuse en spectacle comique."
+    ),
+    recipientSlugs: ['rihab-trifi'],
+    evidenceUrl: null,
+    image: '/portfolio-bu4/images/awards/unnecessary-comments.jpg',
     icon: 'magnifier',
-    status: 'draft',
-  },
-  {
-    slug: 'silent-problem-solver',
-    title: L('The Silent Problem Solver', 'Le·la Résolveur·se Silencieux·se de Problèmes'),
-    issuer: null,
-    year: null,
-    description: L(
-      'For fixing things quietly, without needing the credit.',
-      'Pour réparer les choses discrètement, sans jamais réclamer les lauriers.'
-    ),
-    recipientSlugs: [],
-    evidenceUrl: null,
-    image: null,
-    icon: 'wrench',
-    status: 'draft',
-  },
-  {
-    slug: 'team-spirit',
-    title: L('The Team Spirit Award', "Le prix de l'Esprit d'Équipe"),
-    issuer: null,
-    year: null,
-    description: L(
-      'For the energy that keeps the team working well together.',
-      "Pour l'énergie qui garde l'équipe soudée et efficace."
-    ),
-    recipientSlugs: [],
-    evidenceUrl: null,
-    image: null,
-    icon: 'heart',
-    status: 'draft',
+    status: 'confirmed',
   },
 ];

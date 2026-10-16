@@ -98,16 +98,16 @@ placeholder wherever one of these gaps exists.
 
 ## Awards
 
-13. The 7 categories in `src/data/awards.ts` are the **illustrative
-    examples from the original brief**, marked `status: 'draft'` — the
-    team hasn't picked, renamed, or voted on any of them yet, and no
-    winner is assigned anywhere. The `/awards/` page now shows each as a
-    photo-card gallery with a "winner to be announced" state (a diagonal
-    pattern + the category icon - no photo, no invented name). Once the
-    team votes: set `status: 'confirmed'` and add the winner's slug to
-    `recipientSlugs` in `src/data/awards.ts` - the card will then
-    automatically show that member's own profile photo. To use a different
-    photo for the award itself, set the award's `image` field instead.
+13. ~~The 7 categories in `src/data/awards.ts` were illustrative
+    examples~~ — done: replaced with 7 team-picked "personality" awards,
+    all `status: 'confirmed'` with a real winner (or two, for the "Team
+    Spirit" duo award) and a real candid photo in
+    `public/images/awards/<slug>.jpg` (sourced from `docs/awards/`,
+    cropped/rotated/resized to match the site's other image assets). To
+    add, retire, or re-pick a category: edit `src/data/awards.ts` directly
+    - set `status: 'draft'` and clear `recipientSlugs`/`image` for a
+    category with no winner yet, which brings back the "winner to be
+    announced" state automatically.
 
 ## Contact
 

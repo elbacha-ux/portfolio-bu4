@@ -6,7 +6,7 @@ import { people } from '../data/people';
 import { projects } from '../data/projects';
 import { ui } from '../i18n/ui';
 import { pick, pickAll, localePath } from '../i18n';
-import { projectGallery, hasProjectVideo, projectDocuments } from '../lib/projectMedia';
+import { projectGallery, hasProjectVideo, projectDocuments, documentPreviewImages } from '../lib/projectMedia';
 import { formatFileSize } from '../lib/cv';
 import type { Lang } from '../i18n';
 
@@ -29,9 +29,14 @@ const members = project.memberSlugs.map((s) => people[s]).filter(Boolean);
 
 const gallery = projectGallery(slug);
 const hasVideo = hasProjectVideo(slug);
-const documents = projectDocuments(slug);
 const base = import.meta.env.BASE_URL;
 const videoSrc = hasVideo ? `${base}videos/${slug}.mp4` : null;
+
+const documents = projectDocuments(slug).map((doc) => ({
+  ...doc,
+  previewImages: documentPreviewImages(slug, doc.label),
+}));
+const hasLightbox = gallery.length > 0 || documents.some((d) => d.previewImages.length > 0);
 
 const otherProjects = projects.filter((p) => p.slug !== slug);
 ---
@@ -112,6 +117,21 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
                 {t.projects.downloadDocument}: {doc.label}
                 <span class="muted document-size">({formatFileSize(doc.sizeBytes)})</span>
               </a>
+              {doc.previewImages.length > 0 && (
+                <div class="gallery-grid document-preview-grid">
+                  {doc.previewImages.map((src, i) => (
+                    <button
+                      type="button"
+                      class="gallery-item"
+                      data-full={`${base}${src}`}
+                      data-sound="click"
+                      aria-label={`${t.projects.galleryInspect} ${i + 1}/${doc.previewImages.length}`}
+                    >
+                      <img src={`${base}${src}`} alt={`${doc.label} ${i + 1}`} loading="lazy" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </li>
           ))}
         </ul>
@@ -121,25 +141,19 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
     <section id="gallery" class="reveal">
       <h2>{t.projects.galleryTitle}</h2>
       {gallery.length > 0 ? (
-        <>
-          <div class="gallery-grid">
-            {gallery.map((src, i) => (
-              <button
-                type="button"
-                class="gallery-item"
-                data-full={`${base}${src}`}
-                data-sound="click"
-                aria-label={`${t.projects.galleryInspect} ${i + 1}/${gallery.length}`}
-              >
-                <img src={`${base}${src}`} alt={title} loading="lazy" />
-              </button>
-            ))}
-          </div>
-          <dialog class="lightbox" id="gallery-lightbox">
-            <button type="button" class="lightbox-close" data-sound="click" aria-label={t.common.close}>&times;</button>
-            <img class="lightbox-image" alt={title} />
-          </dialog>
-        </>
+        <div class="gallery-grid">
+          {gallery.map((src, i) => (
+            <button
+              type="button"
+              class="gallery-item"
+              data-full={`${base}${src}`}
+              data-sound="click"
+              aria-label={`${t.projects.galleryInspect} ${i + 1}/${gallery.length}`}
+            >
+              <img src={`${base}${src}`} alt={title} loading="lazy" />
+            </button>
+          ))}
+        </div>
       ) : (
         <div class="media-placeholder">
           <p class="muted">{t.projects.galleryComingSoonBody}</p>
@@ -147,6 +161,13 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
         </div>
       )}
     </section>
+
+    {hasLightbox && (
+      <dialog class="lightbox" id="gallery-lightbox">
+        <button type="button" class="lightbox-close" data-sound="click" aria-label={t.common.close}>&times;</button>
+        <img class="lightbox-image" alt={title} />
+      </dialog>
+    )}
 
     <section id="video" class="reveal">
       <h2>{t.projects.videoTitle}</h2>
@@ -332,6 +353,11 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
   .document-size {
     font-weight: var(--fw-regular);
     font-size: var(--fs-200);
+  }
+  .document-preview-grid {
+    margin-top: var(--space-2);
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    max-width: 640px;
   }
 
   .gallery-grid {

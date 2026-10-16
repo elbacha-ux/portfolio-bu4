@@ -378,7 +378,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
     awards: {
       eyebrow: 'Team culture',
       title: 'BU4 Awards',
-      lead: 'Lighthearted categories celebrating how the team actually works together. These are draft ideas until the team votes on winners - no recipient is shown until confirmed.',
+      lead: 'Lighthearted, team-picked categories celebrating how BU4 actually works together.',
       winnerPending: 'Winner to be announced',
       awardedTo: 'Awarded to',
     },
@@ -588,7 +588,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
     awards: {
       eyebrow: "Esprit d'équipe",
       title: 'Récompenses BU4',
-      lead: "Des catégories légères qui célèbrent la vraie façon dont cette équipe fonctionne. Ce sont des idées provisoires tant que l'équipe n'a pas voté pour un gagnant - aucun lauréat n'est affiché avant confirmation.",
+      lead: "Des catégories légères, choisies par l'équipe, qui célèbrent la vraie façon dont BU4 fonctionne ensemble.",
       winnerPending: 'Gagnant à annoncer',
       awardedTo: 'Décerné à',
     },

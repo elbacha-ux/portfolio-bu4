@@ -24,13 +24,15 @@ const t = ui[lang];
 const title = pick(award.title, lang);
 const description = pick(award.description, lang);
 const recipients = award.recipientSlugs.map((s) => people[s]).filter(Boolean);
-const winner = award.status === 'confirmed' ? recipients[0] : null;
+const winners = award.status === 'confirmed' ? recipients : [];
+const primaryWinner = winners[0] ?? null;
+const winnerNames = winners.map((w) => w.name).join(' & ');
 ---
 
 <article class="award-card reveal">
   <div class="photo-zone">
-    {winner ? (
-      <PhotoOverlay src={award.image ?? winner.photo} name={winner.name} lang={lang} ratio="1 / 1" />
+    {primaryWinner ? (
+      <PhotoOverlay src={award.image ?? primaryWinner.photo} name={winnerNames} lang={lang} ratio="1 / 1" />
     ) : (
       <div class="pending-photo">
         <AwardIcon name={award.icon} />
@@ -43,17 +45,23 @@ const winner = award.status === 'confirmed' ? recipients[0] : null;
 
   <div class="body">
     <h3>{title}</h3>
-    {winner ? (
-      <p class="winner-name">{winner.name}</p>
+    {winners.length > 0 ? (
+      <p class="winner-name">{winnerNames}</p>
     ) : (
       <p class="winner-name pending">{t.awards.winnerPending}</p>
     )}
     {description && <p class="description">{description}</p>}
     {award.year && <p class="edition">{award.year}</p>}
-    {winner && (
-      <a class="profile-link" href={localePath(lang, `members/${winner.slug}/`)}>
-        {t.awards.awardedTo} {winner.name} →
-      </a>
+    {winners.length > 0 && (
+      <p class="profile-link-row">
+        {t.awards.awardedTo}{' '}
+        {winners.map((w, i) => (
+          <>
+            <a class="profile-link" href={localePath(lang, `members/${w.slug}/`)}>{w.name}</a>
+            {i < winners.length - 1 ? ' & ' : ''}
+          </>
+        ))}
+      </p>
     )}
   </div>
 </article>
@@ -172,9 +180,13 @@ const winner = award.status === 'confirmed' ? recipients[0] : null;
     font-size: var(--fs-100);
     margin: 0;
   }
-  .profile-link {
+  .profile-link-row {
     margin-top: var(--space-1);
     font-size: var(--fs-200);
+    font-weight: var(--fw-medium);
+    color: var(--color-text-muted);
+  }
+  .profile-link {
     font-weight: var(--fw-heading);
     text-decoration: none;
     color: var(--color-accent-strong);

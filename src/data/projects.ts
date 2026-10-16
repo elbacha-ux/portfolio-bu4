@@ -70,8 +70,8 @@ export const projects: CollectiveProject[] = [
     imageAlt: null,
     videoUrl: null,
     documentsNote: L(
-      'Customer-acquisition strategy prepared by Rihab Trifi.',
-      "Stratégie d'acquisition de clients préparée par Rihab Trifi."
+      "Rihab Trifi wrote the 12-month PR and partnerships strategy behind this campaign: four focus areas (press relations, content and social media, events and community, and partnerships), four target audiences (large companies, SMEs, schools and institutions, and media), and concrete 12-month goals - including qualified media mentions, published case studies, workshops and quote requests.",
+      "Rihab Trifi a rédigé la stratégie de relations publiques et de partenariats sur 12 mois de cette campagne : quatre axes (relations presse, contenus et réseaux sociaux, événements et communauté, partenariats), quatre cibles (grandes entreprises, PME, écoles et institutions, médias), et des objectifs concrets à 12 mois - dont des retombées médias qualifiées, des études de cas publiées, des ateliers et des demandes de devis."
     ),
   },
 ];

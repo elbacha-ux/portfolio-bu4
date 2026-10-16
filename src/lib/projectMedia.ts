@@ -48,3 +48,18 @@ export function projectDocuments(slug: string): ProjectDocument[] {
       sizeBytes: fs.statSync(path.join(dir, f)).size,
     }));
 }
+
+/** Convention: optional preview images for one document live in
+ * public/documents/projects/<slug>/<document-basename>-preview/ - e.g. a
+ * few key pages exported from a PDF deck, so visitors get a feel for it
+ * without downloading. Entirely optional - an empty/missing folder just
+ * means no previews are shown. */
+export function documentPreviewImages(slug: string, documentBasename: string): string[] {
+  const dir = path.join(process.cwd(), 'public', 'documents', 'projects', slug, `${documentBasename}-preview`);
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir)
+    .filter((f) => IMAGE_EXTENSIONS.includes(path.extname(f).toLowerCase()))
+    .sort()
+    .map((f) => `documents/projects/${slug}/${documentBasename}-preview/${f}`);
+}
