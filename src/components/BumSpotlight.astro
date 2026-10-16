@@ -1,0 +1,97 @@
+---
+import type { Member } from '../data/types';
+import PhotoOverlay from './PhotoOverlay.astro';
+import Button from './Button.astro';
+import Placeholder from './Placeholder.astro';
+import { ui } from '../data/ui-strings';
+
+interface Props {
+  bum: Member;
+  /** Compact: homepage teaser with a link to /bum. Full: the /bum page itself. */
+  variant?: 'compact' | 'full';
+}
+const { bum, variant = 'compact' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+<section class={`bum-spotlight ${variant}`}>
+  <div class="photo-col">
+    <PhotoOverlay src={bum.photo} alt={bum.photoAlt} name={bum.name} ratio="1 / 1" />
+  </div>
+  <div class="content-col">
+    <p class="eyebrow">Business Unit Manager</p>
+    <h2>{bum.name}</h2>
+    {bum.intro ? <p class="intro">{bum.intro}</p> : <p class="intro"><Placeholder label="BUM introduction" /></p>}
+
+    {variant === 'full' && (
+      <>
+        <h3>Responsibilities</h3>
+        {bum.leadership?.responsibilities.length ? (
+          <ul>
+            {bum.leadership.responsibilities.map((r) => <li>{r}</li>)}
+          </ul>
+        ) : (
+          <p><Placeholder label="BUM responsibilities" /></p>
+        )}
+
+        {bum.leadership?.philosophy && (
+          <>
+            <h3>Leadership philosophy</h3>
+            <p class="quote">&ldquo;{bum.leadership.philosophy}&rdquo;</p>
+          </>
+        )}
+      </>
+    )}
+
+    {variant === 'compact' && (
+      <Button href={`${base}bum/`} variant="inverse">{ui.meetTheBum}</Button>
+    )}
+  </div>
+</section>
+
+<style>
+  .bum-spotlight {
+    display: grid;
+    gap: var(--space-4);
+    background: var(--color-navy);
+    color: var(--color-text-inverse);
+    padding: var(--space-4);
+  }
+  .photo-col {
+    max-width: 320px;
+  }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: var(--fw-heading);
+    color: var(--color-light-blue);
+    margin-bottom: var(--space-1);
+  }
+  .content-col h2 {
+    color: var(--color-white);
+    font-size: var(--fs-700);
+  }
+  .content-col h3 {
+    color: var(--color-white);
+    font-size: var(--fs-500);
+    margin-top: var(--space-3);
+  }
+  .intro,
+  .content-col p,
+  .content-col li {
+    color: #e7edf2;
+  }
+  .quote {
+    font-style: italic;
+    border-left: 3px solid var(--color-blue);
+    padding-left: var(--space-2);
+  }
+
+  @media (min-width: 768px) {
+    .bum-spotlight {
+      grid-template-columns: 280px 1fr;
+      align-items: start;
+      padding: var(--space-5);
+    }
+  }
+</style>

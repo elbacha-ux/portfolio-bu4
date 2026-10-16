@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import BumSpotlight from '../../components/BumSpotlight.astro';
+import { people } from '../../data/people';
+import { team } from '../../data/team';
+
+const bum = people[team.bumSlug];
+---
+
+<BaseLayout title="Business Unit Manager" description={`${bum.name}, Business Unit Manager of BU4.`}>
+  <section class="container section">
+    <SectionHeading numeral="" eyebrow="Leadership" title="Business Unit Manager" />
+    <BumSpotlight bum={bum} variant="full" />
+  </section>
+</BaseLayout>

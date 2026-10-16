@@ -1,0 +1,119 @@
+---
+import Logo from './Logo.astro';
+import { nav, site } from '../data/site';
+import { ui } from '../data/ui-strings';
+
+const base = import.meta.env.BASE_URL;
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <Logo width={140} />
+      <p class="affiliation">
+        {ui.footerAffiliation} <strong>{site.parentOrg}</strong> ({site.parentOrgFull}).
+      </p>
+    </div>
+
+    <nav aria-label="Footer">
+      <ul>
+        {nav.map((item) => (
+          <li><a href={`${base}${item.href.replace(/^\//, '')}`}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="footer-contact">
+      <p class="label">Contact</p>
+      {site.contactEmail ? (
+        <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a>
+      ) : (
+        <p class="muted">Official BU4 contact pending confirmation.</p>
+      )}
+      <p class="muted parent-email">
+        {site.parentOrg} general inquiries: <a href={`mailto:${site.parentOrgEmail}`}>{site.parentOrgEmail}</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="container legal">
+    <p>&copy; {year} {site.fullName} · {site.parentOrg}. {ui.footerRights}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-charcoal);
+    color: var(--color-text-inverse);
+    margin-top: var(--space-7);
+  }
+
+  .footer-grid {
+    display: grid;
+    gap: var(--space-4);
+    padding-block: var(--space-6) var(--space-4);
+  }
+
+  /* The logo file has a baked-in white background (no transparency), so it
+     sits on a matching white panel here rather than being recolored. */
+  .footer-brand :global(.bu4-logo) {
+    display: inline-flex;
+    background: var(--color-white);
+    padding: var(--space-1) var(--space-2);
+  }
+
+  .affiliation {
+    margin-top: var(--space-2);
+    color: #d7d5d5;
+    max-width: 40ch;
+  }
+
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  nav a {
+    color: var(--color-text-inverse);
+    text-decoration: none;
+  }
+  nav a:hover {
+    color: var(--color-light-blue);
+  }
+
+  .footer-contact .label {
+    font-weight: var(--fw-heading);
+    margin-bottom: var(--space-1);
+  }
+
+  .footer-contact a {
+    color: var(--color-light-blue);
+  }
+
+  .muted {
+    color: #b8b6b6;
+  }
+
+  .parent-email {
+    margin-top: var(--space-2);
+    font-size: var(--fs-200);
+  }
+
+  .legal {
+    border-top: 1px solid #55504f;
+    padding-block: var(--space-2);
+    font-size: var(--fs-200);
+    color: #b8b6b6;
+  }
+
+  @media (min-width: 768px) {
+    .footer-grid {
+      grid-template-columns: 2fr 1fr 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,44 @@
+---
+import type { CollectiveProject } from '../data/types';
+import ProjectCard from './ProjectCard.astro';
+import { ui } from '../data/ui-strings';
+
+interface Props {
+  projects: CollectiveProject[];
+}
+const { projects } = Astro.props;
+---
+
+{projects.length > 0 ? (
+  <ul class="project-list">
+    {projects.map((p) => <li><ProjectCard project={p} /></li>)}
+  </ul>
+) : (
+  <p class="empty-state">{ui.noProjectsYet}</p>
+)}
+
+<style>
+  .project-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+  @media (min-width: 768px) {
+    .project-list {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-4);
+    }
+  }
+  @media (min-width: 1024px) {
+    .project-list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .empty-state {
+    color: var(--color-cool-gray);
+    font-style: italic;
+    padding: var(--space-4) 0;
+  }
+</style>

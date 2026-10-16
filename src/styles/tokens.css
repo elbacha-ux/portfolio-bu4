@@ -1,0 +1,95 @@
+/*
+  Design tokens verified against docs/brand/Charte-Graphique-1.pdf
+  (JEENISo Identity Manual, Edition 1, 03.2018).
+  Every color below is taken directly from section 2.1/2.2 (Colors - Palette /
+  Secondary Palette) of that PDF. Do not add hues outside this set.
+*/
+:root {
+  /* ---- Brand colors (verified against the PDF) ---- */
+  --color-blue: #3594d6;       /* primary - PDF 2.1, Pantone 2925 C */
+  --color-cool-gray: #615f5f;  /* primary - PDF 2.1, Pantone Cool Gray 10 C */
+  --color-navy: #1a4a6b;       /* secondary - PDF 2.2, Pantone 7694 C */
+  --color-light-blue: #71b4e2; /* secondary - PDF 2.2, Pantone 2925 C (tint) */
+  --color-charcoal: #3a3939;   /* secondary - PDF 2.2, Pantone 447 C */
+  --color-mid-gray: #908f8f;   /* secondary - PDF 2.2, Pantone 877 C */
+  --color-logo-black: #131313; /* PDF 1.2, logo black version */
+
+  /* ---- Derived tokens (not in the PDF; tone-on-tone tints/hover states only) ---- */
+  --color-blue-tint: #ebf4fb;
+  --color-gray-tint: #f2f2f2;
+  --color-navy-deep: #143b56;
+  --color-white: #ffffff;
+
+  /* ---- Semantic roles ---- */
+  --color-bg: var(--color-white);
+  --color-bg-muted: var(--color-gray-tint);
+  --color-bg-inverse: var(--color-navy);
+  --color-text: var(--color-charcoal);
+  --color-text-muted: var(--color-cool-gray);
+  --color-text-inverse: var(--color-white);
+  --color-border: #e3e1e1;
+  --color-accent: var(--color-blue);
+  --color-accent-hover: var(--color-navy-deep);
+  --color-focus-ring: var(--color-navy);
+
+  /* ---- Typography ---- */
+  --font-primary: 'Montserrat', Arial, sans-serif;
+  --font-secondary: Arial, sans-serif;
+
+  --fs-100: 0.8125rem;  /* 13px - fine print */
+  --fs-200: 0.9375rem;  /* 15px - small */
+  --fs-300: 1rem;       /* 16px - body minimum */
+  --fs-400: 1.125rem;   /* 18px - body large */
+  --fs-500: 1.375rem;   /* 22px - lead */
+  --fs-600: 1.75rem;    /* 28px - h4 */
+  --fs-700: 2.25rem;    /* 36px - h3 */
+  --fs-800: 3rem;       /* 48px - h2 */
+  --fs-900: 4rem;       /* 64px - h1 */
+  --fs-numeral: 6rem;   /* 96px - oversized Montserrat Black numerals */
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-heading: 800;
+  --fw-black: 900;
+
+  --lh-tight: 1.1;
+  --lh-normal: 1.5;
+  --lh-relaxed: 1.7;
+
+  /* ---- Spacing scale (8px base) ---- */
+  --space-1: 0.5rem;   /* 8 */
+  --space-2: 1rem;     /* 16 */
+  --space-3: 1.5rem;   /* 24 */
+  --space-4: 2rem;     /* 32 */
+  --space-5: 3rem;     /* 48 */
+  --space-6: 4rem;     /* 64 */
+  --space-7: 6rem;     /* 96 */
+  --space-8: 8rem;     /* 128 */
+
+  /* ---- Layout ---- */
+  --container-max: 1200px;
+  --container-gutter: 1.25rem;
+  --radius: 0; /* charter calls for square corners */
+  --rule-weight: 4px; /* split blue/gray rule under section headings, PDF p.11 */
+  --border-weight: 1px;
+
+  /* ---- Motion ---- */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 450ms;
+
+  /* ---- Breakpoints (reference only, used in media queries directly) ---- */
+  --bp-sm: 480px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+  }
+}

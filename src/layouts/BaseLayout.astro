@@ -1,0 +1,51 @@
+---
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { site } from '../data/site';
+import { ui } from '../data/ui-strings';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Set true on the homepage so the title isn't duplicated with the site name. */
+  isHome?: boolean;
+  noindex?: boolean;
+}
+
+const { title, description = site.description, isHome = false, noindex = false } = Astro.props;
+const pageTitle = isHome ? `${site.fullName} - ${site.parentOrg}` : `${title} - ${site.fullName}`;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    {noindex && <meta name="robots" content="noindex" />}
+
+    <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.ico`} sizes="any" />
+    <link rel="apple-touch-icon" href={`${import.meta.env.BASE_URL}images/brand/bu4-icon-180.png`} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={new URL(`${import.meta.env.BASE_URL}images/brand/bu4-icon-512.png`, Astro.site)} />
+    <meta name="twitter:card" content="summary" />
+
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">{ui.skipToContent}</a>
+    <SiteHeader />
+    <main id="main">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>

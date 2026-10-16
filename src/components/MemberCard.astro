@@ -1,0 +1,46 @@
+---
+import type { Member } from '../data/types';
+import PhotoOverlay from './PhotoOverlay.astro';
+
+interface Props {
+  member: Member;
+}
+const { member } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+<a class="member-card" href={`${base}members/${member.slug}/`}>
+  <PhotoOverlay src={member.photo} alt={member.photoAlt} name={member.name} />
+  <div class="info">
+    <h3>{member.name}</h3>
+    {member.specialty && <p class="specialty">{member.specialty}</p>}
+  </div>
+</a>
+
+<style>
+  .member-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: transform var(--duration-fast) var(--ease-standard);
+  }
+  .member-card:hover {
+    transform: translateY(-4px);
+  }
+  .member-card:hover .specialty {
+    color: var(--color-navy);
+  }
+  .info {
+    padding-top: var(--space-2);
+  }
+  .info h3 {
+    font-size: var(--fs-500);
+    margin-bottom: 0.25rem;
+  }
+  .specialty {
+    margin: 0;
+    color: var(--color-cool-gray);
+    font-size: var(--fs-200);
+    font-weight: var(--fw-medium);
+  }
+</style>

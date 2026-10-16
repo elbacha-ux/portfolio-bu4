@@ -1,0 +1,42 @@
+---
+import type { Award } from '../data/types';
+import AwardCard from './AwardCard.astro';
+import { ui } from '../data/ui-strings';
+
+interface Props {
+  awards: Award[];
+}
+const { awards } = Astro.props;
+---
+
+{awards.length > 0 ? (
+  <ul class="award-list">
+    {awards.map((a) => <li><AwardCard award={a} /></li>)}
+  </ul>
+) : (
+  <p class="empty-state">{ui.noAwardsYet}</p>
+)}
+
+<style>
+  .award-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+  @media (min-width: 768px) {
+    .award-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .award-list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .empty-state {
+    color: var(--color-cool-gray);
+    font-style: italic;
+  }
+</style>

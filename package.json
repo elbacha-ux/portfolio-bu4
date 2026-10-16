@@ -1,0 +1,29 @@
+{
+  "name": "bu4-website",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.22.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check",
+    "validate": "node --experimental-strip-types scripts/validate-content.ts",
+    "check:contrast": "node --experimental-strip-types scripts/check-contrast.ts",
+    "export:drafts": "node --experimental-strip-types scripts/export-member-drafts.ts",
+    "verify": "npm run validate && npm run check:contrast && npm run check && npm run build"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.4.0",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
+  }
+}
