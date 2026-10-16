@@ -45,7 +45,7 @@ const t = ui[lang];
     toggle?.setAttribute('aria-pressed', String(theme === 'dark'));
   }
 
-  toggle?.addEventListener('click', () => {
+  toggle?.addEventListener('click', async () => {
     const next = currentTheme() === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
     try {
@@ -54,6 +54,8 @@ const t = ui[lang];
       /* storage unavailable (private mode / disabled) - theme still applies for this page view */
     }
     reflect();
+    const { sound } = await import('../lib/sound-manager');
+    sound.themeToggle();
   });
 
   reflect();

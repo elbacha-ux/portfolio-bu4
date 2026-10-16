@@ -16,34 +16,30 @@ const t = ui[lang];
 const phoneDigits = site.contactPhone ?? '';
 const phoneDisplay = phoneDigits
   ? `+${phoneDigits.slice(1, 4)} ${phoneDigits.slice(4, 6)} ${phoneDigits.slice(6, 9)} ${phoneDigits.slice(9)}`
-  : null;
+  : '';
 
-const channels = [
-  site.socials.instagram && {
-    icon: 'instagram' as const,
-    label: t.contact.instagramLabel,
-    value: t.contact.instagramHandle,
-    href: site.socials.instagram,
-  },
-  site.contactPhone && {
-    icon: 'phone' as const,
-    label: t.contact.phoneLabel,
-    value: phoneDisplay,
-    href: `tel:${site.contactPhone}`,
-  },
-  {
-    icon: 'mail' as const,
-    label: t.contact.emailLabel,
-    value: site.contactEmail ?? site.parentOrgEmail,
-    href: `mailto:${site.contactEmail ?? site.parentOrgEmail}`,
-  },
-  site.jeenisoWebsite && {
-    icon: 'globe' as const,
-    label: t.contact.websiteLabel,
-    value: site.jeenisoWebsite.replace(/^https?:\/\//, ''),
-    href: site.jeenisoWebsite,
-  },
-].filter((c): c is { icon: 'instagram' | 'phone' | 'mail' | 'globe'; label: string; value: string; href: string } => Boolean(c));
+interface Channel {
+  icon: 'instagram' | 'phone' | 'mail' | 'globe';
+  label: string;
+  value: string;
+  href: string;
+  copyValue: string | null;
+}
+
+const channels: Channel[] = [];
+if (site.socials.instagram) {
+  channels.push({ icon: 'instagram', label: t.contact.instagramLabel, value: t.contact.instagramHandle, href: site.socials.instagram, copyValue: null });
+}
+if (site.contactPhone) {
+  channels.push({ icon: 'phone', label: t.contact.phoneLabel, value: phoneDisplay, href: `tel:${site.contactPhone}`, copyValue: phoneDisplay });
+}
+{
+  const email = site.contactEmail ?? site.parentOrgEmail;
+  channels.push({ icon: 'mail', label: t.contact.emailLabel, value: email, href: `mailto:${email}`, copyValue: email });
+}
+if (site.jeenisoWebsite) {
+  channels.push({ icon: 'globe', label: t.contact.websiteLabel, value: site.jeenisoWebsite.replace(/^https?:\/\//, ''), href: site.jeenisoWebsite, copyValue: null });
+}
 ---
 
 <BaseLayout lang={lang} title={t.contact.title} description={t.contact.lead}>
@@ -54,13 +50,32 @@ const channels = [
     <ul class="channel-grid">
       {channels.map((c, i) => (
         <li class="reveal" style={`transition-delay: ${i * 60}ms`}>
-          <a class="channel-card card" href={c.href} target={c.href.startsWith('http') ? '_blank' : undefined} rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined}>
-            <span class="channel-icon"><ContactIcon name={c.icon} /></span>
-            <span class="channel-text">
-              <span class="channel-label">{c.label}</span>
-              <span class="channel-value">{c.value}</span>
-            </span>
-          </a>
+          <div class="channel-card card">
+            <a class="channel-link" href={c.href} target={c.href.startsWith('http') ? '_blank' : undefined} rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined}>
+              <span class="channel-icon"><ContactIcon name={c.icon} /></span>
+              <span class="channel-text">
+                <span class="channel-label">{c.label}</span>
+                <span class="channel-value">{c.value}</span>
+              </span>
+            </a>
+            {c.copyValue && (
+              <button
+                type="button"
+                class="copy-btn"
+                data-copy={c.copyValue}
+                data-copy-label={t.contact.copyLabel}
+                data-copied-label={t.contact.copiedLabel}
+                aria-label={`${t.contact.copyLabel} ${c.value}`}
+                data-sound="click"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="9" y="9" width="12" height="12" rx="1.5" />
+                  <path d="M6 15H4.5A1.5 1.5 0 0 1 3 13.5v-9A1.5 1.5 0 0 1 4.5 3h9A1.5 1.5 0 0 1 15 4.5V6" />
+                </svg>
+                <span class="copy-feedback" aria-live="polite"></span>
+              </button>
+            )}
+          </div>
         </li>
       ))}
     </ul>
@@ -75,6 +90,32 @@ const channels = [
     <p class="note">{t.contact.note}</p>
   </section>
 </BaseLayout>
+
+<script>
+  import { sound } from '../lib/sound-manager';
+
+  document.querySelectorAll<HTMLButtonElement>('.copy-btn').forEach((btn) => {
+    let resetTimer: number | undefined;
+    btn.addEventListener('click', async () => {
+      const value = btn.dataset.copy;
+      if (!value) return;
+      try {
+        await navigator.clipboard.writeText(value);
+      } catch {
+        return; // clipboard unavailable - the card's own link still works
+      }
+      sound.confirm();
+      const feedback = btn.querySelector('.copy-feedback');
+      if (feedback) feedback.textContent = btn.dataset.copiedLabel ?? '';
+      btn.classList.add('is-copied');
+      window.clearTimeout(resetTimer);
+      resetTimer = window.setTimeout(() => {
+        btn.classList.remove('is-copied');
+        if (feedback) feedback.textContent = '';
+      }, 2000);
+    });
+  });
+</script>
 
 <style>
   .lead {
@@ -95,10 +136,59 @@ const channels = [
   .channel-card {
     display: flex;
     align-items: center;
+    gap: var(--space-1);
+    height: 100%;
+  }
+
+  .channel-link {
+    display: flex;
+    align-items: center;
     gap: var(--space-2);
     text-decoration: none;
     color: inherit;
-    height: 100%;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .copy-btn {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    position: relative;
+    transition: border-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
+  }
+  .copy-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+  .copy-btn:hover,
+  .copy-btn.is-copied {
+    border-color: var(--color-accent);
+    color: var(--color-accent-strong);
+  }
+  .copy-feedback {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    right: 0;
+    background: var(--color-navy);
+    color: var(--color-white);
+    font-size: var(--fs-100);
+    font-weight: var(--fw-heading);
+    padding: 0.3em 0.6em;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-fast) var(--ease-standard);
+  }
+  .copy-btn.is-copied .copy-feedback {
+    opacity: 1;
   }
 
   .channel-icon {

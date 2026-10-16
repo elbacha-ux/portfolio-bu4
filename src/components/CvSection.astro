@@ -1,0 +1,125 @@
+---
+/**
+ * "My CV - take it with you" section. The PDF path is a pure convention
+ * (public/cv/<slug>.pdf) checked for real at build time with Node's fs -
+ * there is nothing to keep in sync in the data files, and a missing file
+ * can never produce a broken download link: it just renders the
+ * "coming soon" state instead. See README "Add a member's CV".
+ */
+import { ui } from '../i18n/ui';
+import { hasCv, cvFileSize, formatFileSize } from '../lib/cv';
+import type { Lang } from '../i18n';
+
+interface Props {
+  slug: string;
+  name: string;
+  lang: Lang;
+}
+const { slug, name, lang } = Astro.props;
+const t = ui[lang];
+
+const exists = hasCv(slug);
+const fileSize = exists ? cvFileSize(slug) : 0;
+
+const base = import.meta.env.BASE_URL;
+const href = `${base}cv/${slug}.pdf`;
+---
+
+<section id="cv" class="cv-section reveal">
+  <div class="cv-card">
+    <div class="cv-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7 2.5h7l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-17a1 1 0 0 1 1-1Z" />
+        <path d="M14 2.5v4h4" />
+        <path d="M8.5 13h7M8.5 16.5h7M8.5 9.5h3" />
+      </svg>
+    </div>
+
+    <div class="cv-info">
+      <h2>{t.member.cvSectionTitle}</h2>
+      {exists ? (
+        <>
+          <p class="cv-body">{t.member.cvSectionBody}</p>
+          <p class="cv-meta">{name} · PDF · {formatFileSize(fileSize)}</p>
+          <div class="cv-actions">
+            <a class="btn btn-primary" href={href} download={`${slug}.pdf`} data-sound="confirm">{t.member.cvDownload}</a>
+            <a class="btn btn-secondary" href={href} target="_blank" rel="noopener noreferrer">{t.member.cvView}</a>
+          </div>
+        </>
+      ) : (
+        <>
+          <p class="cv-body muted">{t.member.cvComingSoonBody}</p>
+          <span class="tag cv-pending-tag">{t.member.cvComingSoon}</span>
+        </>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .cv-section {
+    margin-top: var(--space-6);
+  }
+  .cv-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+    background: var(--color-navy);
+    color: var(--color-white);
+    padding: var(--space-5);
+    box-shadow: var(--shadow-md);
+  }
+  .cv-icon {
+    flex-shrink: 0;
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-light-blue);
+  }
+  .cv-icon svg {
+    width: 36px;
+    height: 36px;
+  }
+  .cv-info {
+    flex: 1;
+    min-width: 220px;
+  }
+  .cv-info h2 {
+    color: var(--color-white);
+    font-size: var(--fs-600);
+    margin-bottom: var(--space-1);
+  }
+  .cv-body {
+    color: #e7edf2;
+    margin-bottom: var(--space-1);
+  }
+  .cv-body.muted {
+    color: #c3ccd4;
+  }
+  .cv-meta {
+    color: var(--color-light-blue);
+    font-size: var(--fs-200);
+    font-weight: var(--fw-medium);
+    margin-bottom: var(--space-3);
+  }
+  .cv-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .cv-actions :global(.btn-secondary) {
+    color: var(--color-white);
+    border-color: var(--color-white);
+  }
+  .cv-actions :global(.btn-secondary:hover) {
+    background: rgba(255, 255, 255, 0.12);
+  }
+  .cv-pending-tag {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--color-white);
+  }
+</style>

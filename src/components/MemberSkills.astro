@@ -1,0 +1,147 @@
+---
+/**
+ * Skills & toolkit section: categorized technical badges (grouping is pure
+ * presentation - see src/lib/skillCategories.ts - never invents a skill),
+ * personal/soft skills, and two honest charts: a language-level bar chart
+ * (built from the member's own stated CEFR level, a real standardized
+ * scale - never a guessed score) and a skill-category distribution donut
+ * (real counts of documented skills, never a proficiency percentage).
+ */
+import Tag from './Tag.astro';
+import BarChart from './BarChart.astro';
+import DonutChart from './DonutChart.astro';
+import Placeholder from './Placeholder.astro';
+import { ui } from '../i18n/ui';
+import { pick, pickAll } from '../i18n';
+import { groupSkillsByCategory } from '../lib/skillCategories';
+import { cefrRank, CEFR_MAX } from '../lib/languageLevels';
+import type { Lang } from '../i18n';
+import type { Member } from '../data/types';
+
+interface Props {
+  member: Member;
+  lang: Lang;
+}
+const { member, lang } = Astro.props;
+const t = ui[lang];
+
+const personal = pickAll(member.skills.personal, lang);
+const categories = groupSkillsByCategory(member.skills.technical, lang);
+
+const languageBars = member.skills.languages
+  .map((l) => {
+    const rank = cefrRank(l.level?.en ?? null);
+    if (rank === null) return null;
+    return { label: pick(l.name, lang) ?? '', value: rank, max: CEFR_MAX, valueLabel: pick(l.level, lang) ?? '' };
+  })
+  .filter((x): x is { label: string; value: number; max: number; valueLabel: string } => x !== null);
+
+const CATEGORY_COLORS = ['var(--color-blue)', 'var(--color-navy)', 'var(--color-light-blue)', 'var(--color-cool-gray)', 'var(--color-mid-gray)'];
+const categorySegments = categories.map((c, i) => ({
+  label: c.label,
+  value: c.items.length,
+  color: CATEGORY_COLORS[i % CATEGORY_COLORS.length],
+}));
+
+const hasAnything = categories.length > 0 || personal.length > 0;
+---
+
+<section id="skills" class="member-skills reveal">
+  <h2>{t.member.toolkitTitle}</h2>
+
+  {hasAnything ? (
+    <div class="skills-layout">
+      <div class="badges-col">
+        {categories.map((cat) => (
+          <div class="category-group">
+            <p class="category-label">{cat.label}</p>
+            <div class="tag-group">
+              {cat.items.map((s) => <Tag>{s}</Tag>)}
+            </div>
+          </div>
+        ))}
+
+        {personal.length > 0 && (
+          <div class="category-group">
+            <p class="category-label">{t.member.personalSkillsTitle}</p>
+            <ul class="soft-skills">{personal.map((s) => <li>{s}</li>)}</ul>
+          </div>
+        )}
+      </div>
+
+      <div class="charts-col">
+        {languageBars.length > 0 && (
+          <div class="chart-block">
+            <p class="chart-title">{t.member.chartLanguagesTitle}</p>
+            <BarChart items={languageBars} summaryLabel={t.member.chartSummaryLabel} />
+          </div>
+        )}
+        {categorySegments.length > 1 && (
+          <div class="chart-block">
+            <p class="chart-title">{t.member.chartSkillsTitle}</p>
+            <DonutChart segments={categorySegments} centerLabel={t.member.statSkills} summaryLabel={t.member.chartSummaryLabel} />
+          </div>
+        )}
+      </div>
+    </div>
+  ) : (
+    <Placeholder label={t.member.placeholderSkills} lang={lang} />
+  )}
+</section>
+
+<style>
+  .member-skills {
+    scroll-margin-top: 90px;
+  }
+  .member-skills h2 {
+    font-size: var(--fs-600);
+    border-bottom: var(--rule-weight) solid var(--color-blue);
+    padding-bottom: var(--space-1);
+    display: inline-block;
+    margin-bottom: var(--space-4);
+  }
+  .skills-layout {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .category-group {
+    margin-bottom: var(--space-3);
+  }
+  .category-label {
+    font-weight: var(--fw-heading);
+    font-size: var(--fs-200);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-1);
+  }
+  .tag-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .soft-skills {
+    margin: 0;
+  }
+  .charts-col {
+    display: grid;
+    gap: var(--space-4);
+    align-content: start;
+  }
+  .chart-block {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: var(--space-3);
+  }
+  .chart-title {
+    font-weight: var(--fw-heading);
+    font-size: var(--fs-200);
+    margin-bottom: var(--space-2);
+  }
+
+  @media (min-width: 1024px) {
+    .skills-layout {
+      grid-template-columns: 1.3fr 1fr;
+    }
+  }
+</style>

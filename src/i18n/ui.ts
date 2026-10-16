@@ -20,6 +20,9 @@ interface UiDict {
     themeToggleLabel: string;
     themeToggleToLight: string;
     themeToggleToDark: string;
+    soundToggleLabel: string;
+    soundEnable: string;
+    soundDisable: string;
   };
   common: {
     skipToContent: string;
@@ -90,6 +93,7 @@ interface UiDict {
     educationTitle: string;
     additionalTraining: string;
     skillsTitle: string;
+    personalSkillsTitle: string;
     interestsTitle: string;
     projectsTitle: string;
     role: string;
@@ -103,6 +107,30 @@ interface UiDict {
     placeholderEducation: string;
     placeholderSkills: string;
     placeholderProjects: string;
+    statProjects: string;
+    statSkills: string;
+    statLanguages: string;
+    ctaExploreProjects: string;
+    ctaViewSkills: string;
+    ctaDownloadCv: string;
+    navOverview: string;
+    navSkills: string;
+    navProjects: string;
+    navCv: string;
+    toolkitTitle: string;
+    chartLanguagesTitle: string;
+    chartSkillsTitle: string;
+    chartProjectsTitle: string;
+    chartSummaryLabel: string;
+    filterAll: string;
+    filterByTool: string;
+    statusCompleted: string;
+    cvSectionTitle: string;
+    cvSectionBody: string;
+    cvDownload: string;
+    cvView: string;
+    cvComingSoon: string;
+    cvComingSoonBody: string;
   };
   bum: {
     eyebrow: string;
@@ -140,6 +168,8 @@ interface UiDict {
     phoneLabel: string;
     emailLabel: string;
     websiteLabel: string;
+    copyLabel: string;
+    copiedLabel: string;
   };
   footer: {
     affiliation: string;
@@ -151,6 +181,13 @@ interface UiDict {
   notFound: {
     title: string;
     body: string;
+  };
+  sound: {
+    signatureTitle: string;
+    signatureBody: string;
+    play: string;
+    stop: string;
+    replay: string;
   };
 }
 
@@ -171,6 +208,9 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       themeToggleLabel: 'Toggle color theme',
       themeToggleToLight: 'Switch to light mode',
       themeToggleToDark: 'Switch to dark mode',
+      soundToggleLabel: 'Interface sound',
+      soundEnable: 'Enable interface sounds',
+      soundDisable: 'Mute interface sounds',
     },
     common: {
       skipToContent: 'Skip to content',
@@ -248,6 +288,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       educationTitle: 'Education',
       additionalTraining: 'Additional training',
       skillsTitle: 'Skills & languages',
+      personalSkillsTitle: 'Personal skills',
       interestsTitle: 'Interests',
       projectsTitle: 'Projects',
       role: 'Role',
@@ -261,6 +302,30 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       placeholderEducation: 'education',
       placeholderSkills: 'skills',
       placeholderProjects: 'projects',
+      statProjects: 'Projects',
+      statSkills: 'Technical skills',
+      statLanguages: 'Languages',
+      ctaExploreProjects: 'Explore projects',
+      ctaViewSkills: 'View skills',
+      ctaDownloadCv: 'Download CV',
+      navOverview: 'Overview',
+      navSkills: 'Skills',
+      navProjects: 'Projects',
+      navCv: 'CV',
+      toolkitTitle: 'Technical toolkit',
+      chartLanguagesTitle: 'Languages',
+      chartSkillsTitle: 'Skills by category',
+      chartProjectsTitle: 'Projects by status',
+      chartSummaryLabel: 'Text summary',
+      filterAll: 'All',
+      filterByTool: 'Filter by tool',
+      statusCompleted: 'Completed',
+      cvSectionTitle: 'My CV — take it with you',
+      cvSectionBody: 'A printable summary of the information on this page.',
+      cvDownload: 'Download CV (PDF)',
+      cvView: 'View CV',
+      cvComingSoon: 'CV coming soon',
+      cvComingSoonBody: "This member's PDF résumé hasn't been added yet.",
     },
     bum: {
       eyebrow: 'Leadership',
@@ -298,6 +363,8 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       phoneLabel: 'Phone',
       emailLabel: 'Email',
       websiteLabel: 'JEENISo website',
+      copyLabel: 'Copy',
+      copiedLabel: 'Copied!',
     },
     footer: {
       affiliation: 'Business Unit 4 is part of',
@@ -309,6 +376,13 @@ export const ui: Record<'en' | 'fr', UiDict> = {
     notFound: {
       title: 'Page not found',
       body: "The page you're looking for doesn't exist or has moved.",
+    },
+    sound: {
+      signatureTitle: 'The BU4 sonic signature',
+      signatureBody: 'A short original audio sting for BU4 - entirely optional, and it never plays on its own.',
+      play: 'Play BU4 intro',
+      stop: 'Stop',
+      replay: 'Replay',
     },
   },
   fr: {
@@ -327,6 +401,9 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       themeToggleLabel: 'Changer le thème',
       themeToggleToLight: 'Passer au mode clair',
       themeToggleToDark: 'Passer au mode sombre',
+      soundToggleLabel: "Son de l'interface",
+      soundEnable: "Activer les sons de l'interface",
+      soundDisable: "Couper les sons de l'interface",
     },
     common: {
       skipToContent: 'Aller au contenu',
@@ -404,6 +481,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       educationTitle: 'Formation',
       additionalTraining: 'Formations complémentaires',
       skillsTitle: 'Compétences & langues',
+      personalSkillsTitle: 'Compétences personnelles',
       interestsTitle: "Centres d'intérêt",
       projectsTitle: 'Projets',
       role: 'Rôle',
@@ -417,6 +495,30 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       placeholderEducation: 'formation',
       placeholderSkills: 'compétences',
       placeholderProjects: 'projets',
+      statProjects: 'Projets',
+      statSkills: 'Compétences techniques',
+      statLanguages: 'Langues',
+      ctaExploreProjects: 'Voir les projets',
+      ctaViewSkills: 'Voir les compétences',
+      ctaDownloadCv: 'Télécharger le CV',
+      navOverview: 'Profil',
+      navSkills: 'Compétences',
+      navProjects: 'Projets',
+      navCv: 'CV',
+      toolkitTitle: 'Boîte à outils technique',
+      chartLanguagesTitle: 'Langues',
+      chartSkillsTitle: 'Compétences par catégorie',
+      chartProjectsTitle: 'Projets par statut',
+      chartSummaryLabel: 'Résumé textuel',
+      filterAll: 'Tout',
+      filterByTool: 'Filtrer par outil',
+      statusCompleted: 'Terminé',
+      cvSectionTitle: 'Mon CV — à emporter',
+      cvSectionBody: 'Un résumé imprimable des informations de cette page.',
+      cvDownload: 'Télécharger le CV (PDF)',
+      cvView: 'Voir le CV',
+      cvComingSoon: 'CV bientôt disponible',
+      cvComingSoonBody: "Le CV PDF de ce membre n'a pas encore été ajouté.",
     },
     bum: {
       eyebrow: 'Direction',
@@ -454,6 +556,8 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       phoneLabel: 'Téléphone',
       emailLabel: 'E-mail',
       websiteLabel: 'Site de JEENISo',
+      copyLabel: 'Copier',
+      copiedLabel: 'Copié !',
     },
     footer: {
       affiliation: 'Business Unit 4 fait partie de',
@@ -465,6 +569,13 @@ export const ui: Record<'en' | 'fr', UiDict> = {
     notFound: {
       title: 'Page introuvable',
       body: "La page que vous cherchez n'existe pas ou a été déplacée.",
+    },
+    sound: {
+      signatureTitle: 'La signature sonore de BU4',
+      signatureBody: "Un court jingle original pour BU4 - entièrement optionnel, il ne se joue jamais tout seul.",
+      play: "Écouter l'intro BU4",
+      stop: 'Arrêter',
+      replay: 'Réécouter',
     },
   },
 };

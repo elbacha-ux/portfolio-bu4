@@ -1,0 +1,112 @@
+---
+/**
+ * Lightweight, dependency-free horizontal bar chart (plain CSS, no SVG/JS
+ * charting library). Always renders an accessible text equivalent
+ * alongside the visual bars, so the data is available even if styles fail
+ * to load or a screen reader skips decorative markup.
+ */
+interface BarItem {
+  label: string;
+  value: number;
+  max: number;
+  /** Shown next to the bar, e.g. "B2" or "C1". */
+  valueLabel: string;
+}
+interface Props {
+  items: BarItem[];
+  summaryLabel: string;
+}
+const { items, summaryLabel } = Astro.props;
+---
+
+<div class="bar-chart" role="img" aria-label={items.map((i) => `${i.label}: ${i.valueLabel}`).join(', ')}>
+  <ul class="bars" aria-hidden="true">
+    {items.map((item) => (
+      <li class="bar-row">
+        <span class="bar-label">{item.label}</span>
+        <span class="bar-track">
+          <span class="bar-fill" style={`width: ${Math.round((item.value / item.max) * 100)}%`}></span>
+        </span>
+        <span class="bar-value">{item.valueLabel}</span>
+      </li>
+    ))}
+  </ul>
+
+  <details class="text-summary">
+    <summary>{summaryLabel}</summary>
+    <ul>
+      {items.map((item) => <li>{item.label}: {item.valueLabel}</li>)}
+    </ul>
+  </details>
+</div>
+
+<style>
+  .bar-chart {
+    width: 100%;
+  }
+  .bars {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+  .bar-row {
+    display: grid;
+    grid-template-columns: 7rem 1fr 3rem;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .bar-label {
+    font-size: var(--fs-200);
+    font-weight: var(--fw-medium);
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bar-track {
+    display: block;
+    height: 10px;
+    background: var(--color-bg-muted);
+    position: relative;
+    overflow: hidden;
+  }
+  .bar-fill {
+    display: block;
+    height: 100%;
+    background: var(--color-accent);
+    transform-origin: left;
+    animation: grow-bar var(--duration-slow) var(--ease-out) both;
+  }
+  @keyframes grow-bar {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bar-fill {
+      animation: none;
+    }
+  }
+  .bar-value {
+    font-size: var(--fs-100);
+    font-weight: var(--fw-heading);
+    color: var(--color-text-muted);
+    text-align: right;
+  }
+  .text-summary {
+    margin-top: var(--space-2);
+  }
+  .text-summary summary {
+    cursor: pointer;
+    font-size: var(--fs-100);
+    color: var(--color-text-muted);
+    width: fit-content;
+  }
+  .text-summary ul {
+    margin: var(--space-1) 0 0;
+    padding-left: 1.2em;
+    font-size: var(--fs-200);
+    color: var(--color-text-muted);
+  }
+</style>

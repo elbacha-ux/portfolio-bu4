@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PhotoOverlay from '../components/PhotoOverlay.astro';
+import MemberHero from '../components/MemberHero.astro';
+import MemberSkills from '../components/MemberSkills.astro';
+import MemberProjects from '../components/MemberProjects.astro';
+import CvSection from '../components/CvSection.astro';
 import Tag from '../components/Tag.astro';
 import LinkList from '../components/LinkList.astro';
 import Placeholder from '../components/Placeholder.astro';
@@ -8,6 +11,7 @@ import { people } from '../data/people';
 import { team } from '../data/team';
 import { ui } from '../i18n/ui';
 import { pick, pickAll, localePath } from '../i18n';
+import { hasCv } from '../lib/cv';
 import type { Lang } from '../i18n';
 
 interface Props {
@@ -18,13 +22,10 @@ const { lang, slug } = Astro.props;
 const t = ui[lang];
 const member = people[slug];
 
-const specialty = pick(member.specialty, lang);
 const intro = pick(member.intro, lang);
 const program = member.education ? pick(member.education.program, lang) : null;
 const degrees = member.education ? pickAll(member.education.degrees, lang) : [];
 const certifications = member.education ? pickAll(member.education.certifications, lang) : [];
-const technical = pickAll(member.skills.technical, lang);
-const personal = pickAll(member.skills.personal, lang);
 const interests = pickAll(member.interests, lang);
 
 const links = [
@@ -34,131 +35,92 @@ const links = [
 ].filter((l): l is { label: string; href: string } => l !== null);
 
 const others = team.memberSlugs.filter((s) => s !== slug).map((s) => people[s]);
+const memberHasCv = hasCv(slug);
+
+const anchors = [
+  { href: '#overview', label: t.member.navOverview, show: true },
+  { href: '#skills', label: t.member.navSkills, show: member.skills.technical.length > 0 || member.skills.personal.length > 0 },
+  { href: '#projects', label: t.member.navProjects, show: member.projects.length > 0 },
+  { href: '#cv', label: t.member.navCv, show: memberHasCv },
+].filter((a) => a.show);
 ---
 
 <BaseLayout lang={lang} title={member.name} description={intro ?? `${member.name} - BU4`}>
+  <MemberHero
+    member={member}
+    lang={lang}
+    projectCount={member.projects.length}
+    skillCount={member.skills.technical.length}
+    languageCount={member.skills.languages.length}
+    hasCv={memberHasCv}
+  />
+
+  <nav class="section-nav" aria-label={t.member.navOverview}>
+    <div class="container section-nav-inner">
+      <a class="back-link" href={localePath(lang, 'team/')}>{t.common.backToTeam}</a>
+      <ul class="anchors">
+        {anchors.map((a) => <li><a href={a.href}>{a.label}</a></li>)}
+      </ul>
+    </div>
+  </nav>
+
   <article class="container member-page">
-    <a class="back-link" href={localePath(lang, 'team/')}>{t.common.backToTeam}</a>
-
-    <header class="member-header">
-      <div class="photo-col reveal">
-        <PhotoOverlay src={member.photo} name={member.name} lang={lang} ratio="4 / 5" />
-      </div>
-      <div class="header-copy reveal">
-        <h1>{member.name}</h1>
-        {specialty && <p class="specialty">{specialty}</p>}
-        {intro ? <p class="intro">{intro}</p> : <Placeholder label={t.member.placeholderIntro} lang={lang} />}
-        <LinkList links={links} />
-      </div>
-    </header>
-
-    <div class="member-body">
-      <section class="reveal">
-        <h2>{t.member.educationTitle}</h2>
-        {member.education ? (
-          <div class="education">
-            {program && <p><strong>{program}</strong>{member.education.institution && `, ${member.education.institution}`}</p>}
-            {member.education.years && <p class="muted">{member.education.years}</p>}
-            {degrees.length > 0 && (
-              <ul>{degrees.map((d) => <li>{d}</li>)}</ul>
-            )}
-            {certifications.length > 0 && (
-              <>
-                <p class="label">{t.member.additionalTraining}</p>
-                <ul>{certifications.map((c) => <li>{c}</li>)}</ul>
-              </>
-            )}
-          </div>
-        ) : (
-          <Placeholder label={t.member.placeholderEducation} lang={lang} />
-        )}
-      </section>
-
-      <section class="reveal">
-        <h2>{t.member.skillsTitle}</h2>
-        {(technical.length > 0 || personal.length > 0) ? (
-          <>
-            {technical.length > 0 && (
-              <div class="tag-group">
-                {technical.map((s) => <Tag>{s}</Tag>)}
-              </div>
-            )}
-            {personal.length > 0 && (
-              <ul class="soft-skills">{personal.map((s) => <li>{s}</li>)}</ul>
-            )}
-            {member.skills.languages.length > 0 && (
-              <p class="languages">
-                {member.skills.languages
-                  .map((l) => {
-                    const name = pick(l.name, lang);
-                    const level = pick(l.level, lang);
-                    return `${name}${level ? ` (${level})` : ''}`;
-                  })
-                  .join(' · ')}
-              </p>
-            )}
-          </>
-        ) : (
-          <Placeholder label={t.member.placeholderSkills} lang={lang} />
-        )}
-      </section>
+    <section id="overview" class="reveal">
+      <h2>{t.member.educationTitle}</h2>
+      {member.education ? (
+        <div class="education">
+          {program && <p><strong>{program}</strong>{member.education.institution && `, ${member.education.institution}`}</p>}
+          {member.education.years && <p class="muted">{member.education.years}</p>}
+          {degrees.length > 0 && <ul>{degrees.map((d) => <li>{d}</li>)}</ul>}
+          {certifications.length > 0 && (
+            <>
+              <p class="label">{t.member.additionalTraining}</p>
+              <ul>{certifications.map((c) => <li>{c}</li>)}</ul>
+            </>
+          )}
+        </div>
+      ) : (
+        <Placeholder label={t.member.placeholderEducation} lang={lang} />
+      )}
 
       {interests.length > 0 && (
-        <section class="reveal">
-          <h2>{t.member.interestsTitle}</h2>
-          <ul>{interests.map((i) => <li>{i}</li>)}</ul>
-        </section>
+        <>
+          <p class="label">{t.member.interestsTitle}</p>
+          <div class="tag-group">
+            {interests.map((i) => <Tag>{i}</Tag>)}
+          </div>
+        </>
       )}
 
+      <div class="links-row">
+        <LinkList links={links} />
+      </div>
+    </section>
+
+    <MemberSkills member={member} lang={lang} />
+    <MemberProjects member={member} lang={lang} />
+
+    {member.experience.length > 0 && (
       <section class="reveal">
-        <h2>{t.member.projectsTitle}</h2>
-        {member.projects.length > 0 ? (
-          <ul class="project-items">
-            {member.projects.map((p) => {
-              const pTitle = pick(p.title, lang);
-              const pDescription = pick(p.description, lang);
-              const pRole = pick(p.role, lang);
-              const pTools = pickAll(p.tools, lang);
-              const pResult = pick(p.result, lang);
-              return (
-                <li class="project-item">
-                  <div class="project-item-head">
-                    <h3>{pTitle}</h3>
-                    {p.status === 'in-progress' && <Tag class="status-tag">{t.common.inProgress}</Tag>}
-                  </div>
-                  {pDescription && <p>{pDescription}</p>}
-                  {pRole && <p class="muted"><strong>{t.member.role}:</strong> {pRole}</p>}
-                  {pTools.length > 0 && <p class="muted"><strong>{t.member.tools}:</strong> {pTools.join(', ')}</p>}
-                  {pResult && <p class="muted"><strong>{t.member.result}:</strong> {pResult}</p>}
-                </li>
-              );
-            })}
-          </ul>
-        ) : (
-          <Placeholder label={t.member.placeholderProjects} lang={lang} />
-        )}
+        <h2>{t.member.experienceTitle}</h2>
+        <ul>
+          {member.experience.map((e) => {
+            const detail = pick(e.detail, lang);
+            return <li><strong>{e.organization}</strong>{detail && ` — ${detail}`}</li>;
+          })}
+        </ul>
       </section>
+    )}
 
-      {member.experience.length > 0 && (
-        <section class="reveal">
-          <h2>{t.member.experienceTitle}</h2>
-          <ul>
-            {member.experience.map((e) => {
-              const detail = pick(e.detail, lang);
-              return <li><strong>{e.organization}</strong>{detail && ` — ${detail}`}</li>;
-            })}
-          </ul>
-        </section>
-      )}
+    {(member.goals.shortTerm || member.goals.longTerm) && (
+      <section class="reveal">
+        <h2>{t.member.goalsTitle}</h2>
+        {member.goals.shortTerm && <p><strong>{t.member.shortTerm}:</strong> {pick(member.goals.shortTerm, lang)}</p>}
+        {member.goals.longTerm && <p><strong>{t.member.longTerm}:</strong> {pick(member.goals.longTerm, lang)}</p>}
+      </section>
+    )}
 
-      {(member.goals.shortTerm || member.goals.longTerm) && (
-        <section class="reveal">
-          <h2>{t.member.goalsTitle}</h2>
-          {member.goals.shortTerm && <p><strong>{t.member.shortTerm}:</strong> {pick(member.goals.shortTerm, lang)}</p>}
-          {member.goals.longTerm && <p><strong>{t.member.longTerm}:</strong> {pick(member.goals.longTerm, lang)}</p>}
-        </section>
-      )}
-    </div>
+    <CvSection slug={slug} name={member.name} lang={lang} />
 
     <nav class="other-members" aria-label={t.common.otherMembers}>
       <h2>{t.common.otherMembers}</h2>
@@ -172,45 +134,64 @@ const others = team.memberSlugs.filter((s) => s !== slug).map((s) => people[s]);
 </BaseLayout>
 
 <style>
-  .member-page {
-    padding-block: var(--space-4) var(--space-7);
+  .section-nav {
+    position: sticky;
+    top: 65px;
+    z-index: 20;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    transition: background-color var(--duration-base) var(--ease-standard), border-color var(--duration-base) var(--ease-standard);
+  }
+  .section-nav-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding-block: var(--space-2);
+    overflow-x: auto;
   }
   .back-link {
-    display: inline-block;
-    margin-bottom: var(--space-3);
+    flex-shrink: 0;
     font-weight: var(--fw-medium);
     text-decoration: none;
+    font-size: var(--fs-200);
+    white-space: nowrap;
   }
-  .member-header {
-    display: grid;
-    gap: var(--space-4);
-    margin-bottom: var(--space-6);
+  .anchors {
+    list-style: none;
+    display: flex;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
   }
-  .photo-col {
-    max-width: 320px;
+  .anchors a {
+    font-size: var(--fs-200);
+    font-weight: var(--fw-medium);
+    text-decoration: none;
+    color: var(--color-text-muted);
+    white-space: nowrap;
   }
-  .specialty {
+  .anchors a:hover {
     color: var(--color-accent-strong);
-    font-weight: var(--fw-heading);
-    margin-top: -0.5rem;
   }
-  .intro {
-    font-size: var(--fs-400);
-    max-width: 60ch;
-  }
-  .member-body {
+
+  .member-page {
+    padding-block: var(--space-6) var(--space-7);
     display: grid;
-    gap: var(--space-5);
+    gap: var(--space-6);
   }
-  .member-body h2 {
+  .member-page > section {
+    scroll-margin-top: 90px;
+  }
+  .member-page h2 {
     font-size: var(--fs-600);
     border-bottom: var(--rule-weight) solid var(--color-blue);
     padding-bottom: var(--space-1);
     display: inline-block;
+    margin-bottom: var(--space-3);
   }
   .label {
     font-weight: var(--fw-heading);
-    margin-top: var(--space-2);
+    margin-top: var(--space-3);
     margin-bottom: var(--space-1);
   }
   .muted {
@@ -220,40 +201,12 @@ const others = team.memberSlugs.filter((s) => s !== slug).map((s) => people[s]);
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin-bottom: var(--space-2);
   }
-  .soft-skills {
-    margin-bottom: var(--space-2);
+  .links-row {
+    margin-top: var(--space-3);
   }
-  .languages {
-    font-weight: var(--fw-medium);
-  }
-  .project-items {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: var(--space-3);
-  }
-  .project-item {
-    border-left: 3px solid var(--color-mid-gray);
-    padding-left: var(--space-2);
-  }
-  .project-item-head {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-  }
-  .project-item h3 {
-    font-size: var(--fs-500);
-    margin: 0;
-  }
-  .status-tag {
-    background: var(--color-accent-soft);
-    color: var(--color-accent-strong);
-  }
+
   .other-members {
-    margin-top: var(--space-7);
     padding-top: var(--space-4);
     border-top: 1px solid var(--color-border);
   }
@@ -270,11 +223,5 @@ const others = team.memberSlugs.filter((s) => s !== slug).map((s) => people[s]);
   .other-members a {
     font-weight: var(--fw-medium);
     text-decoration: none;
-  }
-
-  @media (min-width: 768px) {
-    .member-header {
-      grid-template-columns: 280px 1fr;
-    }
   }
 </style>
