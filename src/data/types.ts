@@ -31,6 +31,11 @@ export interface MemberProject {
   /** Verified outcome/result, only when explicitly stated. */
   result: Localized<string> | null;
   link: string | null;
+  /** Optional - reuses the collective-project gallery convention
+   * (public/images/projects/<slug>/, via src/lib/projectMedia.ts) so an
+   * individual project can show screenshots too. Null when there's no
+   * dedicated gallery for this one. */
+  slug: string | null;
 }
 
 export interface MemberExperience {

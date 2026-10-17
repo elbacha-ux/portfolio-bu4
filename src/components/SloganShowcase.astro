@@ -38,11 +38,13 @@ const t = ui[lang];
     </p>
 
     <details class="why">
-      <summary>
+      <summary data-sound="click">
         <span class="plus" aria-hidden="true"></span>
         {t.about.sloganToggle}
       </summary>
-      <p class="why-body">{t.about.sloganBody}</p>
+      <div class="why-body-wrapper">
+        <p class="why-body">{t.about.sloganBody}</p>
+      </div>
     </details>
 
     <div class="signature-row">
@@ -194,13 +196,17 @@ const t = ui[lang];
     padding: 0.7em 1.4em;
     margin-inline: auto;
     width: fit-content;
-    transition: background-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
+    transition: background-color var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-out), transform var(--duration-fast) var(--ease-out);
   }
   .why summary::-webkit-details-marker {
     display: none;
   }
   .why summary:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.14);
+    border-color: var(--color-light-blue);
+  }
+  .why summary:active {
+    transform: scale(0.95);
   }
 
   .plus {
@@ -214,7 +220,7 @@ const t = ui[lang];
     content: '';
     position: absolute;
     background: currentColor;
-    transition: transform var(--duration-fast) var(--ease-standard);
+    transition: transform var(--duration-base) var(--ease-out);
   }
   .plus::before {
     left: 0;
@@ -228,12 +234,25 @@ const t = ui[lang];
     width: 2px;
     height: 14px;
   }
+  details[open] .plus::before,
   details[open] .plus::after {
-    transform: scaleY(0);
+    transform: rotate(45deg);
   }
 
+  .why-body-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition: grid-template-rows var(--duration-slow) var(--ease-out), opacity var(--duration-base) var(--ease-out);
+  }
+  details[open] .why-body-wrapper {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
   .why-body {
-    margin: var(--space-3) auto 0;
+    overflow: hidden;
+    margin: 0 auto;
+    padding-top: var(--space-3);
     color: #e7edf2;
     font-size: var(--fs-400);
     max-width: 50ch;
@@ -254,6 +273,15 @@ const t = ui[lang];
     font-size: var(--fs-200);
     max-width: 48ch;
     text-align: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .why summary,
+    .plus::before,
+    .plus::after,
+    .why-body-wrapper {
+      transition: none;
+    }
   }
 
   @media (min-width: 768px) {

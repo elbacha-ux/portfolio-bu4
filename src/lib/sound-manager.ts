@@ -1,11 +1,10 @@
 /**
- * Tiny, dependency-free sound manager. No audio files exist yet for this
- * project, so every sound is synthesized at runtime with the Web Audio API
- * (a handful of short oscillator tones) - this is explicitly the fallback
- * the brief asks for when real recorded assets aren't available. If the
- * team later records proper UI sounds, swap the tone() calls below for
- * `new Audio('/portfolio-bu4/sounds/<name>.mp3').play()` - the public API
- * (sound.click(), sound.confirm(), ...) would not need to change.
+ * Tiny, dependency-free sound manager. Every UI tone (click, confirm,
+ * hover, ...) is still synthesized at runtime with the Web Audio API - no
+ * recorded assets exist for those yet, this is the explicit fallback the
+ * brief allows. The BU4 sonic signature is the one exception: it now plays
+ * a real recorded clip (public/sounds/bu4-signature.mp3) instead of
+ * synthesized notes.
  *
  * - Disabled by default; only enabled once the visitor opts in (SoundToggle).
  * - The AudioContext is created lazily, on the first call after a user
@@ -16,11 +15,12 @@
 
 const STORAGE_KEY = 'bu4-sound';
 const MIN_GAP_MS = 70; // prevents a burst of sound from rapid repeated triggers
+const SIGNATURE_SRC = `${import.meta.env.BASE_URL}sounds/bu4-signature.mp3`;
 
 let ctx: AudioContext | null = null;
 let enabled = false;
 let lastPlay = 0;
-let signatureNodes: OscillatorNode[] = [];
+let signatureAudio: HTMLAudioElement | null = null;
 
 function getContext(): AudioContext | null {
   try {
@@ -110,6 +110,11 @@ export const sound = {
     if (!enabled || !throttled()) return;
     tone(640, 0.07, { type: 'sine', peak: 0.055 });
   },
+  /** A soft, brief swell - hovering a photo (member cards, hero, award winners). */
+  hover() {
+    if (!enabled || !throttled()) return;
+    sweep(420, 520, 0.06, 0.03);
+  },
   /** Positive confirmation - copy-to-clipboard, CV download started. */
   confirm() {
     if (!enabled || !throttled()) return;
@@ -127,56 +132,35 @@ export const sound = {
     sweep(300, 560, 0.14);
   },
   /**
-   * The BU4 sonic signature - a short original 4-note motif. Always plays
-   * when its own dedicated button is pressed (that click is the explicit
-   * user gesture this sound is gated on) regardless of the ambient sound
-   * toggle, exactly like pressing play on an embedded audio player would.
+   * The BU4 sonic signature - a real recorded clip (public/sounds/bu4-signature.mp3).
+   * Always plays when its own dedicated button is pressed (that click is the
+   * explicit user gesture this sound is gated on) regardless of the ambient
+   * sound toggle, exactly like pressing play on an embedded audio player would.
    */
   playSignature(onEnd?: () => void) {
-    const c = getContext();
-    if (!c) {
-      onEnd?.();
-      return;
-    }
     this.stopSignature();
-    const notes: Array<[number, number, number]> = [
-      [392, 0.22, 0], // G4
-      [494, 0.22, 0.2], // B4
-      [587, 0.22, 0.4], // D5
-      [784, 0.5, 0.62], // G5
-    ];
-    for (const [freq, duration, delay] of notes) {
+    try {
+      const audio = new Audio(SIGNATURE_SRC);
+      signatureAudio = audio;
+      const finish = () => {
+        if (signatureAudio === audio) signatureAudio = null;
+        onEnd?.();
+      };
+      audio.addEventListener('ended', finish, { once: true });
+      audio.play().catch(finish);
+    } catch {
+      onEnd?.();
+    }
+  },
+  stopSignature() {
+    if (signatureAudio) {
       try {
-        const osc = c.createOscillator();
-        const gain = c.createGain();
-        osc.type = 'sine';
-        osc.frequency.value = freq;
-        const start = c.currentTime + delay;
-        gain.gain.setValueAtTime(0.0001, start);
-        gain.gain.linearRampToValueAtTime(0.09, start + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
-        osc.connect(gain).connect(c.destination);
-        osc.start(start);
-        osc.stop(start + duration + 0.03);
-        signatureNodes.push(osc);
+        signatureAudio.pause();
+        signatureAudio.currentTime = 0;
       } catch {
         /* ignore */
       }
+      signatureAudio = null;
     }
-    const totalMs = (notes[notes.length - 1][1] + notes[notes.length - 1][2]) * 1000 + 60;
-    window.setTimeout(() => {
-      signatureNodes = [];
-      onEnd?.();
-    }, totalMs);
-  },
-  stopSignature() {
-    for (const osc of signatureNodes) {
-      try {
-        osc.stop();
-      } catch {
-        /* already stopped */
-      }
-    }
-    signatureNodes = [];
   },
 };
