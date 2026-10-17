@@ -16,6 +16,7 @@ import DonutChart from './DonutChart.astro';
 import Placeholder from './Placeholder.astro';
 import { ui } from '../i18n/ui';
 import { pick, pickAll } from '../i18n';
+import { projectGallery } from '../lib/projectMedia';
 import type { Lang } from '../i18n';
 import type { Member } from '../data/types';
 
@@ -25,6 +26,7 @@ interface Props {
 }
 const { member, lang } = Astro.props;
 const t = ui[lang];
+const base = import.meta.env.BASE_URL;
 
 const projects = member.projects.map((p) => ({
   title: pick(p.title, lang) ?? '',
@@ -34,7 +36,9 @@ const projects = member.projects.map((p) => ({
   status: p.status,
   result: pick(p.result, lang),
   link: p.link,
+  gallery: p.slug ? projectGallery(p.slug) : [],
 }));
+const hasAnyGallery = projects.some((p) => p.gallery.length > 0);
 
 const toolSlug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
@@ -98,11 +102,33 @@ const showStatusChart = projects.length > 1 && completedCount > 0 && inProgressC
                 {p.link && (
                   <a class="project-link" href={p.link} target="_blank" rel="noopener noreferrer">{p.link}</a>
                 )}
+                {p.gallery.length > 0 && (
+                  <div class="gallery-grid">
+                    {p.gallery.map((src, i) => (
+                      <button
+                        type="button"
+                        class="gallery-item"
+                        data-full={`${base}${src}`}
+                        data-sound="click"
+                        aria-label={`${t.projects.galleryInspect} ${i + 1}/${p.gallery.length}`}
+                      >
+                        <img src={`${base}${src}`} alt={p.title} loading="lazy" />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </details>
           </li>
         ))}
       </ul>
+
+      {hasAnyGallery && (
+        <dialog class="lightbox" id="member-gallery-lightbox">
+          <button type="button" class="lightbox-close" data-sound="click" aria-label={t.common.close}>&times;</button>
+          <img class="lightbox-image" alt="" />
+        </dialog>
+      )}
     </>
   ) : (
     <Placeholder label={t.member.placeholderProjects} lang={lang} />
@@ -124,6 +150,23 @@ const showStatusChart = projects.length > 1 && completedCount > 0 && inProgressC
         });
       });
     });
+
+    const dialog = container.querySelector<HTMLDialogElement>('#member-gallery-lightbox');
+    const lightboxImage = dialog?.querySelector<HTMLImageElement>('.lightbox-image');
+    if (dialog && lightboxImage) {
+      container.querySelectorAll<HTMLButtonElement>('.gallery-item').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const full = btn.dataset.full;
+          if (!full) return;
+          lightboxImage.src = full;
+          dialog.showModal();
+        });
+      });
+      dialog.querySelector('.lightbox-close')?.addEventListener('click', () => dialog.close());
+      dialog.addEventListener('click', (e) => {
+        if (e.target === dialog) dialog.close();
+      });
+    }
   }
 </script>
 
@@ -253,5 +296,62 @@ const showStatusChart = projects.length > 1 && completedCount > 0 && inProgressC
     font-size: var(--fs-200);
     font-weight: var(--fw-heading);
     word-break: break-all;
+  }
+
+  .gallery-grid {
+    display: grid;
+    gap: var(--space-2);
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    margin-top: var(--space-2);
+  }
+  .gallery-item {
+    display: block;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: zoom-in;
+    width: 100%;
+  }
+  .gallery-item img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    transition: opacity var(--duration-fast) var(--ease-standard);
+  }
+  .gallery-item:hover img,
+  .gallery-item:focus-visible img {
+    opacity: 0.85;
+  }
+
+  .lightbox {
+    border: none;
+    padding: 0;
+    max-width: min(90vw, 1100px);
+    max-height: 90vh;
+    background: transparent;
+  }
+  .lightbox::backdrop {
+    background: rgba(10, 12, 16, 0.85);
+  }
+  .lightbox-image {
+    display: block;
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+  }
+  .lightbox-close {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    width: 2.25rem;
+    height: 2.25rem;
+    line-height: 1;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 50%;
+    background: rgba(10, 12, 16, 0.6);
+    color: var(--color-white);
+    cursor: pointer;
   }
 </style>

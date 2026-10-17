@@ -120,6 +120,18 @@ const altPath = swapLangInPath(Astro.url.pathname, otherLang(lang));
         else if (kind === 'confirm') sound.confirm();
         else if (kind === 'whoosh') sound.whoosh();
       });
+
+      // Same delegation pattern for hover - data-sound-hover="true" on a
+      // photo frame. mouseover bubbles (mouseenter doesn't), so a
+      // relatedTarget check keeps this firing once per real entry instead
+      // of on every move between child elements.
+      document.addEventListener('mouseover', (event) => {
+        const trigger = (event.target as HTMLElement)?.closest<HTMLElement>('[data-sound-hover]');
+        if (!trigger) return;
+        const related = (event as MouseEvent).relatedTarget as Node | null;
+        if (related && trigger.contains(related)) return;
+        sound.hover();
+      });
     </script>
   </body>
 </html>

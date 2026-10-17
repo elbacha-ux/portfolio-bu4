@@ -74,6 +74,7 @@ export const people: Record<string, Member> = {
         status: 'completed',
         result: L('1st place, end-of-year high school project (2021-2022).', 'Projet de fin d’année (2e année du lycée), 1re place au classement (2021-2022).'),
         link: null,
+        slug: null,
       },
       {
         title: L('Solar energy research project', "Projet de recherche sur l'énergie solaire"),
@@ -86,6 +87,7 @@ export const people: Record<string, Member> = {
         status: 'completed',
         result: null,
         link: null,
+        slug: null,
       },
       {
         title: L('3D-printed mobile engine', 'Moteur mobile en pièces imprimées en 3D'),
@@ -98,6 +100,7 @@ export const people: Record<string, Member> = {
         status: 'completed',
         result: null,
         link: null,
+        slug: null,
       },
     ],
     experience: [
@@ -177,6 +180,7 @@ export const people: Record<string, Member> = {
         status: 'in-progress',
         result: null,
         link: null,
+        slug: null,
       },
       {
         title: L('ENISo TEAM - project management website', 'ENISo TEAM - Site web de gestion de projets'),
@@ -189,6 +193,7 @@ export const people: Record<string, Member> = {
         status: 'in-progress',
         result: null,
         link: null,
+        slug: null,
       },
     ],
     experience: [
@@ -234,6 +239,9 @@ export const people: Record<string, Member> = {
         L('JavaScript', 'JavaScript'),
         L('Notions of digital telecommunications and digital systems', 'Notions en télécommunications numériques et en systèmes numériques'),
         L('Video editing', 'Montage vidéo'),
+        L('AI-assisted editing (video and photo)', 'Montage assisté par IA (vidéo et photo)'),
+        L('Suno (AI music generation)', 'Suno (génération musicale par IA)'),
+        L('Google Flow (AI video generation)', 'Google Flow (génération vidéo par IA)'),
       ],
       personal: [
         L('Curiosity and eagerness to learn', "Curiosité et capacité d'apprentissage"),
@@ -256,8 +264,22 @@ export const people: Record<string, Member> = {
       L('IoT', 'Objets connectés (IoT)'),
       L('Cybersecurity', 'Cybersécurité'),
       L('Music and guitar', 'Musique et guitare'),
+      L('Gaming - League of Legends (Master)', 'Jeux vidéo - League of Legends (rang Maître)'),
     ],
     projects: [
+      {
+        title: L('League of Birds', 'League of Birds'),
+        description: L(
+          'A Flappy Bird-style arcade game, designed and built solo in Unity.',
+          "Un jeu d'arcade inspiré de Flappy Bird, conçu et développé en solo avec Unity."
+        ),
+        role: L('Solo design and development.', 'Conception et développement en solo.'),
+        tools: [L('Unity', 'Unity'), L('C#', 'C#')],
+        status: 'completed',
+        result: null,
+        link: null,
+        slug: 'league-of-birds',
+      },
       {
         title: L('BU4 portfolio website', 'Site web portfolio de BU4'),
         description: L(
@@ -272,6 +294,7 @@ export const people: Record<string, Member> = {
         status: 'in-progress',
         result: null,
         link: null,
+        slug: null,
       },
       {
         title: L('JEENISo "Show Your Motivation" challenge #1 - video', 'JEENISo - vidéo "Show your motivation challenge n°1"'),
@@ -281,6 +304,7 @@ export const people: Record<string, Member> = {
         status: 'completed',
         result: null,
         link: null,
+        slug: null,
       },
     ],
     experience: [
@@ -361,6 +385,7 @@ export const people: Record<string, Member> = {
         status: null,
         result: null,
         link: null,
+        slug: null,
       },
       {
         title: L('LLM interface', 'Interface LLM'),
@@ -373,6 +398,7 @@ export const people: Record<string, Member> = {
         status: 'in-progress',
         result: null,
         link: null,
+        slug: null,
       },
       {
         title: L('Robotic arm', 'Bras robotique'),
@@ -385,6 +411,7 @@ export const people: Record<string, Member> = {
         status: null,
         result: null,
         link: null,
+        slug: null,
       },
     ],
     experience: [
@@ -458,6 +485,7 @@ export const people: Record<string, Member> = {
         status: 'in-progress',
         result: null,
         link: null,
+        slug: null,
       },
       {
         title: L('Driver drowsiness detection system', 'Système de détection de somnolence du conducteur'),
@@ -470,6 +498,7 @@ export const people: Record<string, Member> = {
         status: 'in-progress',
         result: null,
         link: null,
+        slug: null,
       },
       {
         title: L('Battery Management System (BMS)', 'Système de gestion de batterie (BMS)'),
@@ -482,6 +511,7 @@ export const people: Record<string, Member> = {
         status: 'in-progress',
         result: null,
         link: null,
+        slug: null,
       },
       {
         title: L('Emergency signal detection', 'Détection des signaux d’urgence'),
@@ -494,6 +524,7 @@ export const people: Record<string, Member> = {
         status: 'in-progress',
         result: null,
         link: null,
+        slug: null,
       },
       {
         title: L('Automatic Emergency Braking (AEB)', 'Freinage d’urgence automatique (AEB)'),
@@ -506,6 +537,7 @@ export const people: Record<string, Member> = {
         status: 'in-progress',
         result: null,
         link: null,
+        slug: null,
       },
     ],
     experience: [
@@ -569,6 +601,7 @@ export const people: Record<string, Member> = {
         status: 'in-progress',
         result: null,
         link: null,
+        slug: null,
       },
       {
         title: L('Telemetry station', 'Station Telemetry'),
@@ -581,6 +614,7 @@ export const people: Record<string, Member> = {
         status: 'in-progress',
         result: null,
         link: null,
+        slug: null,
       },
     ],
     experience: [
@@ -653,6 +687,7 @@ export const people: Record<string, Member> = {
         status: 'in-progress',
         result: null,
         link: null,
+        slug: null,
       },
       {
         title: L('ENISo TEAM - smart classroom', 'ENISo TEAM - Salle de classe intelligente'),
@@ -665,6 +700,7 @@ export const people: Record<string, Member> = {
         status: 'in-progress',
         result: null,
         link: null,
+        slug: null,
       },
     ],
     experience: [

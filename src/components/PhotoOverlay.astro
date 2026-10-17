@@ -23,7 +23,7 @@ const initials = name
   .toUpperCase();
 ---
 
-<div class="photo-frame" style={`aspect-ratio: ${ratio};`}>
+<div class="photo-frame" style={`aspect-ratio: ${ratio};`} data-sound-hover={src ? 'true' : undefined}>
   {src ? (
     <img src={src} alt={alt} loading="lazy" width="480" height="600" />
   ) : (
@@ -44,6 +44,15 @@ const initials = name
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform var(--duration-slow) var(--ease-out);
+  }
+  .photo-frame:hover img {
+    transform: scale(1.06);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .photo-frame img {
+      transition: none;
+    }
   }
   .fallback {
     width: 100%;
