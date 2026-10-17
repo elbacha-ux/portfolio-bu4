@@ -39,7 +39,7 @@ export const awards: Award[] = [
   },
   {
     slug: 'editing-wizard',
-    title: L('The Editing Wizard', 'Le·la Magicien·ne du Montage'),
+    title: L('The Editing Wizard', 'Le Magicien du Montage'),
     issuer: null,
     year: null,
     description: L(
@@ -69,12 +69,12 @@ export const awards: Award[] = [
   },
   {
     slug: 'pitch-master',
-    title: L('The Pitch Master', 'Le·la Maître du Pitch'),
+    title: L('The Pitch Master', 'La Reine du Pitch'),
     issuer: null,
     year: null,
     description: L(
       'For making any idea sound like the obvious next step.',
-      'Pour rendre n’importe quelle idée évidente dès qu’il·elle en parle.'
+      'Pour rendre n’importe quelle idée évidente dès qu’elle en parle.'
     ),
     recipientSlugs: ['nour-lemjid'],
     evidenceUrl: null,
@@ -84,7 +84,7 @@ export const awards: Award[] = [
   },
   {
     slug: 'memory-keeper',
-    title: L('The BU4 Memory Keeper', 'Le·la Gardien·ne des Souvenirs de BU4'),
+    title: L('The BU4 Memory Keeper', 'Le Gardien des Souvenirs de BU4'),
     issuer: null,
     year: null,
     description: L(
