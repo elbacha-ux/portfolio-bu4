@@ -1,0 +1,79 @@
+---
+/**
+ * Floating "back to top" button. Hidden until the visitor has scrolled past
+ * one viewport height, so it never competes with content on short pages.
+ */
+import { ui } from '../i18n/ui';
+import type { Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+
+<button id="back-to-top" type="button" class="back-to-top" aria-label={t.common.backToTop} data-sound="click">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 19V5M6 11l6-6 6 6" />
+  </svg>
+</button>
+
+<script>
+  const btn = document.getElementById('back-to-top');
+  if (btn) {
+    const toggle = () => btn.classList.toggle('is-visible', window.scrollY > window.innerHeight * 0.75);
+    window.addEventListener('scroll', toggle, { passive: true });
+    toggle();
+    btn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+</script>
+
+<style>
+  .back-to-top {
+    position: fixed;
+    right: var(--space-3);
+    bottom: var(--space-3);
+    z-index: 40;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out), border-color var(--duration-fast) var(--ease-standard);
+  }
+  .back-to-top.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .back-to-top:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent-strong);
+  }
+  .back-to-top:active {
+    transform: scale(0.92);
+  }
+  .back-to-top svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media (min-width: 768px) {
+    .back-to-top {
+      right: var(--space-5);
+      bottom: var(--space-5);
+    }
+  }
+</style>

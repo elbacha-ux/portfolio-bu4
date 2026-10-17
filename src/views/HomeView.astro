@@ -29,6 +29,11 @@ const description = site.description[lang];
 
 <BaseLayout lang={lang} title={site.fullName} description={description} isHome>
   <section class="hero">
+    <div class="facets" aria-hidden="true">
+      <span class="facet f1"></span>
+      <span class="facet f2"></span>
+      <span class="facet f3"></span>
+    </div>
     <div class="container hero-grid">
       <div class="hero-copy reveal">
         <p class="eyebrow">{t.home.heroEyebrow}</p>
@@ -41,7 +46,7 @@ const description = site.description[lang];
           <Button href={localePath(lang, 'contact/')} variant="secondary">{t.common.heroCtaSecondary}</Button>
         </div>
       </div>
-      <div class="hero-mark" aria-hidden="true">
+      <div class="hero-mark reveal" aria-hidden="true">
         <span class="numeral">04</span>
       </div>
     </div>
@@ -94,11 +99,51 @@ const description = site.description[lang];
 
 <style>
   .hero {
+    position: relative;
     background: var(--color-accent-soft);
     overflow: hidden;
+    isolation: isolate;
     transition: background-color var(--duration-base) var(--ease-standard);
   }
+  .facets {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .facet {
+    position: absolute;
+    display: block;
+  }
+  .f1 {
+    width: 42%;
+    height: 170%;
+    top: -35%;
+    right: -12%;
+    background: var(--color-light-blue);
+    opacity: 0.16;
+    clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);
+  }
+  .f2 {
+    width: 20%;
+    height: 120%;
+    top: -10%;
+    right: 20%;
+    background: var(--color-blue);
+    opacity: 0.1;
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  }
+  .f3 {
+    width: 16%;
+    height: 60%;
+    bottom: -10%;
+    left: -4%;
+    background: var(--color-blue);
+    opacity: 0.08;
+    clip-path: polygon(0 0, 100% 30%, 70% 100%, 0 100%);
+  }
   .hero-grid {
+    position: relative;
+    z-index: 1;
     display: grid;
     gap: var(--space-4);
     padding-block: var(--space-6) var(--space-5);

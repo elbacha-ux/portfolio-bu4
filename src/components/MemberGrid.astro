@@ -1,6 +1,7 @@
 ---
 import type { Member } from '../data/types';
 import MemberCard from './MemberCard.astro';
+import { pickAll } from '../i18n';
 import type { Lang } from '../i18n';
 
 interface Props {
@@ -8,11 +9,15 @@ interface Props {
   lang: Lang;
 }
 const { members, lang } = Astro.props;
+
+const toSlug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 ---
 
 <ul class="member-grid">
   {members.map((m) => (
-    <li><MemberCard member={m} lang={lang} /></li>
+    <li data-skills={pickAll(m.skills.technical, lang).map(toSlug).join(' ')}>
+      <MemberCard member={m} lang={lang} />
+    </li>
   ))}
 </ul>
 
@@ -39,6 +44,13 @@ const { members, lang } = Astro.props;
     }
     .member-grid li:nth-child(5) {
       grid-column-start: 2;
+    }
+    /* That centering trick is tuned for the full, unfiltered 7-member
+       roster - it doesn't generalize to arbitrary filtered counts, so a
+       page that filters this grid (see TeamView.astro) can toggle this
+       class to drop back to normal left-to-right flow. */
+    .member-grid.is-filtered li:nth-child(5) {
+      grid-column-start: auto;
     }
   }
 </style>

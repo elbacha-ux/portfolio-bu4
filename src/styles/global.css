@@ -29,6 +29,19 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Native cross-document view transitions (Chromium) - a real, full page
+ * navigation (every script on the new page runs normally, nothing is
+ * soft-swapped), the browser just cross-fades the old/new page on top of
+ * it. Unsupported browsers (Firefox, older Safari) simply ignore this and
+ * navigate instantly as before - pure progressive enhancement, no JS. */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--duration-base);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -40,6 +53,10 @@ html {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
   }
 }
 
@@ -251,7 +268,7 @@ button {
 
 .card:hover {
   box-shadow: var(--shadow-md);
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   border-color: var(--color-accent);
 }
 

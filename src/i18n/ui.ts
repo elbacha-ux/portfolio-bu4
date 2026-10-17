@@ -45,6 +45,7 @@ interface UiDict {
     noProjectsYet: string;
     noAwardsYet: string;
     backToHome: string;
+    backToTop: string;
   };
   home: {
     heroEyebrow: string;
@@ -92,6 +93,8 @@ interface UiDict {
     lead: string;
     ledByPrefix: string;
     bumTitle: string;
+    filterBySkill: string;
+    noMembersForSkill: string;
   };
   member: {
     educationTitle: string;
@@ -253,6 +256,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       noProjectsYet: 'No projects published yet - check back soon.',
       noAwardsYet: 'Award categories are still being finalized.',
       backToHome: 'Back to home',
+      backToTop: 'Back to top',
     },
     home: {
       heroEyebrow: 'Seven engineering students, one business unit',
@@ -307,6 +311,8 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       lead: 'Each profile links to a full individual portfolio with skills, projects and interests.',
       ledByPrefix: 'Led by',
       bumTitle: 'Business Unit Manager',
+      filterBySkill: 'Filter by skill',
+      noMembersForSkill: 'No one on the team has listed this skill yet.',
     },
     member: {
       educationTitle: 'Education',
@@ -466,6 +472,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       noProjectsYet: 'Aucun projet publié pour le moment - revenez bientôt.',
       noAwardsYet: 'Les catégories de récompenses sont encore en préparation.',
       backToHome: "Retour à l'accueil",
+      backToTop: 'Retour en haut',
     },
     home: {
       heroEyebrow: 'Sept élèves-ingénieurs, une business unit',
@@ -520,6 +527,8 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       lead: 'Chaque profil renvoie vers un portfolio individuel complet avec compétences, projets et centres d’intérêt.',
       ledByPrefix: 'Dirigée par',
       bumTitle: 'Business Unit Manager',
+      filterBySkill: 'Filtrer par compétence',
+      noMembersForSkill: "Personne dans l'équipe n'a encore indiqué cette compétence.",
     },
     member: {
       educationTitle: 'Formation',
