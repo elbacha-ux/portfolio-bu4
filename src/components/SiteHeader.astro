@@ -130,6 +130,16 @@ function isActive(href: string) {
   window.addEventListener('resize', () => {
     if (window.innerWidth >= 1024 && toggle?.getAttribute('aria-expanded') === 'true') closeMenu();
   });
+
+  // Glass effect once scrolled past the header's own height - a crisp
+  // solid bar at the very top (where it sits over varied hero content),
+  // a soft blur once there's page content sliding underneath it.
+  const header = document.querySelector<HTMLElement>('.site-header');
+  if (header) {
+    const updateScrolled = () => header.classList.toggle('is-scrolled', window.scrollY > 24);
+    window.addEventListener('scroll', updateScrolled, { passive: true });
+    updateScrolled();
+  }
 </script>
 
 <style>
@@ -139,7 +149,13 @@ function isActive(href: string) {
     z-index: 50;
     background: var(--color-surface);
     border-bottom: 1px solid var(--color-border);
-    transition: background-color var(--duration-base) var(--ease-standard), border-color var(--duration-base) var(--ease-standard);
+    transition: background-color var(--duration-base) var(--ease-standard), border-color var(--duration-base) var(--ease-standard), box-shadow var(--duration-base) var(--ease-standard);
+  }
+  .site-header.is-scrolled {
+    background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-sm);
   }
 
   .bar {

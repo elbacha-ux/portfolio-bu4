@@ -1,0 +1,79 @@
+---
+/**
+ * A small hidden delight for people who poke around - the classic Konami
+ * code triggers a confetti burst, the BU4 sonic signature (bypassing the
+ * ambient sound toggle, exactly like SignaturePlayer does, since this key
+ * sequence is itself the explicit gesture), and a one-line toast. Doesn't
+ * fabricate anything about the team - just a nod to the real slogan.
+ */
+import { ui } from '../i18n/ui';
+import type { Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+
+<div id="easter-egg-toast" class="easter-egg-toast" role="status" aria-live="polite" data-message={t.common.easterEgg}></div>
+
+<script>
+  import { sound } from '../lib/sound-manager';
+  import { burstConfetti } from '../lib/confetti';
+
+  const sequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+  let position = 0;
+
+  document.addEventListener('keydown', (event) => {
+    const expected = sequence[position];
+    const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+    if (key === expected) {
+      position += 1;
+      if (position === sequence.length) {
+        position = 0;
+        burstConfetti(window.innerWidth / 2, window.innerHeight / 3);
+        sound.playSignature();
+        const toast = document.getElementById('easter-egg-toast');
+        if (toast) {
+          toast.textContent = toast.dataset.message ?? '';
+          toast.classList.add('is-visible');
+          window.setTimeout(() => toast.classList.remove('is-visible'), 4000);
+        }
+      }
+    } else {
+      position = key === sequence[0] ? 1 : 0;
+    }
+  });
+</script>
+
+<style>
+  .easter-egg-toast {
+    position: fixed;
+    left: 50%;
+    bottom: var(--space-4);
+    transform: translate(-50%, 12px);
+    z-index: 100;
+    max-width: min(90vw, 420px);
+    background: var(--color-navy);
+    color: var(--color-white);
+    padding: var(--space-3) var(--space-4);
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+    font-weight: var(--fw-medium);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out);
+  }
+  .easter-egg-toast.is-visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .easter-egg-toast {
+      transition: opacity var(--duration-base) linear;
+      transform: translate(-50%, 0);
+    }
+  }
+</style>

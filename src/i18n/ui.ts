@@ -46,11 +46,16 @@ interface UiDict {
     noAwardsYet: string;
     backToHome: string;
     backToTop: string;
+    easterEgg: string;
   };
   home: {
     heroEyebrow: string;
     heroTitle: string;
     heroLeadSuffix: string;
+    statMembers: string;
+    statAwards: string;
+    statSkills: string;
+    statLanguages: string;
     section1Eyebrow: string;
     section1Title: string;
     section1Body: string;
@@ -257,12 +262,17 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       noAwardsYet: 'Award categories are still being finalized.',
       backToHome: 'Back to home',
       backToTop: 'Back to top',
+      easterEgg: "Challenges are our business - and you just found one. Nice.",
     },
     home: {
       heroEyebrow: 'Seven engineering students, one business unit',
       heroTitle: 'Seven engineering students at ENISo, one business unit.',
       heroLeadSuffix:
         "We build, learn and ship projects together - from embedded electronics to the web platform you're reading this on.",
+      statMembers: 'Members',
+      statAwards: 'Award categories',
+      statSkills: 'Technical skills',
+      statLanguages: 'Languages',
       section1Eyebrow: 'Who we are',
       section1Title: "A team built on JEENISo's engineering culture",
       section1Body:
@@ -473,12 +483,17 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       noAwardsYet: 'Les catégories de récompenses sont encore en préparation.',
       backToHome: "Retour à l'accueil",
       backToTop: 'Retour en haut',
+      easterEgg: "Les défis, c'est notre métier - et vous venez d'en trouver un. Joli.",
     },
     home: {
       heroEyebrow: 'Sept élèves-ingénieurs, une business unit',
       heroTitle: "Sept élèves-ingénieurs de l'ENISo, une seule business unit.",
       heroLeadSuffix:
         "Nous construisons, apprenons et menons des projets ensemble - des systèmes embarqués à la plateforme web que vous consultez en ce moment.",
+      statMembers: 'Membres',
+      statAwards: 'Catégories de récompenses',
+      statSkills: 'Compétences techniques',
+      statLanguages: 'Langues',
       section1Eyebrow: 'Qui sommes-nous',
       section1Title: "Une équipe portée par la culture d'ingénierie de JEENISo",
       section1Body:

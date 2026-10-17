@@ -1,0 +1,45 @@
+---
+/** Thin fixed bar under the header that fills as the visitor scrolls down
+ * the page. Pure visual chrome - aria-hidden, no semantic meaning. */
+---
+
+<div class="scroll-progress" aria-hidden="true">
+  <div class="scroll-progress-bar" id="scroll-progress-bar"></div>
+</div>
+
+<script>
+  const bar = document.getElementById('scroll-progress-bar');
+  if (bar) {
+    const update = () => {
+      const doc = document.documentElement;
+      const scrollable = doc.scrollHeight - doc.clientHeight;
+      const pct = scrollable > 0 ? (doc.scrollTop / scrollable) * 100 : 0;
+      bar.style.width = `${Math.min(100, Math.max(0, pct))}%`;
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
+</script>
+
+<style>
+  .scroll-progress {
+    position: sticky;
+    top: 0;
+    z-index: 51;
+    height: 3px;
+    background: transparent;
+  }
+  .scroll-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--color-blue), var(--color-light-blue));
+    transition: width 100ms linear;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-progress-bar {
+      transition: none;
+    }
+  }
+</style>

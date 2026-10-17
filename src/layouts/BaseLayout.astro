@@ -2,6 +2,8 @@
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import BackToTop from '../components/BackToTop.astro';
+import ScrollProgress from '../components/ScrollProgress.astro';
+import EasterEgg from '../components/EasterEgg.astro';
 import { site } from '../data/site';
 import { ui } from '../i18n/ui';
 import { swapLangInPath, otherLang } from '../i18n';
@@ -76,12 +78,18 @@ const altPath = swapLangInPath(Astro.url.pathname, otherLang(lang));
   </head>
   <body>
     <a href="#main" class="skip-link">{t.common.skipToContent}</a>
+    <ScrollProgress />
     <SiteHeader lang={lang} />
     <main id="main">
       <slot />
     </main>
     <SiteFooter lang={lang} />
     <BackToTop lang={lang} />
+    <EasterEgg lang={lang} />
+    <script>
+      import { initTilt } from '../lib/tilt';
+      initTilt();
+    </script>
     <script>
       // Scroll-reveal: progressive enhancement only - .reveal elements are
       // fully visible without this (see the html.js gate in global.css).
