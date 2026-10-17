@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Tag from '../components/Tag.astro';
-import Placeholder from '../components/Placeholder.astro';
 import { people } from '../data/people';
 import { projects } from '../data/projects';
 import { ui } from '../i18n/ui';
@@ -212,9 +211,9 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
       </section>
     )}
 
-    <section id="gallery" class="reveal">
-      <h2>{t.projects.galleryTitle}</h2>
-      {gallery.length > 0 ? (
+    {gallery.length > 0 && (
+      <section id="gallery" class="reveal">
+        <h2>{t.projects.galleryTitle}</h2>
         <div class="gallery-grid">
           {gallery.map((src, i) => (
             <button
@@ -228,13 +227,8 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
             </button>
           ))}
         </div>
-      ) : (
-        <div class="media-placeholder">
-          <p class="muted">{t.projects.galleryComingSoonBody}</p>
-          <Placeholder lang={lang} />
-        </div>
-      )}
-    </section>
+      </section>
+    )}
 
     {hasLightbox && (
       <dialog class="lightbox" id="gallery-lightbox">
@@ -243,24 +237,21 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
       </dialog>
     )}
 
-    <section id="video" class="reveal">
-      <h2>{t.projects.videoTitle}</h2>
-      {videoSrc ? (
-        <video controls preload="none" class="project-video">
-          <source src={videoSrc} type="video/mp4" />
-        </video>
-      ) : project.videoUrl ? (
-        <a class="btn btn-secondary" href={project.videoUrl} target="_blank" rel="noopener noreferrer" data-sound="click">
-          {t.projects.videoTitle}
-          <span aria-hidden="true">↗</span>
-        </a>
-      ) : (
-        <div class="media-placeholder">
-          <p class="muted">{t.projects.videoComingSoonBody}</p>
-          <Placeholder lang={lang} />
-        </div>
-      )}
-    </section>
+    {(videoSrc || project.videoUrl) && (
+      <section id="video" class="reveal">
+        <h2>{t.projects.videoTitle}</h2>
+        {videoSrc ? (
+          <video controls preload="none" class="project-video">
+            <source src={videoSrc} type="video/mp4" />
+          </video>
+        ) : (
+          <a class="btn btn-secondary" href={project.videoUrl!} target="_blank" rel="noopener noreferrer" data-sound="click">
+            {t.projects.videoTitle}
+            <span aria-hidden="true">↗</span>
+          </a>
+        )}
+      </section>
+    )}
 
     {otherProjects.length > 0 && (
       <nav class="other-projects" aria-label={t.projects.otherProjectsTitle}>
@@ -557,16 +548,6 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
     max-width: 720px;
     aspect-ratio: 16 / 9;
     background: var(--color-charcoal);
-  }
-
-  .media-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-2);
-    padding: var(--space-4);
-    background: var(--color-bg-muted);
-    max-width: 480px;
   }
 
   .other-projects {
