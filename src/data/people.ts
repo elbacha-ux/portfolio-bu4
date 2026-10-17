@@ -228,7 +228,11 @@ export const people: Record<string, Member> = {
         L('Baccalauréat in mathematics (2024)', 'Baccalauréat en mathématiques (2024)'),
         L('Preparatory classes in mathematics and physics - IPEIM (2025)', 'Classes préparatoires en mathématiques et physique - IPEIM (2025)'),
       ],
-      certifications: [L('In progress', "En cours d'acquisition")],
+      certifications: [
+        L('Business Model Canvas (BMC) training', 'Formation en Business Model Canvas (BMC)'),
+        L('Networking basics', 'Notions de base en réseaux'),
+        L('In progress', "En cours d'acquisition"),
+      ],
     },
     skills: {
       technical: [
