@@ -16,8 +16,8 @@ export const projects: CollectiveProject[] = [
     slug: 'bu4-portfolio-website',
     title: L('BU4 portfolio website', 'Site web portfolio de BU4'),
     description: L(
-      "A digital showcase presenting Business Unit 4's identity, members, skills and projects - the site you are currently viewing, built collectively by the whole team.",
-      "Une vitrine numérique présentant l'identité, les membres, les compétences et les projets de Business Unit 4 - le site que vous consultez actuellement, construit collectivement par toute l'équipe."
+      "An ongoing project to design and develop BU4's shared portfolio, bringing together the team's engineering background, technical projects and creative interests in a single interactive experience. Rather than relying on a conventional static template, the team is exploring interactive visualizations, dynamic project showcases and thoughtful user interactions to create a portfolio that reflects both its technical skills and its personality.",
+      "Un projet continu de conception et de développement du portfolio commun de BU4, réunissant le parcours d'ingénierie de l'équipe, ses projets techniques et ses centres d'intérêt créatifs dans une seule expérience interactive. Plutôt que de s'appuyer sur un modèle statique classique, l'équipe explore des visualisations interactives, des présentations de projets dynamiques et des interactions utilisateur réfléchies pour créer un portfolio qui reflète à la fois ses compétences techniques et sa personnalité."
     ),
     category: L('Web development', 'Développement web'),
     status: 'in-progress',
@@ -31,13 +31,55 @@ export const projects: CollectiveProject[] = [
       'walid-ben-said',
     ],
     tools: [L('Astro', 'Astro'), L('TypeScript', 'TypeScript'), L('HTML', 'HTML'), L('CSS', 'CSS'), L('JavaScript', 'JavaScript'), L('GitHub', 'GitHub')],
-    skills: [],
+    skills: [
+      L('UI/UX design', 'Design UI/UX'),
+      L('Responsive design', 'Design responsive'),
+      L('Accessibility', 'Accessibilité'),
+      L('Bilingual content architecture', 'Architecture de contenu bilingue'),
+    ],
     outcome: null,
-    link: null,
+    link: 'https://elbacha-ux.github.io/portfolio-bu4/',
     image: null,
     imageAlt: null,
     videoUrl: null,
     documentsNote: null,
+    repositoryUrl: 'https://github.com/elbacha-ux/portfolio-bu4',
+    caseStudy: {
+      overview: L(
+        "BU4's portfolio website is the team's shared showcase - a bilingual site presenting the group's identity, individual member profiles, collective projects and skills in one place. It started as a joint deliverable and has grown into an ongoing design and development project, continuously refined as new content and features are added.",
+        "Le site portfolio de BU4 est la vitrine commune de l'équipe - un site bilingue qui présente l'identité du groupe, les profils individuels des membres, les projets collectifs et les compétences, réunis au même endroit. Né comme un livrable commun, il est devenu un projet de conception et de développement continu, affiné au fil de l'ajout de nouveaux contenus et fonctionnalités."
+      ),
+      designPhilosophy: L(
+        "Rather than a conventional static template, the site is built around honest, interactive case studies: real project detail pages with photo galleries, document downloads and verified data, instead of generic marketing copy. Content that hasn't been confirmed by a team member - an award winner, a CV, a project outcome - is never invented; the interface shows a clear \"coming soon\" state instead. The goal is a portfolio that feels designed and personal without overstating what has actually been done.",
+        "Plutôt qu'un modèle statique classique, le site s'organise autour d'études de cas honnêtes et interactives : de véritables pages de détail de projet avec galeries photo, documents téléchargeables et données vérifiées, plutôt qu'un discours marketing générique. Un contenu non confirmé par un membre de l'équipe - un lauréat de récompense, un CV, un résultat de projet - n'est jamais inventé : l'interface affiche un état « bientôt disponible » à la place. L'objectif est un portfolio qui paraît conçu et personnel sans jamais exagérer ce qui a réellement été fait."
+      ),
+      technicalImplementation: L(
+        "Built with Astro and TypeScript as a fully static site, deployed to GitHub Pages. Content lives in typed data files (src/data/) rather than a CMS, so every member, project and award is checked at build time. The site is bilingual through mirrored static routes (English at the root, French under /fr/) sharing the same view components, with every UI string centralized in one typed dictionary - a missing translation fails the build instead of silently falling back to English. Dark mode uses CSS custom properties with a blocking inline script to avoid a flash of the wrong theme. There is no UI framework or charting library: skill and status charts are hand-built with CSS, and interactions like the image lightbox and the project carousel are plain, dependency-free JavaScript.",
+        "Construit avec Astro et TypeScript sous forme de site entièrement statique, déployé sur GitHub Pages. Le contenu vit dans des fichiers de données typés (src/data/) plutôt que dans un CMS, de sorte que chaque membre, projet et récompense est vérifié à la compilation. Le site est bilingue grâce à des routes statiques miroir (anglais à la racine, français sous /fr/) qui partagent les mêmes composants de vue, avec chaque texte d'interface centralisé dans un dictionnaire typé unique - une traduction manquante fait échouer la compilation au lieu de basculer silencieusement vers l'anglais. Le mode sombre utilise des variables CSS avec un script inline bloquant pour éviter un flash du mauvais thème. Il n'y a ni framework d'interface ni bibliothèque de graphiques : les graphiques de compétences et de statut sont construits en CSS pur, et des interactions comme la visionneuse d'images ou le carrousel de projets reposent sur du JavaScript simple, sans dépendance."
+      ),
+      keyFeaturesDone: [
+        L('Bilingual EN/FR content with full UI coverage', 'Contenu bilingue EN/FR avec couverture complète de l’interface'),
+        L('Light/dark theme toggle with no flash of the wrong theme', 'Bascule thème clair/sombre sans flash du mauvais thème'),
+        L('Responsive layouts for mobile, tablet and desktop', 'Mises en page responsives (mobile, tablette, bureau)'),
+        L('Interactive project detail pages with photo galleries and a lightbox', 'Pages de détail de projet interactives avec galeries photo et visionneuse'),
+        L('Honest, data-driven skill and language charts - no invented scores', 'Graphiques de compétences et de langues honnêtes et basés sur des données réelles - aucun score inventé'),
+        L('Optional interface sound design, off by default', 'Système sonore d’interface optionnel, désactivé par défaut'),
+        L('Downloadable CVs and supporting documents where supplied', 'CV et documents téléchargeables lorsqu’ils sont fournis'),
+        L('Infinite, swipeable awards carousel', 'Carrousel de récompenses infini et glissable'),
+      ],
+      keyFeaturesInProgress: [
+        L('Completing remaining member CVs, photos and project media as the team supplies them', 'Finalisation des CV, photos et médias de projet restants au fur et à mesure que l’équipe les fournit'),
+        L('Refining accessibility and motion details across the site', 'Affinement des détails d’accessibilité et d’animation sur l’ensemble du site'),
+      ],
+      challengesAndDecisions: L(
+        "Keeping the site honest while making it feel complete was the main tension: every placeholder had to degrade gracefully (a missing CV shows a \"coming soon\" state, not a broken link) rather than being hidden or faked. Static mirrored routes were chosen over a dynamic [locale] routing scheme for simplicity and to catch missing translations at build time. Charts and interactive widgets were hand-built in CSS and vanilla JavaScript instead of adding a library, since the data sets are small and the goal was to keep the project dependency-light and easy to reason about.",
+        "La principale tension a été de garder le site honnête tout en le faisant paraître abouti : chaque élément manquant doit se dégrader proprement (un CV absent affiche un état « bientôt disponible », jamais un lien cassé) plutôt que d'être caché ou simulé. Des routes statiques miroir ont été préférées à un système de routage dynamique par locale, pour plus de simplicité et pour détecter les traductions manquantes dès la compilation. Les graphiques et widgets interactifs ont été construits à la main en CSS et en JavaScript natif plutôt que d'ajouter une bibliothèque, les jeux de données étant réduits et l'objectif étant de garder le projet léger en dépendances et facile à comprendre."
+      ),
+      currentProgress: L(
+        "Actively maintained. Member profiles, CVs and project media are added as the team supplies them, and the interaction design - animations, sound, navigation - keeps being refined. This entry will keep reflecting the site's real state rather than a finished snapshot.",
+        "Activement maintenu. Les profils des membres, les CV et les médias de projet sont ajoutés au fur et à mesure que l'équipe les fournit, et le design des interactions - animations, son, navigation - continue d'être affiné. Cette fiche continuera de refléter l'état réel du site plutôt qu'un instantané figé."
+      ),
+    },
   },
   {
     slug: 're-imaginelab-campaign',
@@ -73,5 +115,7 @@ export const projects: CollectiveProject[] = [
       "Rihab Trifi wrote the 12-month PR and partnerships strategy behind this campaign: four focus areas (press relations, content and social media, events and community, and partnerships), four target audiences (large companies, SMEs, schools and institutions, and media), and concrete 12-month goals - including qualified media mentions, published case studies, workshops and quote requests.",
       "Rihab Trifi a rédigé la stratégie de relations publiques et de partenariats sur 12 mois de cette campagne : quatre axes (relations presse, contenus et réseaux sociaux, événements et communauté, partenariats), quatre cibles (grandes entreprises, PME, écoles et institutions, médias), et des objectifs concrets à 12 mois - dont des retombées médias qualifiées, des études de cas publiées, des ateliers et des demandes de devis."
     ),
+    repositoryUrl: null,
+    caseStudy: null,
   },
 ];

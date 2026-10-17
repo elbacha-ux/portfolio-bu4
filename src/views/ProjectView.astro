@@ -27,6 +27,15 @@ const skills = pickAll(project.skills, lang);
 const documentsNote = pick(project.documentsNote, lang);
 const members = project.memberSlugs.map((s) => people[s]).filter(Boolean);
 
+const cs = project.caseStudy;
+const overview = cs ? pick(cs.overview, lang) : null;
+const designPhilosophy = cs ? pick(cs.designPhilosophy, lang) : null;
+const technicalImplementation = cs ? pick(cs.technicalImplementation, lang) : null;
+const keyFeaturesDone = cs ? pickAll(cs.keyFeaturesDone, lang) : [];
+const keyFeaturesInProgress = cs ? pickAll(cs.keyFeaturesInProgress, lang) : [];
+const challengesAndDecisions = cs ? pick(cs.challengesAndDecisions, lang) : null;
+const currentProgress = cs ? pick(cs.currentProgress, lang) : null;
+
 const gallery = projectGallery(slug);
 const hasVideo = hasProjectVideo(slug);
 const base = import.meta.env.BASE_URL;
@@ -54,12 +63,20 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
       </div>
       <h1>{title}</h1>
       {description && <p class="lead">{description}</p>}
-      {project.link && (
-        <a class="btn btn-primary" href={project.link} target="_blank" rel="noopener noreferrer" data-sound="click">
-          {t.projects.visitSite}
-          <span aria-hidden="true">↗</span>
-        </a>
-      )}
+      <div class="hero-actions">
+        {project.link && (
+          <a class="btn btn-primary" href={project.link} target="_blank" rel="noopener noreferrer" data-sound="click">
+            {t.projects.visitSite}
+            <span aria-hidden="true">↗</span>
+          </a>
+        )}
+        {project.repositoryUrl && (
+          <a class="btn btn-secondary" href={project.repositoryUrl} target="_blank" rel="noopener noreferrer" data-sound="click">
+            {t.projects.sourceCode}
+            <span aria-hidden="true">↗</span>
+          </a>
+        )}
+      </div>
     </div>
   </header>
 
@@ -70,6 +87,13 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
   </nav>
 
   <article class="container project-page">
+    {overview && (
+      <section class="reveal">
+        <h2>{t.projects.aboutTitle}</h2>
+        <p>{overview}</p>
+      </section>
+    )}
+
     {members.length > 0 && (
       <section class="reveal">
         <h2>{t.projects.contributorsTitle}</h2>
@@ -96,6 +120,56 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
         <div class="tag-group">
           {skills.map((skill) => <Tag>{skill}</Tag>)}
         </div>
+      </section>
+    )}
+
+    {designPhilosophy && (
+      <section class="reveal">
+        <h2>{t.projects.designPhilosophyTitle}</h2>
+        <p>{designPhilosophy}</p>
+      </section>
+    )}
+
+    {technicalImplementation && (
+      <section class="reveal">
+        <h2>{t.projects.technicalImplementationTitle}</h2>
+        <p>{technicalImplementation}</p>
+      </section>
+    )}
+
+    {(keyFeaturesDone.length > 0 || keyFeaturesInProgress.length > 0) && (
+      <section class="reveal">
+        <h2>{t.projects.keyFeaturesTitle}</h2>
+        {keyFeaturesDone.length > 0 && (
+          <div class="feature-group">
+            <p class="feature-group-label">{t.member.statusCompleted}</p>
+            <ul class="feature-list feature-list-done">
+              {keyFeaturesDone.map((f) => <li>{f}</li>)}
+            </ul>
+          </div>
+        )}
+        {keyFeaturesInProgress.length > 0 && (
+          <div class="feature-group">
+            <p class="feature-group-label">{t.common.inProgress}</p>
+            <ul class="feature-list feature-list-in-progress">
+              {keyFeaturesInProgress.map((f) => <li>{f}</li>)}
+            </ul>
+          </div>
+        )}
+      </section>
+    )}
+
+    {challengesAndDecisions && (
+      <section class="reveal">
+        <h2>{t.projects.challengesTitle}</h2>
+        <p>{challengesAndDecisions}</p>
+      </section>
+    )}
+
+    {currentProgress && (
+      <section class="reveal current-progress">
+        <h2>{t.projects.currentProgressTitle}</h2>
+        <p>{currentProgress}</p>
       </section>
     )}
 
@@ -277,6 +351,11 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
     color: var(--color-text-muted);
     margin-bottom: var(--space-3);
   }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
 
   .section-nav {
     position: sticky;
@@ -328,6 +407,63 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+  }
+
+  .feature-group {
+    margin-bottom: var(--space-3);
+  }
+  .feature-group:last-child {
+    margin-bottom: 0;
+  }
+  .feature-group-label {
+    font-weight: var(--fw-heading);
+    font-size: var(--fs-200);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-1);
+  }
+  .feature-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .feature-list li {
+    position: relative;
+    padding-left: 1.5em;
+  }
+  .feature-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 8px;
+    height: 8px;
+  }
+  .feature-list-done li::before {
+    background: var(--color-blue);
+    border-radius: 50%;
+  }
+  .feature-list-in-progress li::before {
+    background: var(--color-accent-soft);
+    border: 2px solid var(--color-accent-strong);
+    border-radius: 50%;
+    width: 6px;
+    height: 6px;
+  }
+  .feature-list-in-progress li {
+    color: var(--color-text-muted);
+  }
+
+  .current-progress {
+    background: var(--color-bg-muted);
+    padding: var(--space-4);
+    border-left: 3px solid var(--color-blue);
+  }
+  .current-progress h2 {
+    margin-bottom: var(--space-2);
   }
 
   .documents-note {
