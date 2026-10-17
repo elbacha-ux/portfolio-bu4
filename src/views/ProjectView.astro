@@ -86,6 +86,22 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
   </nav>
 
   <article class="container project-page">
+    {(videoSrc || project.videoUrl) && (
+      <section id="video" class="reveal">
+        <h2>{t.projects.videoTitle}</h2>
+        {videoSrc ? (
+          <video autoplay muted playsinline controls preload="metadata" class="project-video">
+            <source src={videoSrc} type="video/mp4" />
+          </video>
+        ) : (
+          <a class="btn btn-secondary" href={project.videoUrl!} target="_blank" rel="noopener noreferrer" data-sound="click">
+            {t.projects.videoTitle}
+            <span aria-hidden="true">↗</span>
+          </a>
+        )}
+      </section>
+    )}
+
     {overview && (
       <section class="reveal">
         <h2>{t.projects.aboutTitle}</h2>
@@ -235,22 +251,6 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
         <button type="button" class="lightbox-close" data-sound="click" aria-label={t.common.close}>&times;</button>
         <img class="lightbox-image" alt={title} />
       </dialog>
-    )}
-
-    {(videoSrc || project.videoUrl) && (
-      <section id="video" class="reveal">
-        <h2>{t.projects.videoTitle}</h2>
-        {videoSrc ? (
-          <video controls preload="none" class="project-video">
-            <source src={videoSrc} type="video/mp4" />
-          </video>
-        ) : (
-          <a class="btn btn-secondary" href={project.videoUrl!} target="_blank" rel="noopener noreferrer" data-sound="click">
-            {t.projects.videoTitle}
-            <span aria-hidden="true">↗</span>
-          </a>
-        )}
-      </section>
     )}
 
     {otherProjects.length > 0 && (
