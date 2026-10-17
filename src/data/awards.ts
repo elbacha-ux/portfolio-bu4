@@ -19,7 +19,7 @@ export const awards: Award[] = [
     recipientSlugs: ['ahmed-belgacem'],
     evidenceUrl: null,
     image: '/portfolio-bu4/images/awards/chill-guy.jpg',
-    icon: 'shield',
+    icon: 'wave',
     status: 'confirmed',
   },
   {
@@ -34,7 +34,7 @@ export const awards: Award[] = [
     recipientSlugs: ['amena-aouichaoui'],
     evidenceUrl: null,
     image: '/portfolio-bu4/images/awards/guys-focus.jpg',
-    icon: 'wrench',
+    icon: 'target',
     status: 'confirmed',
   },
   {
@@ -94,7 +94,7 @@ export const awards: Award[] = [
     recipientSlugs: ['walid-ben-said'],
     evidenceUrl: null,
     image: '/portfolio-bu4/images/awards/memory-keeper.jpg',
-    icon: 'clock',
+    icon: 'camera',
     status: 'confirmed',
   },
   {
@@ -109,7 +109,7 @@ export const awards: Award[] = [
     recipientSlugs: ['amena-aouichaoui', 'lina-ben-hadj-slama'],
     evidenceUrl: null,
     image: '/portfolio-bu4/images/awards/chaotic-collaboration.jpg',
-    icon: 'heart',
+    icon: 'spark',
     status: 'confirmed',
   },
   {
@@ -124,7 +124,7 @@ export const awards: Award[] = [
     recipientSlugs: ['walid-ben-said', 'lina-ben-hadj-slama'],
     evidenceUrl: null,
     image: '/portfolio-bu4/images/awards/strongest-connection.jpg',
-    icon: 'heart',
+    icon: 'signal',
     status: 'confirmed',
   },
   {
@@ -139,7 +139,22 @@ export const awards: Award[] = [
     recipientSlugs: ['rihab-trifi'],
     evidenceUrl: null,
     image: '/portfolio-bu4/images/awards/unnecessary-comments.jpg',
-    icon: 'magnifier',
+    icon: 'laugh',
+    status: 'confirmed',
+  },
+  {
+    slug: 'perfect-chemistry',
+    title: L('The Perfect Chemistry Award', "Le Prix de l'Alchimie Parfaite"),
+    issuer: null,
+    year: null,
+    description: L(
+      'Whatever the project, their ideas just react well together - instant results, no explosions.',
+      "Quel que soit le projet, leurs idées réagissent toujours bien ensemble - des résultats immédiats, sans aucune explosion."
+    ),
+    recipientSlugs: ['amena-aouichaoui', 'fedi-khouildi'],
+    evidenceUrl: null,
+    image: '/portfolio-bu4/images/awards/perfect-chemistry.jpg',
+    icon: 'flask',
     status: 'confirmed',
   },
 ];
