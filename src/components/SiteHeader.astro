@@ -33,7 +33,7 @@ function isActive(href: string) {
       <ul>
         {navItems.map((item) => (
           <li>
-            <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+            <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined} data-sound-hover="true">
               {item.label}
             </a>
           </li>
@@ -66,7 +66,7 @@ function isActive(href: string) {
     <ul>
       {navItems.map((item) => (
         <li>
-          <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a>
+          <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined} data-sound-hover="true">{item.label}</a>
         </li>
       ))}
       <li><a class="btn btn-primary" href={localePath(lang, 'projects/')} data-sound="click">{t.common.heroCta}</a></li>

@@ -202,8 +202,6 @@ interface UiDict {
     body: string;
   };
   sound: {
-    signatureTitle: string;
-    signatureBody: string;
     play: string;
     stop: string;
     replay: string;
@@ -416,9 +414,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       body: "The page you're looking for doesn't exist or has moved.",
     },
     sound: {
-      signatureTitle: 'The BU4 sonic signature',
-      signatureBody: 'A short original audio sting for BU4 - entirely optional, and it never plays on its own.',
-      play: 'Play BU4 intro',
+      play: 'Play BU4 slogan',
       stop: 'Stop',
       replay: 'Replay',
     },
@@ -628,9 +624,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       body: "La page que vous cherchez n'existe pas ou a été déplacée.",
     },
     sound: {
-      signatureTitle: 'La signature sonore de BU4',
-      signatureBody: "Un court jingle original pour BU4 - entièrement optionnel, il ne se joue jamais tout seul.",
-      play: "Écouter l'intro BU4",
+      play: "Écouter le slogan BU4",
       stop: 'Arrêter',
       replay: 'Réécouter',
     },
