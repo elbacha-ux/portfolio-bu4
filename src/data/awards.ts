@@ -113,6 +113,21 @@ export const awards: Award[] = [
     status: 'confirmed',
   },
   {
+    slug: 'strongest-connection',
+    title: L('The Strongest Connection Award', 'Le Prix de la Connexion la Plus Forte'),
+    issuer: null,
+    year: null,
+    description: L(
+      'Their communication signal is always at 100% - zero buffering, unlimited interaction.',
+      'Leur signal de communication est toujours au maximum : zéro coupure, interaction illimitée.'
+    ),
+    recipientSlugs: ['walid-ben-said', 'lina-ben-hadj-slama'],
+    evidenceUrl: null,
+    image: '/portfolio-bu4/images/awards/strongest-connection.jpg',
+    icon: 'heart',
+    status: 'confirmed',
+  },
+  {
     slug: 'unnecessary-comments',
     title: L('The CEO of Unnecessary Comments', 'La PDG des Commentaires Inutiles'),
     issuer: null,
