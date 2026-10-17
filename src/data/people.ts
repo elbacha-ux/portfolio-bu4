@@ -318,7 +318,7 @@ export const people: Record<string, Member> = {
       { organization: 'EUREKA Club, ENISo', detail: null },
       { organization: 'Cyberguards, ENISo', detail: null },
       { organization: 'Mawawil', detail: L('Manager of the musical troupe.', 'Manager de la troupe musicale.') },
-      { organization: 'LPS Beatbox & Guitar', detail: L('Member of the artistic committee.', 'Membre du comité artistique.') },
+      { organization: 'Beatbox', detail: L('Member of the artistic committee (LPS).', "Membre du comité artistique (LPS).") },
     ],
     achievements: [],
     links: { email: 'Fedi.khouildi@eniso.u-sousse.tn', linkedin: 'https://www.linkedin.com/in/fedi-khouildi-7b4659433/', github: 'https://github.com/elbacha-ux' },
