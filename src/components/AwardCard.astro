@@ -86,12 +86,6 @@ const winnerNames = winners.map((w) => w.name).join(' & ');
   .photo-zone {
     position: relative;
   }
-  .photo-zone :global(.photo-frame img) {
-    transition: transform var(--duration-slow) var(--ease-out);
-  }
-  .award-card:hover .photo-zone :global(.photo-frame img) {
-    transform: scale(1.05);
-  }
 
   .pending-photo {
     aspect-ratio: 1 / 1;

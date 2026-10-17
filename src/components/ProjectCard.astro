@@ -61,6 +61,7 @@ const detailHref = localePath(lang, `projects/${project.slug}/`);
     display: flex;
     flex-direction: column;
     height: 100%;
+    overflow: hidden;
   }
   .card-link {
     color: inherit;
@@ -80,6 +81,10 @@ const detailHref = localePath(lang, `projects/${project.slug}/`);
     object-fit: cover;
     margin: calc(var(--space-3) * -1) calc(var(--space-3) * -1) var(--space-3);
     width: calc(100% + var(--space-3) * 2);
+    transition: transform var(--duration-slow) var(--ease-out);
+  }
+  .project-card:hover img {
+    transform: scale(1.06);
   }
   .meta {
     display: flex;
