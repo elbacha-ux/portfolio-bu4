@@ -243,6 +243,7 @@ export const people: Record<string, Member> = {
         L('JavaScript', 'JavaScript'),
         L('Notions of digital telecommunications and digital systems', 'Notions en télécommunications numériques et en systèmes numériques'),
         L('Video editing', 'Montage vidéo'),
+        L('Advanced video editing with CapCut', 'Montage vidéo avancé avec CapCut'),
         L('AI-assisted editing (video and photo)', 'Montage assisté par IA (vidéo et photo)'),
         L('Suno (AI music generation)', 'Suno (génération musicale par IA)'),
         L('Google Flow (AI video generation)', 'Google Flow (génération vidéo par IA)'),
@@ -269,6 +270,7 @@ export const people: Record<string, Member> = {
       L('Cybersecurity', 'Cybersécurité'),
       L('Music and guitar', 'Musique et guitare'),
       L('Gaming - League of Legends (Master)', 'Jeux vidéo - League of Legends (rang Maître)'),
+      L('Gym and calisthenics', 'Musculation et callisthénie'),
     ],
     projects: [
       {
