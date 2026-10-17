@@ -152,6 +152,12 @@ interface UiDict {
     visitSite: string;
     viewDetails: string;
     aboutTitle: string;
+    designPhilosophyTitle: string;
+    technicalImplementationTitle: string;
+    keyFeaturesTitle: string;
+    challengesTitle: string;
+    currentProgressTitle: string;
+    sourceCode: string;
     contributorsTitle: string;
     toolsTitle: string;
     skillsTitle: string;
@@ -364,6 +370,12 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       visitSite: 'Visit site',
       viewDetails: 'View details →',
       aboutTitle: 'About this project',
+      designPhilosophyTitle: 'Design philosophy',
+      technicalImplementationTitle: 'Technical implementation',
+      keyFeaturesTitle: 'Key features',
+      challengesTitle: 'Challenges & decisions',
+      currentProgressTitle: 'Current progress',
+      sourceCode: 'Source code',
       contributorsTitle: 'Contributors',
       toolsTitle: 'Tools & technologies',
       skillsTitle: 'Skills used',
@@ -574,6 +586,12 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       visitSite: 'Voir le site',
       viewDetails: 'Voir les détails →',
       aboutTitle: 'À propos de ce projet',
+      designPhilosophyTitle: 'Philosophie de conception',
+      technicalImplementationTitle: 'Implémentation technique',
+      keyFeaturesTitle: 'Fonctionnalités clés',
+      challengesTitle: 'Défis et choix techniques',
+      currentProgressTitle: 'Avancement actuel',
+      sourceCode: 'Code source',
       contributorsTitle: 'Contributeurs',
       toolsTitle: 'Outils et technologies',
       skillsTitle: 'Compétences mobilisées',

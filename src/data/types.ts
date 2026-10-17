@@ -111,6 +111,25 @@ export interface CollectiveProject {
   /** Short intro shown above the Documents section, e.g. crediting who
    * prepared a supporting PDF. Null when there's nothing to say. */
   documentsNote: Localized<string> | null;
+  /** Source repository, when one is actually configured for this project -
+   * never a guessed or invented URL. Null otherwise. */
+  repositoryUrl: string | null;
+  /** Optional deep-dive case study rendered on the project's detail page.
+   * Every field is nullable/empty so a project can adopt only the sections
+   * that are actually true for it - nothing here is auto-generated. */
+  caseStudy: ProjectCaseStudy | null;
+}
+
+export interface ProjectCaseStudy {
+  overview: Localized<string> | null;
+  designPhilosophy: Localized<string> | null;
+  technicalImplementation: Localized<string> | null;
+  /** Shipped, working features - never aspirational. */
+  keyFeaturesDone: Localized<string>[];
+  /** Explicitly not finished yet - keeps the "done" list honest. */
+  keyFeaturesInProgress: Localized<string>[];
+  challengesAndDecisions: Localized<string> | null;
+  currentProgress: Localized<string> | null;
 }
 
 /** Small inline-SVG icon set rendered on award cards - purely decorative,
