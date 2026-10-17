@@ -163,9 +163,7 @@ interface UiDict {
     skillsTitle: string;
     galleryTitle: string;
     galleryInspect: string;
-    galleryComingSoonBody: string;
     videoTitle: string;
-    videoComingSoonBody: string;
     outcomeTitle: string;
     documentsTitle: string;
     downloadDocument: string;
@@ -381,9 +379,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       skillsTitle: 'Skills used',
       galleryTitle: 'Gallery',
       galleryInspect: 'View full-size photo',
-      galleryComingSoonBody: 'Photos from this project will be added here once available.',
       videoTitle: 'Video',
-      videoComingSoonBody: 'A video for this project will be added here once available.',
       outcomeTitle: 'Outcome',
       documentsTitle: 'Documents',
       downloadDocument: 'Download',
@@ -597,9 +593,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       skillsTitle: 'Compétences mobilisées',
       galleryTitle: 'Galerie',
       galleryInspect: 'Voir la photo en pleine taille',
-      galleryComingSoonBody: 'Les photos de ce projet seront ajoutées ici dès qu\'elles seront disponibles.',
       videoTitle: 'Vidéo',
-      videoComingSoonBody: 'Une vidéo de ce projet sera ajoutée ici dès qu\'elle sera disponible.',
       outcomeTitle: 'Résultat',
       documentsTitle: 'Documents',
       downloadDocument: 'Télécharger',
