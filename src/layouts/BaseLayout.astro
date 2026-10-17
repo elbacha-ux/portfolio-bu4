@@ -90,9 +90,13 @@ const altPath = swapLangInPath(Astro.url.pathname, otherLang(lang));
       import { initTilt } from '../lib/tilt';
       import { initSpotlight } from '../lib/spotlight';
       import { initParallax } from '../lib/parallax';
+      import { initCursor } from '../lib/cursor';
+      import { initMagnetic } from '../lib/magnetic';
       initTilt();
       initSpotlight();
       initParallax();
+      initCursor();
+      initMagnetic();
     </script>
     <script>
       // Scroll-reveal: progressive enhancement only - .reveal elements are

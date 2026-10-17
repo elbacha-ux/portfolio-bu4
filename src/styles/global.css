@@ -62,6 +62,7 @@ html.theme-transition-manual::view-transition-new(root) {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
     scroll-behavior: auto !important;
   }
   ::view-transition-old(root),
@@ -366,6 +367,106 @@ html.js img.fade-in-img.is-loaded {
   opacity: 0;
   transition: opacity var(--duration-base) var(--ease-standard);
 }
+
+/* ---- Ambient gradient glow ----
+   Soft blurred brand-color blobs sitting behind a section's own content
+   (and the hard-edged facet shapes, where present). Pure CSS, static (never
+   animates), so it looks identical under prefers-reduced-motion - opt in
+   per-section with the .glow-bg class on an already position:relative,
+   isolation:isolate section. */
+.glow-bg::before {
+  content: '';
+  position: absolute;
+  inset: -15%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 20%, color-mix(in srgb, var(--color-light-blue) 38%, transparent), transparent 55%),
+    radial-gradient(circle at 82% 15%, color-mix(in srgb, var(--color-blue) 30%, transparent), transparent 50%),
+    radial-gradient(circle at 55% 95%, color-mix(in srgb, var(--color-navy) 22%, transparent), transparent 55%);
+  filter: blur(50px);
+}
+
+/* ---- Film-grain texture overlay ----
+   A faint fixed noise layer over the whole viewport for an editorial,
+   less-flat feel. Inline SVG feTurbulence, no image request. Opacity is
+   intentionally tiny - it should read as texture, not as visible static. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  pointer-events: none;
+  opacity: 0.025;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---- Custom cursor (progressive enhancement) ----
+   Dot + trailing ring created by cursor.ts, mouse/trackpad only. The
+   `custom-cursor` class is only ever added once that script confirms a fine
+   pointer + hover capability + no reduced-motion preference, so `cursor:
+   none` never ships to a touch visitor or a JS-disabled one. */
+@media (hover: hover) and (pointer: fine) {
+  html.custom-cursor,
+  html.custom-cursor * {
+    cursor: none;
+  }
+  html.custom-cursor input,
+  html.custom-cursor textarea,
+  html.custom-cursor [contenteditable='true'] {
+    cursor: text;
+  }
+}
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  border-radius: 50%;
+  will-change: transform;
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--color-accent-strong);
+}
+.cursor-ring {
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid var(--color-accent-strong);
+  opacity: 0.55;
+  transition: width var(--duration-base) var(--ease-out), height var(--duration-base) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-standard);
+}
+.cursor-ring.is-hovering {
+  width: 52px;
+  height: 52px;
+  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+  opacity: 0.85;
+}
+.cursor-dot.is-hidden,
+.cursor-ring.is-hidden {
+  opacity: 0;
+}
+
+/* ---- Staggered grid reveal ----
+   The known card-grid containers stagger their .reveal children's
+   transition-delay by document order, so cards that cross into view
+   together fade in one after another instead of all at once. Pure CSS - a
+   no-JS visitor never has the hidden starting state to begin with (see the
+   html.js gate above), so there's nothing to stagger without JS. */
+html.js :where(.member-grid, .project-list, .award-list) > li:nth-child(1) .reveal { transition-delay: 0ms; }
+html.js :where(.member-grid, .project-list, .award-list) > li:nth-child(2) .reveal { transition-delay: 70ms; }
+html.js :where(.member-grid, .project-list, .award-list) > li:nth-child(3) .reveal { transition-delay: 140ms; }
+html.js :where(.member-grid, .project-list, .award-list) > li:nth-child(4) .reveal { transition-delay: 210ms; }
+html.js :where(.member-grid, .project-list, .award-list) > li:nth-child(5) .reveal { transition-delay: 280ms; }
+html.js :where(.member-grid, .project-list, .award-list) > li:nth-child(6) .reveal { transition-delay: 350ms; }
+html.js :where(.member-grid, .project-list, .award-list) > li:nth-child(7) .reveal { transition-delay: 420ms; }
+html.js :where(.member-grid, .project-list, .award-list) > li:nth-child(n+8) .reveal { transition-delay: 490ms; }
 
 @media (min-width: 768px) {
   .container {

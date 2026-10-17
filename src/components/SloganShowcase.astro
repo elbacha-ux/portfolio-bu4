@@ -17,9 +17,19 @@ interface Props {
 }
 const { lang } = Astro.props;
 const t = ui[lang];
+
+// Split each colored chunk into its real words so the slogan can reveal
+// word by word (like it's being written) instead of as 3 fixed blocks -
+// each word keeps a running index across all three chunks for the
+// staggered transition-delay in the <style> below.
+let wordIndex = 0;
+const toWords = (text: string) => text.split(' ').map((word) => ({ word, i: wordIndex++ }));
+const w1 = toWords(t.about.sloganWord1);
+const w2 = toWords(t.about.sloganWord2);
+const w3 = toWords(t.about.sloganWord3);
 ---
 
-<section class="slogan-showcase reveal" data-spotlight>
+<section class="slogan-showcase glow-bg reveal" data-spotlight>
   <div class="facets" aria-hidden="true">
     <span class="facet f1" data-parallax="0.06"></span>
     <span class="facet f2" data-parallax="0.12"></span>
@@ -32,9 +42,11 @@ const t = ui[lang];
   <div class="container showcase-inner">
     <p class="eyebrow">{t.about.sloganEyebrow}</p>
     <p class="slogan-text">
-      <span class="word w1">{t.about.sloganWord1}</span>
-      <span class="word w2">{t.about.sloganWord2}</span>
-      <span class="word w3">{t.about.sloganWord3}</span>
+      <span class="word w1">{w1.map((p, idx) => <>{idx > 0 && ' '}<span class="word-piece" style={`--i: ${p.i}`}>{p.word}</span></>)}</span>
+      {' '}
+      <span class="word w2">{w2.map((p, idx) => <>{idx > 0 && ' '}<span class="word-piece" style={`--i: ${p.i}`}>{p.word}</span></>)}</span>
+      {' '}
+      <span class="word w3">{w3.map((p, idx) => <>{idx > 0 && ' '}<span class="word-piece" style={`--i: ${p.i}`}>{p.word}</span></>)}</span>
     </p>
 
     <details class="why">
@@ -153,6 +165,22 @@ const t = ui[lang];
     padding: 0 0.15em;
     transition: transform var(--duration-base) var(--ease-out), color var(--duration-base) var(--ease-standard);
     cursor: default;
+  }
+  .word-piece {
+    display: inline-block;
+  }
+  /* Written word by word: each piece starts hidden and slides up into
+     place once the section is scrolled into view (.reveal/.is-visible from
+     BaseLayout's shared observer), staggered by --i across all 3 chunks. */
+  html.js .slogan-showcase .word-piece {
+    opacity: 0;
+    transform: translateY(0.35em);
+    transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out);
+    transition-delay: calc(var(--i) * 120ms);
+  }
+  html.js .slogan-showcase.is-visible .word-piece {
+    opacity: 1;
+    transform: none;
   }
   .word:hover,
   .word:focus-visible {
@@ -282,6 +310,10 @@ const t = ui[lang];
     .why-body-wrapper,
     .why-body {
       transition: none;
+    }
+    html.js .slogan-showcase .word-piece {
+      opacity: 1;
+      transform: none;
     }
   }
 
