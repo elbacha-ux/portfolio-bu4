@@ -50,17 +50,17 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
 ---
 
 <BaseLayout lang={lang} title={title} description={description ?? title}>
-  <header class="project-hero">
+  <header class="project-hero" data-spotlight>
     <div class="facets" aria-hidden="true">
-      <span class="facet f1"></span>
-      <span class="facet f2"></span>
+      <span class="facet f1" data-parallax="0.09"></span>
+      <span class="facet f2" data-parallax="0.15"></span>
     </div>
     <div class="container hero-content reveal">
       <div class="meta">
         {category && <Tag>{category}</Tag>}
         {project.status === 'in-progress' && <Tag class="status-tag">{t.common.inProgress}</Tag>}
       </div>
-      <h1>{title}</h1>
+      <h1 style={`view-transition-name: project-title-${project.slug}`}>{title}</h1>
       {description && <p class="lead">{description}</p>}
       <div class="hero-actions">
         {project.link && (

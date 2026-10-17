@@ -21,13 +21,22 @@ const detailHref = localePath(lang, `projects/${project.slug}/`);
 ---
 
 <article class="project-card card reveal" data-tilt>
-  {project.image && <img src={project.image} alt={project.imageAlt ? pick(project.imageAlt, lang) ?? '' : ''} loading="lazy" width="480" height="300" />}
+  {project.image && (
+    <img
+      src={project.image}
+      alt={project.imageAlt ? pick(project.imageAlt, lang) ?? '' : ''}
+      loading="lazy"
+      width="480"
+      height="300"
+      style={`view-transition-name: project-image-${project.slug}`}
+    />
+  )}
   <div class="body">
     <div class="meta">
       {category && <Tag>{category}</Tag>}
       {project.status === 'in-progress' && <Tag class="status-tag">{t.common.inProgress}</Tag>}
     </div>
-    <h3><a class="card-link" href={detailHref} data-sound="click">{title}</a></h3>
+    <h3 style={`view-transition-name: project-title-${project.slug}`}><a class="card-link" href={detailHref} data-sound="click">{title}</a></h3>
     {description && <p>{description}</p>}
     <div class="card-actions">
       {project.link && (

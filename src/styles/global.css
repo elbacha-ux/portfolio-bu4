@@ -83,6 +83,33 @@ body {
   transition: background-color var(--duration-base) var(--ease-standard), color var(--duration-base) var(--ease-standard);
 }
 
+::selection {
+  background: var(--color-blue);
+  color: var(--color-white);
+}
+
+/* Firefox */
+html {
+  scrollbar-color: var(--color-mid-gray) transparent;
+  scrollbar-width: thin;
+}
+/* WebKit/Blink */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-mid-gray);
+  border: 3px solid var(--color-bg);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-cool-gray);
+}
+
 /* Belt-and-suspenders: never allow a single element to force page-wide
    horizontal scroll (long French compound words, unbroken URLs, etc.). */
 html, body {
@@ -308,6 +335,36 @@ html.js .reveal.is-visible {
     opacity: 1;
     transform: none;
   }
+}
+
+/* ---- Image fade-in (progressive enhancement) ----
+   Same pattern as scroll-reveal above: visible by default, only armed once
+   `js` is on <html>. Scoped to content images (BaseLayout.astro queries
+   `main img`) so chrome like the header/footer logo never flashes in. */
+html.js img.fade-in-img {
+  opacity: 0;
+  transition: opacity var(--duration-slow) var(--ease-out);
+}
+html.js img.fade-in-img.is-loaded {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.js img.fade-in-img {
+    opacity: 1;
+  }
+}
+
+/* ---- Spotlight glow (progressive enhancement) ----
+   Soft cursor-tracking glow on signature dark hero sections - the overlay
+   div is created by spotlight.ts, this just styles it. Mouse/trackpad only,
+   never created at all under reduced-motion or on touch devices. */
+.spotlight-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-standard);
 }
 
 @media (min-width: 768px) {
