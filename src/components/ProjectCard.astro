@@ -20,7 +20,7 @@ const tools = pickAll(project.tools, lang);
 const detailHref = localePath(lang, `projects/${project.slug}/`);
 ---
 
-<article class="project-card card reveal">
+<article class="project-card card reveal" data-tilt>
   {project.image && <img src={project.image} alt={project.imageAlt ? pick(project.imageAlt, lang) ?? '' : ''} loading="lazy" width="480" height="300" />}
   <div class="body">
     <div class="meta">

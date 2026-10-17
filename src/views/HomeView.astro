@@ -14,6 +14,7 @@ import { people } from '../data/people';
 import { team } from '../data/team';
 import { projects } from '../data/projects';
 import { awards } from '../data/awards';
+import { locales, pickAll } from '../i18n';
 
 interface Props {
   lang: Lang;
@@ -25,6 +26,18 @@ const members = team.memberSlugs.map((slug) => people[slug]);
 const bum = people[team.bumSlug];
 const featuredProjects = projects.slice(0, 3);
 const description = site.description[lang];
+
+const toSlug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+const skillSlugs = new Set<string>();
+for (const m of members) {
+  for (const skill of pickAll(m.skills.technical, lang)) skillSlugs.add(toSlug(skill));
+}
+const stats = [
+  { value: members.length, label: t.home.statMembers },
+  { value: awards.length, label: t.home.statAwards },
+  { value: skillSlugs.size, label: t.home.statSkills },
+  { value: locales.length, label: t.home.statLanguages },
+];
 ---
 
 <BaseLayout lang={lang} title={site.fullName} description={description} isHome>
@@ -49,6 +62,16 @@ const description = site.description[lang];
       <div class="hero-mark reveal" aria-hidden="true">
         <span class="numeral">04</span>
       </div>
+    </div>
+    <div class="container stats-row reveal">
+      <ul class="stats">
+        {stats.map((s) => (
+          <li>
+            <span class="stat-value" data-count-to={s.value}>0</span>
+            <span class="stat-label">{s.label}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 
@@ -96,6 +119,45 @@ const description = site.description[lang];
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  const counters = document.querySelectorAll<HTMLElement>('[data-count-to]');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function animateCount(el: HTMLElement) {
+    const target = Number(el.dataset.countTo ?? '0');
+    if (reduceMotion || !target) {
+      el.textContent = String(target);
+      return;
+    }
+    const duration = 1200;
+    const start = performance.now();
+    function tick(now: number) {
+      const progress = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = String(Math.round(eased * target));
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  if (counters.length && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            animateCount(entry.target as HTMLElement);
+            io.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.6 }
+    );
+    counters.forEach((el) => io.observe(el));
+  } else {
+    counters.forEach((el) => animateCount(el));
+  }
+</script>
 
 <style>
   .hero {
@@ -175,6 +237,39 @@ const description = site.description[lang];
     display: none;
   }
 
+  .stats-row {
+    position: relative;
+    z-index: 1;
+    padding-bottom: var(--space-5);
+  }
+  .stats {
+    list-style: none;
+    margin: 0;
+    padding: var(--space-4) 0 0;
+    border-top: 1px solid var(--color-border);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+  .stats li {
+    display: flex;
+    flex-direction: column;
+  }
+  .stat-value {
+    font-size: var(--fs-700);
+    font-weight: var(--fw-black);
+    color: var(--color-navy);
+    line-height: 1;
+  }
+  .stat-label {
+    margin-top: 0.3em;
+    font-size: var(--fs-100);
+    font-weight: var(--fw-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+  }
+
   .section {
     padding-block: var(--space-6);
   }
@@ -212,6 +307,12 @@ const description = site.description[lang];
   .closing :global(.on-dark.btn-secondary:hover) {
     background: rgba(255, 255, 255, 0.12);
     color: var(--color-white);
+  }
+
+  @media (min-width: 640px) {
+    .stats {
+      grid-template-columns: repeat(4, 1fr);
+    }
   }
 
   @media (min-width: 1024px) {

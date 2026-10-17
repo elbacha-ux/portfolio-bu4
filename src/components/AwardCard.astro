@@ -29,7 +29,7 @@ const primaryWinner = winners[0] ?? null;
 const winnerNames = winners.map((w) => w.name).join(' & ');
 ---
 
-<article class="award-card reveal">
+<article class="award-card reveal" data-tilt>
   <div class="photo-zone">
     {primaryWinner ? (
       <PhotoOverlay src={award.image ?? primaryWinner.photo} name={winnerNames} lang={lang} ratio="1 / 1" />

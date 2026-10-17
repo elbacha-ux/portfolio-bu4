@@ -25,6 +25,7 @@ const t = ui[lang];
 
 <script>
   import { sound } from '../lib/sound-manager';
+  import { burstConfetti } from '../lib/confetti';
 
   const btn = document.getElementById('signature-play');
   const label = btn?.querySelector('.play-label');
@@ -45,6 +46,8 @@ const t = ui[lang];
     playing = true;
     btn.classList.add('is-playing');
     setLabel(btn.dataset.labelStop);
+    const rect = btn.getBoundingClientRect();
+    burstConfetti(rect.left + rect.width / 2, rect.top);
     sound.playSignature(() => {
       playing = false;
       btn.classList.remove('is-playing');

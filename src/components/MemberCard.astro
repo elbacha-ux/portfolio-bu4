@@ -12,7 +12,7 @@ const { member, lang } = Astro.props;
 const specialty = pick(member.specialty, lang);
 ---
 
-<a class="member-card reveal" href={localePath(lang, `members/${member.slug}/`)}>
+<a class="member-card reveal" href={localePath(lang, `members/${member.slug}/`)} data-tilt>
   <PhotoOverlay src={member.photo} name={member.name} lang={lang} />
   <div class="info">
     <h3>{member.name}</h3>

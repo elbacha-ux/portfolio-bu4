@@ -42,6 +42,16 @@ html {
   animation-duration: var(--duration-base);
 }
 
+/* ThemeToggle drives its own same-document view transition (a circular
+ * clip-path reveal expanding from the button) instead of the default
+ * cross-fade above - this class is only ever on <html> for the brief
+ * window that specific transition is running. */
+html.theme-transition-manual::view-transition-old(root),
+html.theme-transition-manual::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
