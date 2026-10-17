@@ -134,7 +134,21 @@ export interface ProjectCaseStudy {
 
 /** Small inline-SVG icon set rendered on award cards - purely decorative,
  * matched to each category's theme. See AwardIcon.astro. */
-export type AwardIconName = 'clock' | 'scissors' | 'shield' | 'megaphone' | 'magnifier' | 'wrench' | 'heart';
+export type AwardIconName =
+  | 'clock'
+  | 'scissors'
+  | 'shield'
+  | 'megaphone'
+  | 'magnifier'
+  | 'wrench'
+  | 'heart'
+  | 'wave'
+  | 'target'
+  | 'camera'
+  | 'spark'
+  | 'signal'
+  | 'laugh'
+  | 'flask';
 
 export interface Award {
   slug: string;
