@@ -88,7 +88,11 @@ const altPath = swapLangInPath(Astro.url.pathname, otherLang(lang));
     <EasterEgg lang={lang} />
     <script>
       import { initTilt } from '../lib/tilt';
+      import { initSpotlight } from '../lib/spotlight';
+      import { initParallax } from '../lib/parallax';
       initTilt();
+      initSpotlight();
+      initParallax();
     </script>
     <script>
       // Scroll-reveal: progressive enhancement only - .reveal elements are
@@ -110,6 +114,21 @@ const altPath = swapLangInPath(Astro.url.pathname, otherLang(lang));
       } else {
         items.forEach((item) => item.classList.add('is-visible'));
       }
+    </script>
+    <script>
+      // Content photos fade in once actually loaded instead of popping in -
+      // scoped to <main> so header/footer chrome (logo) never flashes.
+      // Same progressive-enhancement gate as scroll-reveal: fully visible
+      // without this.
+      const photos = document.querySelectorAll<HTMLImageElement>('main img');
+      photos.forEach((img) => {
+        img.classList.add('fade-in-img');
+        if (img.complete) {
+          img.classList.add('is-loaded');
+        } else {
+          img.addEventListener('load', () => img.classList.add('is-loaded'), { once: true });
+        }
+      });
     </script>
     <script>
       // One delegated listener handles every `data-sound` trigger on the

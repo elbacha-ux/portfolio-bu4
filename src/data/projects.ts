@@ -99,7 +99,7 @@ export const projects: CollectiveProject[] = [
       'rihab-trifi',
       'walid-ben-said',
     ],
-    tools: [],
+    tools: [L('CapCut', 'CapCut'), L('Photoshop', 'Photoshop'), L('Google Flow', 'Google Flow'), L('GitHub Pages', 'GitHub Pages')],
     skills: [
       L('Video editing', 'Montage vidéo'),
       L('Shooting', 'Tournage'),
@@ -116,6 +116,33 @@ export const projects: CollectiveProject[] = [
       "Rihab Trifi a rédigé la stratégie de relations publiques et de partenariats sur 12 mois de cette campagne : quatre axes (relations presse, contenus et réseaux sociaux, événements et communauté, partenariats), quatre cibles (grandes entreprises, PME, écoles et institutions, médias), et des objectifs concrets à 12 mois - dont des retombées médias qualifiées, des études de cas publiées, des ateliers et des demandes de devis."
     ),
     repositoryUrl: null,
-    caseStudy: null,
+    caseStudy: {
+      overview: L(
+        "Re-Imagine FabLab Solidaire is ENISo's open-access fabrication lab - laser cutting, 3D printing, CNC and VR, backed by JEENISo and ISO 9001-certified. BU4 produced its promotional campaign end to end: a short video, a poster, a companion website and a 12-month PR strategy, each piece owned by a different member and brought together as one deliverable.",
+        "Re-Imagine FabLab Solidaire est le laboratoire de fabrication ouvert de l'ENISo - découpe laser, impression 3D, CNC et réalité virtuelle, adossé à JEENISo et certifié ISO 9001. BU4 a produit sa campagne promotionnelle de bout en bout : une courte vidéo, une affiche, un site web compagnon et une stratégie de relations publiques sur 12 mois, chaque volet porté par un membre différent et réunis en un seul livrable."
+      ),
+      designPhilosophy: L(
+        'The campaign leans on the positioning from Rihab Trifi\'s strategy: a FabLab that\'s accessible to everyone, complete (concept to finished part, mechanical to electronic to digital) and reliable (backed by JEENISo\'s ISO 9001 certification and real client work). The tagline captures it directly: "Re-Imagine: from idea to object."',
+        "La campagne s'appuie sur le positionnement défini dans la stratégie de Rihab Trifi : un FabLab accessible à tous, complet (de l'idée à la pièce finie, du mécanique à l'électronique en passant par le numérique) et fiable (adossé à la certification ISO 9001 de JEENISo et à des réalisations clients réelles). La signature le résume directement : « Re-Imagine : de l'idée à l'objet »."
+      ),
+      technicalImplementation: L(
+        'Edited in CapCut, with graphics from Photoshop and AI-assisted video elements from Google Flow. The companion website was built separately by Lina Ben Hadj Slama and Ahmed Belgacem and is hosted on GitHub Pages.',
+        "Montée sous CapCut, avec des éléments graphiques réalisés sous Photoshop et des éléments vidéo assistés par IA via Google Flow. Le site web compagnon a été développé séparément par Lina Ben Hadj Slama et Ahmed Belgacem et est hébergé sur GitHub Pages."
+      ),
+      keyFeaturesDone: [
+        L('A short promotional video', 'Une courte vidéo promotionnelle'),
+        L('Campaign poster', 'Affiche de campagne'),
+        L('Companion website', 'Site web compagnon'),
+        L('12-month PR and partnerships strategy document', 'Document de stratégie de relations publiques et de partenariats sur 12 mois'),
+      ],
+      keyFeaturesInProgress: [
+        L("Executing the strategy's 12-month rollout (press outreach, content calendar, events, partnerships) beyond the initial campaign assets", "Mise en œuvre du déploiement de la stratégie sur 12 mois (relations presse, calendrier de contenu, événements, partenariats) au-delà des premiers supports de campagne"),
+      ],
+      challengesAndDecisions: L(
+        "Coordinating seven people across four different crafts - writing, filming, editing, web development and strategy - without a single point of failure was the main challenge: each piece (script, footage, edit, site, strategy) was produced independently by its owner and only combined at the end. The video stays short by design, prioritizing one clear message - the lab's accessibility and reliability - over trying to cover every service it offers.",
+        "Coordonner sept personnes sur quatre savoir-faire différents - écriture, tournage, montage, développement web et stratégie - sans point de défaillance unique a été le principal défi : chaque élément (scénario, images, montage, site, stratégie) a été produit indépendamment par son responsable et assemblé seulement à la fin. La vidéo reste volontairement courte, pour privilégier un message clair et unique - l'accessibilité et la fiabilité du lab - plutôt que de vouloir couvrir tous les services proposés."
+      ),
+      currentProgress: null,
+    },
   },
 ];
