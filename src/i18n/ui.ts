@@ -185,7 +185,6 @@ interface UiDict {
     noEmailAtOrg: string;
     noEmailOrContact: string;
     noEmailLinkText: string;
-    note: string;
     instagramLabel: string;
     instagramHandle: string;
     phoneLabel: string;
@@ -401,7 +400,6 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       noEmailAtOrg: 'at',
       noEmailOrContact: 'or contact a member directly through the links on their',
       noEmailLinkText: 'team profile',
-      note: 'This page intentionally has no contact form: the site is static and has no backend to receive submissions. Use the links above instead.',
       instagramLabel: 'Instagram',
       instagramHandle: '@wearebu4',
       phoneLabel: 'Phone',
@@ -615,7 +613,6 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       noEmailAtOrg: 'à',
       noEmailOrContact: "ou contacter un membre directement via les liens sur son",
       noEmailLinkText: 'profil',
-      note: "Cette page ne contient volontairement aucun formulaire de contact : le site est statique et ne dispose pas de serveur pour recevoir des messages. Utilisez les liens ci-dessus.",
       instagramLabel: 'Instagram',
       instagramHandle: '@wearebu4',
       phoneLabel: 'Téléphone',
