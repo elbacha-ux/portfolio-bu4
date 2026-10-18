@@ -185,7 +185,6 @@ interface UiDict {
     otherProjectsTitle: string;
     bookOpenHint: string;
     bookCoverTitle: string;
-    bookCoverSubtitle: string;
     bookClose: string;
     bookNext: string;
     bookPrev: string;
@@ -424,7 +423,6 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       otherProjectsTitle: 'Other projects',
       bookOpenHint: 'Click to open',
       bookCoverTitle: 'Featured Projects',
-      bookCoverSubtitle: 'An Engineering Portfolio',
       bookClose: 'Close book',
       bookNext: 'Next chapter',
       bookPrev: 'Previous chapter',
@@ -661,7 +659,6 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       otherProjectsTitle: 'Autres projets',
       bookOpenHint: 'Cliquez pour ouvrir',
       bookCoverTitle: 'Projets phares',
-      bookCoverSubtitle: "Un portfolio d'ingénierie",
       bookClose: 'Fermer le livre',
       bookNext: 'Chapitre suivant',
       bookPrev: 'Chapitre précédent',

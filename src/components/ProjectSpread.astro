@@ -52,17 +52,24 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
       <button type="button" class="corner corner-prev" data-book-prev aria-label={t.projects.bookPrev}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6" /></svg>
       </button>
-      <p class="spread-chapter">{t.projects.bookChapterLabel} {chapterNumber}</p>
-      <h3>{title}</h3>
-      {(category || tools.length > 0) && (
-        <p class="spread-meta">
-          {category}
-          {category && tools.length > 0 && ' · '}
-          {tools.length > 0 && tools.join(', ')}
-        </p>
-      )}
-      {description && <p class="spread-description">{description}</p>}
-      <p class="spread-page-number">{index * 2 + 1}</p>
+      <div class="spread-left-scroll">
+        <p class="spread-chapter">{t.projects.bookChapterLabel} {chapterNumber}</p>
+        <h3>{title}</h3>
+        {(category || tools.length > 0) && (
+          <p class="spread-meta">
+            {category}
+            {category && tools.length > 0 && ' · '}
+            {tools.length > 0 && tools.join(', ')}
+          </p>
+        )}
+        {description && <p class="spread-description">{description}</p>}
+      </div>
+      <div class="spread-left-footer">
+        <a href={detailHref} class="spread-cta" data-sound="click">
+          {t.projects.bookReadCaseStudy} <span aria-hidden="true">→</span>
+        </a>
+        <p class="spread-page-number">{index * 2 + 1}</p>
+      </div>
     </div>
 
     <div class="spread-page spread-page-right">
@@ -96,9 +103,6 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
             {t.projects.sourceCode} <span aria-hidden="true">↗</span>
           </a>
         )}
-        <a href={detailHref} class="spread-link spread-link-case-study" data-sound="click">
-          {t.projects.bookReadCaseStudy} <span aria-hidden="true">→</span>
-        </a>
       </div>
       <p class="spread-page-number">{index * 2 + 2}</p>
     </div>
@@ -181,8 +185,27 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
   .spread-page-left {
     border-bottom: var(--border-weight) dashed var(--color-border);
   }
+  /* The left page stops scrolling as a whole and instead scrolls only
+     its text block, with the case-study CTA pinned below it as a
+     non-scrolling footer - otherwise a longer description pushes the
+     CTA below the fold, and that's exactly the "have to scroll to find
+     it" complaint this fixes. */
   :global(html.js) .spread-page-left {
     border-bottom: none;
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+  }
+  .spread-left-scroll {
+    min-width: 0;
+  }
+  :global(html.js) .spread-left-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  .spread-left-footer {
+    flex-shrink: 0;
   }
 
   .corner {
@@ -344,11 +367,37 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
   .spread-link:hover {
     text-decoration: underline;
   }
-  .spread-link-case-study {
-    border-bottom: 2px solid var(--color-blue);
+
+  /* The primary call to action, so it gets a real button treatment (not
+     just another text link) and sits on the left page right after the
+     description - always in view without scrolling, unlike the right
+     page's media + overview + secondary links further down. */
+  .spread-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    width: fit-content;
+    margin-top: var(--space-4);
+    padding: 0.7em 1.2em;
+    font-size: var(--fs-300);
+    font-weight: var(--fw-heading);
+    color: var(--color-text-inverse);
+    background: var(--color-accent-strong);
+    text-decoration: none;
   }
-  :global(html.js) .spread-link-case-study {
-    color: #1c1a17;
+  .spread-cta:hover {
+    background: var(--color-accent-hover);
+  }
+  :global(html.js) .spread-cta {
+    /* Fixed navy/white, not the theme-swapping accent tokens - the page
+       itself is always cream paper in enhanced mode, see .spread-chapter. */
+    background: var(--color-navy);
+    color: #ffffff;
+    border-radius: 2px;
+    box-shadow: 0 8px 20px -10px rgba(26, 74, 107, 0.55);
+  }
+  :global(html.js) .spread-cta:hover {
+    background: var(--color-navy-deep);
   }
 
   .spread-page-number {

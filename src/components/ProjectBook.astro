@@ -74,9 +74,11 @@ const gearTeeth = Array.from({ length: 10 }, (_, i) => (i / 10) * 360);
             </svg>
           </span>
           <span class="cover-text">
-            <span class="cover-kicker">{site.fullName}</span>
+            <span class="cover-kicker">
+              <span class="cover-kicker-brand">{site.name}</span>
+              <span class="cover-kicker-tagline">{site.tagline}</span>
+            </span>
             <span class="cover-title">{t.projects.bookCoverTitle}</span>
-            <span class="cover-subtitle">{t.projects.bookCoverSubtitle}</span>
           </span>
           <span class="cover-spine-edge" aria-hidden="true"></span>
         </span>
@@ -185,9 +187,14 @@ const gearTeeth = Array.from({ length: 10 }, (_, i) => (i / 10) * 360);
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 10% 9%;
-    background: linear-gradient(155deg, var(--color-navy-deep) 0%, var(--color-navy) 55%, #0d2435 100%);
+    align-items: center;
+    justify-content: flex-start;
+    padding: 11% 9% 8%;
+    /* A near-black book-cloth look instead of the brand's navy - the
+       cover is a standalone "object" sitting on the page, not a brand
+       surface, so it can go darker/more neutral than the site's usual
+       blue palette. */
+    background: linear-gradient(165deg, #1c1c1f 0%, #101012 55%, #050506 100%);
     box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6), 0 2px 0 rgba(255, 255, 255, 0.06) inset;
     backface-visibility: hidden;
     overflow: hidden;
@@ -196,18 +203,19 @@ const gearTeeth = Array.from({ length: 10 }, (_, i) => (i / 10) * 360);
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(120deg, rgba(255, 255, 255, 0.08), transparent 40%);
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.06), transparent 40%);
     pointer-events: none;
   }
-  /* Faint drafting-paper grid, like the backing sheet under a technical
-     drawing - purely textural, never competes with the text on top. */
+  /* Faint woven-cloth texture (two very low-opacity diagonal hatches)
+     instead of a blueprint grid - the cover reads as a bound object, not
+     a technical drawing, so the texture should feel like cover cloth. */
   .cover-grid {
     position: absolute;
     inset: 0;
     opacity: 0.5;
-    background-image: linear-gradient(rgba(142, 196, 234, 0.35) 1px, transparent 1px), linear-gradient(90deg, rgba(142, 196, 234, 0.35) 1px, transparent 1px);
-    background-size: 18px 18px;
-    mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, black, transparent 85%);
+    background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.035) 0, rgba(255, 255, 255, 0.035) 1px, transparent 1px, transparent 4px),
+      repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.035) 0, rgba(255, 255, 255, 0.035) 1px, transparent 1px, transparent 4px);
+    mask-image: radial-gradient(ellipse 80% 75% at 50% 45%, black, transparent 90%);
   }
   .cover-spine-edge {
     position: absolute;
@@ -219,9 +227,12 @@ const gearTeeth = Array.from({ length: 10 }, (_, i) => (i / 10) * 360);
   }
   .cover-linework {
     position: absolute;
-    inset: 8%;
-    color: var(--color-light-blue);
-    opacity: 0.22;
+    top: 44%;
+    bottom: 11%;
+    left: 12%;
+    right: 12%;
+    color: #c9ccd1;
+    opacity: 0.25;
   }
   .cover-linework svg {
     width: 100%;
@@ -231,29 +242,41 @@ const gearTeeth = Array.from({ length: 10 }, (_, i) => (i / 10) * 360);
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 0.5em;
+    align-items: center;
+    gap: 0.75em;
+    text-align: center;
     color: var(--color-white);
   }
   .cover-kicker {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
+  }
+  .cover-kicker-brand {
+    font-size: var(--fs-200);
+    font-weight: var(--fw-black);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: #e7e9ec;
+  }
+  .cover-kicker-tagline {
     font-size: var(--fs-100);
-    font-weight: var(--fw-heading);
+    font-weight: var(--fw-medium);
     text-transform: uppercase;
     letter-spacing: 0.14em;
-    /* #8ec4ea, not --color-light-blue (#71b4e2) - the latter only clears
-       4.17:1 against the cover's mid-gradient navy stop, just under the
-       4.5:1 AA floor for this size; this tone verifies at 5.02:1. */
-    color: #8ec4ea;
+    color: #aab0b8;
   }
   .cover-title {
-    font-size: clamp(1.5rem, 4vw, 2.75rem);
+    font-size: clamp(1.75rem, 5vw, 3.25rem);
     font-weight: var(--fw-black);
-    line-height: 1.05;
-    max-width: 14ch;
-  }
-  .cover-subtitle {
-    font-size: var(--fs-300);
-    font-weight: var(--fw-medium);
-    color: #c7d6e2;
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    max-width: 16ch;
+    color: #eef0f2;
+    /* A subtle engraved/foil-stamped look - a thin light edge above, a
+       soft dark edge below - rather than a flat fill. */
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.12), 0 -1px 1px rgba(0, 0, 0, 0.5);
   }
   .book-pages-edge {
     position: absolute;
@@ -278,10 +301,9 @@ const gearTeeth = Array.from({ length: 10 }, (_, i) => (i / 10) * 360);
     font-weight: var(--fw-heading);
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    /* Same #8ec4ea fix as .cover-kicker - full opacity here too, since a
-       dampened 0.85 blended back toward the navy backdrop drops this
-       back under 4.5:1 even with the lighter color. */
-    color: #8ec4ea;
+    /* Neutral silver to match the cover's new book-cloth palette - still
+       well clear of AA (10.5:1+) against the near-black background. */
+    color: #c7ccd2;
     transition: opacity var(--duration-base) var(--ease-standard);
     pointer-events: none;
     /* A slow, gentle breathing motion - not a hard bounce - so the hint
