@@ -23,6 +23,9 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
+# local Claude Code tool config/state - not part of the site
+.claude/
+
 # private source material - never publish raw CVs
 docs/content/cvs/
 docs/content/members/*.draft.md
