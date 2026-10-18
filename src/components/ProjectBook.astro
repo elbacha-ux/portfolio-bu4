@@ -25,7 +25,6 @@ interface Props {
 const { projects, lang } = Astro.props;
 const t = ui[lang];
 const total = projects.length;
-const currentYear = new Date().getFullYear();
 
 // Gear teeth for the cover's technical illustration, computed rather than
 // hand-written per-tooth - a gear, a dimension line and corner
@@ -79,16 +78,6 @@ const gearTeeth = Array.from({ length: 10 }, (_, i) => (i / 10) * 360);
             <span class="cover-title">{t.projects.bookCoverTitle}</span>
             <span class="cover-subtitle">{t.projects.bookCoverSubtitle}</span>
           </span>
-          <span class="cover-titleblock" aria-hidden="true">
-            <span class="tb-row">
-              <span>BU4</span>
-              <span>VOL. I</span>
-            </span>
-            <span class="tb-row">
-              <span>{String(total).padStart(2, '0')} {t.projects.bookChapterLabel.toUpperCase()}{total === 1 ? '' : 'S'}</span>
-              <span>{currentYear}</span>
-            </span>
-          </span>
           <span class="cover-spine-edge" aria-hidden="true"></span>
         </span>
         <span class="book-pages-edge" aria-hidden="true"></span>
@@ -99,16 +88,6 @@ const gearTeeth = Array.from({ length: 10 }, (_, i) => (i / 10) * 360);
         {projects.map((project, i) => <ProjectSpread project={project} lang={lang} index={i} total={total} />)}
       </div>
     </div>
-  </div>
-
-  <div class="book-controls">
-    <button type="button" class="book-ctrl" data-book-prev aria-label={t.projects.bookPrev}>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6" /></svg>
-    </button>
-    <span class="book-counter" data-book-counter aria-live="polite">1 / {total}</span>
-    <button type="button" class="book-ctrl" data-book-next aria-label={t.projects.bookNext}>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
-    </button>
   </div>
 </div>
 
@@ -125,8 +104,7 @@ const gearTeeth = Array.from({ length: 10 }, (_, i) => (i / 10) * 360);
     perspective: none;
   }
   .book-ambient,
-  .book-cover,
-  .book-controls {
+  .book-cover {
     display: none;
   }
   .book-pages {
@@ -137,8 +115,7 @@ const gearTeeth = Array.from({ length: 10 }, (_, i) => (i / 10) * 360);
     --book-max-w: min(100%, 980px);
   }
   :global(html.js) .book-ambient,
-  :global(html.js) .book-cover,
-  :global(html.js) .book-controls {
+  :global(html.js) .book-cover {
     display: block;
   }
 
@@ -187,9 +164,20 @@ const gearTeeth = Array.from({ length: 10 }, (_, i) => (i / 10) * 360);
     50% { transform: rotateY(0deg) translateY(-6px) rotateX(1deg); }
   }
   .is-open .book-cover {
-    animation: none;
     transform: rotateY(-165deg);
     pointer-events: none;
+  }
+  /* Closing removes .is-open immediately, which would otherwise let the
+     idle cover-float animation below retake the transform property and
+     snap it straight to the animation's own keyframe - CSS animations
+     don't hand off to a transition, they just win outright the instant
+     they're re-enabled, which is why closing looked like an instant cut
+     instead of a swing. book.ts adds .is-closing for the swing's
+     duration so the animation stays suppressed until the transition
+     has actually finished closing the cover. */
+  .is-open .book-cover,
+  .is-closing .book-cover {
+    animation: none;
   }
   .cover-face {
     position: relative;
@@ -267,30 +255,6 @@ const gearTeeth = Array.from({ length: 10 }, (_, i) => (i / 10) * 360);
     font-weight: var(--fw-medium);
     color: #c7d6e2;
   }
-  /* A small title-block, like the info box on a real engineering drawing -
-     real figures only (team name, volume, the actual chapter count, the
-     current year), nothing fabricated. */
-  .cover-titleblock {
-    position: relative;
-    display: grid;
-    gap: 0;
-    width: fit-content;
-    min-width: 50%;
-    border: 1px solid rgba(142, 196, 234, 0.4);
-    font-size: var(--fs-100);
-    font-weight: var(--fw-heading);
-    letter-spacing: 0.08em;
-    color: #c7d6e2;
-  }
-  .tb-row {
-    display: flex;
-    justify-content: space-between;
-    gap: var(--space-3);
-    padding: 0.4em 0.7em;
-  }
-  .tb-row:first-child {
-    border-bottom: 1px solid rgba(142, 196, 234, 0.4);
-  }
   .book-pages-edge {
     position: absolute;
     right: -6px;
@@ -320,9 +284,17 @@ const gearTeeth = Array.from({ length: 10 }, (_, i) => (i / 10) * 360);
     color: #8ec4ea;
     transition: opacity var(--duration-base) var(--ease-standard);
     pointer-events: none;
+    /* A slow, gentle breathing motion - not a hard bounce - so the hint
+       reads as an invitation to click rather than a distraction. */
+    animation: hint-float 2.4s ease-in-out infinite;
+  }
+  @keyframes hint-float {
+    0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+    50% { transform: translateX(-50%) translateY(-5px); opacity: 0.65; }
   }
   .book-open-hint.is-dismissed {
     opacity: 0;
+    animation: none;
   }
   .book-cover:hover:not(:disabled),
   .book-cover:focus-visible {
@@ -336,6 +308,17 @@ const gearTeeth = Array.from({ length: 10 }, (_, i) => (i / 10) * 360);
     inset: 0;
     transform-style: preserve-3d;
   }
+  /* Every spread sits at opacity 0 while the book is closed - not just
+     the non-active ones - because a flat (untransformed) spread and the
+     flat closed cover are coplanar inside this preserve-3d stage, and
+     z-index doesn't reliably win that tie (it can lose to DOM order),
+     which let chapter 1 visibly bleed through the "closed" cover.
+     Once open, ALL spreads turn opaque together (not just the active
+     one, like before) so the turn is actually visible as pages rotate
+     away - z-index + backface-visibility alone decide what's on top
+     from then on, which is fine since the cover has rotated clear by
+     then and every remaining comparison is pages-vs-pages, where
+     z-index and DOM order already agree. */
   :global(html.js) :global(.book-spread) {
     position: absolute;
     inset: 0;
@@ -343,71 +326,31 @@ const gearTeeth = Array.from({ length: 10 }, (_, i) => (i / 10) * 360);
     transform-origin: left center;
     backface-visibility: hidden;
     transform: rotateY(0deg);
-    transition: transform 0.85s cubic-bezier(0.65, 0, 0.35, 1);
-    pointer-events: none;
+    /* Same easing as the cover below (a proven, properly monotonic
+       ease-in-out) - an unusual curve tried here earlier had the page
+       sit almost still for the first ~40% of the duration then whip
+       through the rest, which read as a stutter, not a turn. */
+    transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1);
     opacity: 0;
+    pointer-events: none;
+  }
+  :global(html.js) .is-open :global(.book-spread) {
+    opacity: 1;
   }
   :global(html.js) .is-open :global(.book-spread.is-active) {
-    opacity: 1;
     pointer-events: auto;
   }
   :global(html.js) .is-open :global(.book-spread.is-turned) {
     transform: rotateY(-165deg);
   }
 
-  /* ---- Controls ---- */
-  .book-controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-3);
-    margin-top: var(--space-4);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity var(--duration-base) var(--ease-standard);
-  }
-  .project-book.is-open .book-controls {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  .book-ctrl {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--color-border);
-    background: var(--color-surface);
-    color: var(--color-text);
-    cursor: pointer;
-    transition: border-color var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
-  }
-  .book-ctrl:hover:not(:disabled) {
-    border-color: var(--color-accent);
-  }
-  .book-ctrl:active:not(:disabled) {
-    transform: scale(0.94);
-  }
-  .book-ctrl:disabled {
-    opacity: 0.35;
-    cursor: default;
-  }
-  .book-ctrl svg {
-    width: 18px;
-    height: 18px;
-  }
-  .book-counter {
-    font-size: var(--fs-200);
-    font-weight: var(--fw-heading);
-    color: var(--color-text-muted);
-    min-width: 4ch;
-    text-align: center;
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .book-cover {
       animation: none;
       transition: none;
+    }
+    .book-open-hint {
+      animation: none;
     }
     :global(html.js) :global(.book-spread) {
       transition: none;

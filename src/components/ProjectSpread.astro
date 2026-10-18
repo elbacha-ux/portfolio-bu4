@@ -132,7 +132,7 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
     z-index: 1;
     background: linear-gradient(90deg, rgba(0, 0, 0, 0.35), transparent 18%);
     opacity: 0;
-    transition: opacity 0.85s var(--ease-standard);
+    transition: opacity 1s var(--ease-standard);
     pointer-events: none;
   }
   :global(html.js) .book-spread.is-turned .spread-shadow-overlay,
@@ -199,14 +199,17 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
     border: none;
     background: none;
     color: #2a2622;
-    opacity: 0;
+    /* Faintly visible at rest, not hover-only - a hover-gated affordance
+       is invisible on touch devices, which have no hover state at all. */
+    opacity: 0.3;
     cursor: pointer;
     transition: opacity var(--duration-fast) var(--ease-standard);
   }
   :global(html.js) .spread-page:hover .corner {
-    opacity: 0.5;
+    opacity: 0.6;
   }
-  :global(html.js) .corner:hover {
+  :global(html.js) .corner:hover,
+  :global(html.js) .corner:focus-visible {
     opacity: 1 !important;
   }
   :global(html.js) .corner:disabled {

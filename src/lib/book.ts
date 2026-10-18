@@ -8,8 +8,8 @@
  * are, there's no hand-rolled animation queue to get confused.
  *
  * "Previous" at chapter 1 closes the book rather than doing nothing, so
- * the left-arrow key, the corner-click buttons and the control-bar prev
- * button all close the book from the first chapter - see prev() below.
+ * the left-arrow key and the corner-click prev buttons both close the
+ * book from the first chapter - see prev() below.
  *
  * Progressive enhancement: without this script (or without `html.js`),
  * every spread is in normal document flow and fully readable - see the
@@ -32,11 +32,13 @@ export function initProjectBook() {
 
   let currentIndex = 0;
   let isOpen = false;
+  let closingFallbackTimer: number | undefined;
 
   const counter = root.querySelector<HTMLElement>('[data-book-counter]');
   const prevBtns = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-book-prev]'));
   const nextBtns = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-book-next]'));
   const hint = root.querySelector<HTMLElement>('[data-book-hint]');
+  const cover = root.querySelector<HTMLElement>('[data-book-cover]');
   const closeLabel = root.dataset.closeLabel ?? 'Close book';
   const prevLabel = root.dataset.prevLabel ?? 'Previous chapter';
 
@@ -57,9 +59,27 @@ export function initProjectBook() {
     root.classList.toggle('is-open', isOpen);
   }
 
+  // Keeps the cover's idle floating animation suppressed for exactly the
+  // duration of its closing swing - re-enabling it the instant .is-open
+  // comes off would otherwise let that animation snap the cover straight
+  // to its own keyframe instead of letting the CSS transition swing it
+  // shut (see the .is-closing comment in ProjectBook.astro's styles for
+  // why). Driven by the cover's own transitionend rather than a guessed
+  // duration, so it can't drift out of sync with the CSS.
+  function endClosingState() {
+    if (closingFallbackTimer) window.clearTimeout(closingFallbackTimer);
+    closingFallbackTimer = undefined;
+    root.classList.remove('is-closing');
+    cover?.removeEventListener('transitionend', onCoverTransitionEnd);
+  }
+  function onCoverTransitionEnd(event: TransitionEvent) {
+    if (event.target === cover && event.propertyName === 'transform') endClosingState();
+  }
+
   function openBook() {
     if (isOpen) return;
     isOpen = true;
+    endClosingState();
     sound.whoosh();
     hint?.classList.add('is-dismissed');
     render();
@@ -71,7 +91,17 @@ export function initProjectBook() {
     if (!isOpen) return;
     isOpen = false;
     sound.click();
+    if (reduceMotion) {
+      render();
+      return;
+    }
+    root.classList.add('is-closing');
     render();
+    cover?.addEventListener('transitionend', onCoverTransitionEnd);
+    // Fallback in case transitionend never fires for some reason (an
+    // interrupted transition, a browser quirk) - without it .is-closing
+    // could get stuck forever and silently keep the float animation off.
+    closingFallbackTimer = window.setTimeout(endClosingState, 1200);
   }
 
   function goTo(index: number) {
@@ -92,8 +122,8 @@ export function initProjectBook() {
     else closeBook();
   }
 
-  root.querySelector<HTMLElement>('[data-book-cover]')?.addEventListener('click', openBook);
-  root.querySelector<HTMLElement>('[data-book-cover]')?.addEventListener('keydown', (event) => {
+  cover?.addEventListener('click', openBook);
+  cover?.addEventListener('keydown', (event) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       openBook();
