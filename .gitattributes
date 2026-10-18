@@ -1,3 +1,11 @@
 *.mp4 filter=lfs diff=lfs merge=lfs -text
 *.mov filter=lfs diff=lfs merge=lfs -text
 docs/content/projects/Re-ImagineLab-BU4.mp4 filter=lfs diff=lfs merge=lfs -text
+
+# Anything under public/ is served directly by the live site on every
+# deployment target - GitHub Pages doesn't support Git LFS at all, and
+# Vercel only fetches real LFS content if LFS support is explicitly
+# enabled per project, so an LFS-tracked file here silently deploys as a
+# tiny pointer file instead of the real asset. Never route public/ through
+# LFS, regardless of extension.
+public/** -filter -diff -merge -text

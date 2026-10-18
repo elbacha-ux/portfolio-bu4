@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://elbacha-ux.github.io/portfolio-bu4/sitemap-index.xml
