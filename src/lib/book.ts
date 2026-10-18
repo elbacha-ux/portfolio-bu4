@@ -134,7 +134,19 @@ export function initProjectBook() {
   prevBtns.forEach((btn) => btn.addEventListener('click', prev));
 
   document.addEventListener('keydown', (event) => {
-    if (!isOpen) return;
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
+    const target = event.target as HTMLElement | null;
+    // Don't hijack arrow keys from an unrelated text field elsewhere on
+    // the page - only the closed cover itself should open on ArrowRight
+    // while focus is there (its own keydown handler above covers
+    // Enter/Space; this one adds the right-arrow shortcut on top).
+    const inTextField = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+    if (inTextField) return;
+
+    if (!isOpen) {
+      if (event.key === 'ArrowRight') openBook();
+      return;
+    }
     if (event.key === 'ArrowRight') next();
     else if (event.key === 'ArrowLeft') prev();
     else if (event.key === 'Escape') closeBook();
