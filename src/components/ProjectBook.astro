@@ -79,6 +79,19 @@ const base = import.meta.env.BASE_URL;
     display: grid;
     gap: var(--space-6);
   }
+  /* ---- Enhanced (html.js) book presentation - desktop/tablet only ----
+     Below 641px this entire block is skipped, so html.js has no effect
+     and the page renders exactly like the no-JS fallback above: a
+     plain, fully-readable stacked list. A 3D page-turning book has no
+     good touch equivalent - no hover, awkward nested scrolling inside a
+     fixed-height box, fiddly corner targets - so rather than patch
+     those problems one at a time, mobile just never arms the book at
+     all. See the matching @media wrapper in ProjectSpread.astro.
+     (The cover/ambient `display: block` override lives inside this
+     wrapper too - otherwise it'd flip the cover visible on mobile
+     without any of the positioning/sizing rules below to make it look
+     right.) */
+  @media (min-width: 641px) {
   :global(html.js) .project-book {
     --book-max-w: min(100%, 980px);
   }
@@ -86,8 +99,6 @@ const base = import.meta.env.BASE_URL;
   :global(html.js) .book-cover {
     display: block;
   }
-
-  /* ---- Enhanced (html.js) book presentation ---- */
   :global(html.js) .book-stage {
     position: relative;
     max-width: var(--book-max-w);
@@ -353,6 +364,7 @@ const base = import.meta.env.BASE_URL;
   :global(html.js) .is-open :global(.book-spread.is-turned) {
     transform: rotateY(-165deg);
   }
+  } /* /@media (min-width: 641px) - enhanced book presentation */
 
   @media (prefers-reduced-motion: reduce) {
     .book-cover {
@@ -364,15 +376,6 @@ const base = import.meta.env.BASE_URL;
     }
     :global(html.js) :global(.book-spread) {
       transition: none;
-    }
-  }
-
-  @media (max-width: 640px) {
-    :global(html.js) .book-stage {
-      padding-block: var(--space-4);
-    }
-    :global(html.js) .book {
-      aspect-ratio: 3 / 4;
     }
   }
 </style>

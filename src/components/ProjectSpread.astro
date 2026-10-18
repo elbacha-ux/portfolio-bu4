@@ -43,7 +43,6 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
   data-book-spread
   data-index={index}
   style={`z-index: ${total - index}`}
-  aria-hidden="true"
   aria-label={`${t.projects.bookChapterLabel} ${chapterNumber}: ${title}`}
 >
   <div class="spread-shadow-overlay" aria-hidden="true"></div>
@@ -110,6 +109,10 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
 </article>
 
 <style>
+  /* ---- Base: plain stacked card, used as-is below 641px ----
+     No-JS visitors, crawlers, and (deliberately) every mobile viewport
+     all render this exact same readable layout - see the @media wrapper
+     further down for why mobile never arms the desktop book presentation. */
   .book-spread {
     display: block;
   }
@@ -125,121 +128,22 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
     border: var(--border-weight) solid var(--color-border);
     padding: var(--space-5);
   }
-
-  :global(html.js) .book-spread {
-    height: 100%;
-  }
-  :global(html.js) .spread-shadow-overlay {
-    display: block;
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.35), transparent 18%);
-    opacity: 0;
-    transition: opacity 1s var(--ease-standard);
-    pointer-events: none;
-  }
-  :global(html.js) .book-spread.is-turned .spread-shadow-overlay,
-  :global(html.js) .book-spread:not(.is-active):not(.is-turned) .spread-shadow-overlay {
-    opacity: 0.6;
-  }
-  :global(html.js) .spread-face {
-    position: relative;
-    height: 100%;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-    background: #faf7f1;
-    border: none;
-    box-shadow: 0 40px 70px -25px rgba(0, 0, 0, 0.55);
-    overflow: hidden;
-  }
-  :global(html.js) .spread-face::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 0;
-    bottom: 0;
-    width: 40px;
-    margin-left: -20px;
-    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.12), transparent);
-    z-index: 2;
-    pointer-events: none;
-  }
-
   .spread-page {
     position: relative;
     padding: var(--space-4);
     color: var(--color-text);
     min-width: 0;
   }
-  /* The fixed "ink on cream paper" look only applies once the enhanced
-     book is active (background: #faf7f1, below) - the plain no-JS
-     fallback keeps using theme-adaptive colors on a theme-adaptive
-     surface, so dark mode without JS still has real contrast instead of
-     fixed dark text landing on a fixed-dark reading of --color-surface. */
-  :global(html.js) .spread-page {
-    padding: 9% 8%;
-    overflow-y: auto;
-    color: #2a2622;
-  }
   .spread-page-left {
     border-bottom: var(--border-weight) dashed var(--color-border);
-  }
-  /* The left page stops scrolling as a whole and instead scrolls only
-     its text block, with the case-study CTA pinned below it as a
-     non-scrolling footer - otherwise a longer description pushes the
-     CTA below the fold, and that's exactly the "have to scroll to find
-     it" complaint this fixes. */
-  :global(html.js) .spread-page-left {
-    border-bottom: none;
-    display: flex;
-    flex-direction: column;
-    overflow-y: hidden;
   }
   .spread-left-scroll {
     min-width: 0;
   }
-  :global(html.js) .spread-left-scroll {
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow-y: auto;
-  }
   .spread-left-footer {
     flex-shrink: 0;
   }
-
   .corner {
-    display: none;
-  }
-  /* A generous full-height strip along the page edge, not just a small
-     corner button - hovering anywhere near that side of the page is
-     enough to reach for the turn, not just a precise 44px target. */
-  :global(html.js) .corner {
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: clamp(48px, 16%, 90px);
-    padding-bottom: var(--space-4);
-    border: none;
-    background: none;
-    color: #2a2622;
-    /* Faintly visible at rest, not hover-only - a hover-gated affordance
-       is invisible on touch devices, which have no hover state at all. */
-    opacity: 0.3;
-    cursor: pointer;
-    transition: opacity var(--duration-fast) var(--ease-standard);
-  }
-  :global(html.js) .spread-page:hover .corner {
-    opacity: 0.6;
-  }
-  :global(html.js) .corner:hover,
-  :global(html.js) .corner:focus-visible {
-    opacity: 1 !important;
-  }
-  :global(html.js) .corner:disabled {
     display: none;
   }
   .corner-prev {
@@ -252,43 +156,6 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
     width: 20px;
     height: 20px;
   }
-  /* A soft curling shadow that grows in from the edge under the cursor,
-     and a subtle 3D tilt of the page itself - both read as "this page
-     wants to be turned", not just a button lighting up. Degrades
-     harmlessly (no lift, icon-only affordance) in browsers without
-     :has() support. */
-  :global(html.js) .corner::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity var(--duration-base) var(--ease-standard);
-    pointer-events: none;
-  }
-  :global(html.js) .corner-prev::before {
-    background: linear-gradient(to right, rgba(0, 0, 0, 0.1), transparent);
-  }
-  :global(html.js) .corner-next::before {
-    background: linear-gradient(to left, rgba(0, 0, 0, 0.1), transparent);
-  }
-  :global(html.js) .corner:hover::before,
-  :global(html.js) .corner:focus-visible::before {
-    opacity: 1;
-  }
-  :global(html.js) .spread-page {
-    transition: transform 0.35s var(--ease-standard);
-  }
-  :global(html.js) .spread-page-right:has(.corner-next:hover),
-  :global(html.js) .spread-page-right:has(.corner-next:focus-visible) {
-    transform: perspective(1400px) rotateY(-3deg);
-    transform-origin: right center;
-  }
-  :global(html.js) .spread-page-left:has(.corner-prev:hover),
-  :global(html.js) .spread-page-left:has(.corner-prev:focus-visible) {
-    transform: perspective(1400px) rotateY(3deg);
-    transform-origin: left center;
-  }
-
   .spread-chapter {
     font-size: var(--fs-100);
     font-weight: var(--fw-heading);
@@ -297,28 +164,15 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
     color: var(--color-accent-strong);
     margin: 0 0 var(--space-2);
   }
-  /* Fixed navy once enhanced, not the theme-swapping accent token: the
-     page itself is always cream paper in that mode, so the ink needs to
-     stay fixed too (a light-blue dark-mode accent would be unreadable
-     here - same bug class as the homepage stat numbers, fixed earlier). */
-  :global(html.js) .spread-chapter {
-    color: var(--color-navy);
-  }
   .spread-page h3 {
     font-size: var(--fs-700);
     margin-bottom: var(--space-2);
-  }
-  :global(html.js) .spread-page h3 {
-    color: #1c1a17;
   }
   .spread-meta {
     font-size: var(--fs-200);
     font-weight: var(--fw-medium);
     color: var(--color-text-muted);
     margin-bottom: var(--space-3);
-  }
-  :global(html.js) .spread-meta {
-    color: #6b6258;
   }
   .spread-description {
     font-size: var(--fs-300);
@@ -329,21 +183,8 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
     line-height: var(--lh-relaxed);
     margin-top: var(--space-3);
   }
-  :global(html.js) .spread-description,
-  :global(html.js) .spread-overview {
-    color: #3a3530;
-  }
-
   .spread-media {
     margin: calc(var(--space-4) * -1) calc(var(--space-4) * -1) var(--space-3);
-  }
-  :global(html.js) .spread-media {
-    margin: 0 0 var(--space-3);
-    /* Above the full-height corner hover strips (see .corner below), so
-       the video's own controls stay clickable right up to the edges
-       instead of being intercepted by the page-turn affordance. */
-    position: relative;
-    z-index: 1;
   }
   .spread-image,
   .spread-video {
@@ -390,17 +231,10 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
     opacity: 0.15;
     clip-path: polygon(50% 0, 100% 100%, 0 100%);
   }
-
   .spread-links {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
-  }
-  :global(html.js) .spread-links {
-    /* Same reason as .spread-media - stay clickable above the corner
-       hover strips. */
-    position: relative;
-    z-index: 1;
   }
   .spread-link {
     display: inline-flex;
@@ -411,18 +245,12 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
     color: var(--color-accent-strong);
     text-decoration: none;
   }
-  /* Fixed navy once enhanced - see the .spread-chapter comment above. */
-  :global(html.js) .spread-link {
-    color: var(--color-navy);
-  }
   .spread-link:hover {
     text-decoration: underline;
   }
-
   /* The primary call to action, so it gets a real button treatment (not
      just another text link) and sits on the left page right after the
-     description - always in view without scrolling, unlike the right
-     page's media + overview + secondary links further down. */
+     description. */
   .spread-cta {
     display: inline-flex;
     align-items: center;
@@ -439,32 +267,203 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
   .spread-cta:hover {
     background: var(--color-accent-hover);
   }
-  :global(html.js) .spread-cta {
-    /* Fixed navy/white, not the theme-swapping accent tokens - the page
-       itself is always cream paper in enhanced mode, see .spread-chapter.
-       Also lifted above the corner hover strips, same reason as
-       .spread-media, so it stays clickable right up to the left edge. */
-    position: relative;
-    z-index: 1;
-    background: var(--color-navy);
-    color: #ffffff;
-    border-radius: 2px;
-    box-shadow: 0 8px 20px -10px rgba(26, 74, 107, 0.55);
-  }
-  :global(html.js) .spread-cta:hover {
-    background: var(--color-navy-deep);
-  }
-
   .spread-page-number {
     margin: var(--space-3) 0 0;
     font-size: var(--fs-100);
     color: var(--color-text-muted);
     text-align: right;
   }
-  :global(html.js) .spread-page-number {
-    /* #6b6258 on the #faf7f1 page background, 5.59:1 - verified AA,
-       lighter tones here (e.g. #8a8178) fall to ~3.6:1 and fail. */
-    color: #6b6258;
+
+  /* ---- Enhanced (html.js) two-page spread - desktop/tablet only ----
+     Below 641px this whole block is skipped, so html.js has no effect
+     here at all and every viewport under that width gets the exact same
+     plain, fully-readable stacked card as the base rules above. That's
+     deliberate: the fixed-height double-page spread, its nested
+     description scroll, and the edge-hover page-turn affordance don't
+     have a good touch equivalent, so mobile never arms any of it rather
+     than degrading awkwardly. See the matching wrapper in
+     ProjectBook.astro. */
+  @media (min-width: 641px) {
+    :global(html.js) .book-spread {
+      height: 100%;
+    }
+    :global(html.js) .spread-shadow-overlay {
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0.35), transparent 18%);
+      opacity: 0;
+      transition: opacity 1s var(--ease-standard);
+      pointer-events: none;
+    }
+    :global(html.js) .book-spread.is-turned .spread-shadow-overlay,
+    :global(html.js) .book-spread:not(.is-active):not(.is-turned) .spread-shadow-overlay {
+      opacity: 0.6;
+    }
+    /* The fixed "ink on cream paper" look only applies once the enhanced
+       book is active - the plain base rules above keep theme-adaptive
+       colors on a theme-adaptive surface, so dark mode without JS (or on
+       mobile) still has real contrast instead of fixed dark text landing
+       on a fixed-dark reading of --color-surface. */
+    :global(html.js) .spread-face {
+      position: relative;
+      height: 100%;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      background: #faf7f1;
+      border: none;
+      box-shadow: 0 40px 70px -25px rgba(0, 0, 0, 0.55);
+      overflow: hidden;
+    }
+    :global(html.js) .spread-face::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 40px;
+      margin-left: -20px;
+      background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.12), transparent);
+      z-index: 2;
+      pointer-events: none;
+    }
+    :global(html.js) .spread-page {
+      padding: 9% 8%;
+      overflow-y: auto;
+      color: #2a2622;
+      transition: transform 0.35s var(--ease-standard);
+    }
+    /* The left page stops scrolling as a whole and instead scrolls only
+       its text block, with the case-study CTA pinned below it as a
+       non-scrolling footer - otherwise a longer description pushes the
+       CTA below the fold. */
+    :global(html.js) .spread-page-left {
+      border-bottom: none;
+      display: flex;
+      flex-direction: column;
+      overflow-y: hidden;
+    }
+    :global(html.js) .spread-left-scroll {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+    }
+    /* A generous full-height strip along the page edge, not just a small
+       corner button - hovering anywhere near that side of the page is
+       enough to reach for the turn, not just a precise 44px target. */
+    :global(html.js) .corner {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: clamp(48px, 16%, 90px);
+      padding-bottom: var(--space-4);
+      border: none;
+      background: none;
+      color: #2a2622;
+      opacity: 0.3;
+      cursor: pointer;
+      transition: opacity var(--duration-fast) var(--ease-standard);
+    }
+    :global(html.js) .spread-page:hover .corner {
+      opacity: 0.6;
+    }
+    :global(html.js) .corner:hover,
+    :global(html.js) .corner:focus-visible {
+      opacity: 1 !important;
+    }
+    :global(html.js) .corner:disabled {
+      display: none;
+    }
+    /* A soft curling shadow that grows in from the edge under the
+       cursor, and a subtle 3D tilt of the page itself - both read as
+       "this page wants to be turned", not just a button lighting up.
+       Degrades harmlessly (no lift, icon-only affordance) in browsers
+       without :has() support. */
+    :global(html.js) .corner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity var(--duration-base) var(--ease-standard);
+      pointer-events: none;
+    }
+    :global(html.js) .corner-prev::before {
+      background: linear-gradient(to right, rgba(0, 0, 0, 0.1), transparent);
+    }
+    :global(html.js) .corner-next::before {
+      background: linear-gradient(to left, rgba(0, 0, 0, 0.1), transparent);
+    }
+    :global(html.js) .corner:hover::before,
+    :global(html.js) .corner:focus-visible::before {
+      opacity: 1;
+    }
+    :global(html.js) .spread-page-right:has(.corner-next:hover),
+    :global(html.js) .spread-page-right:has(.corner-next:focus-visible) {
+      transform: perspective(1400px) rotateY(-3deg);
+      transform-origin: right center;
+    }
+    :global(html.js) .spread-page-left:has(.corner-prev:hover),
+    :global(html.js) .spread-page-left:has(.corner-prev:focus-visible) {
+      transform: perspective(1400px) rotateY(3deg);
+      transform-origin: left center;
+    }
+    /* Fixed navy once enhanced, not the theme-swapping accent token: the
+       page itself is always cream paper in that mode, so the ink needs
+       to stay fixed too (a light-blue dark-mode accent would be
+       unreadable here - same bug class as the homepage stat numbers,
+       fixed earlier). */
+    :global(html.js) .spread-chapter {
+      color: var(--color-navy);
+    }
+    :global(html.js) .spread-page h3 {
+      color: #1c1a17;
+    }
+    :global(html.js) .spread-meta {
+      color: #6b6258;
+    }
+    :global(html.js) .spread-description,
+    :global(html.js) .spread-overview {
+      color: #3a3530;
+    }
+    :global(html.js) .spread-media {
+      margin: 0 0 var(--space-3);
+      /* Above the full-height corner hover strips, so the video's own
+         controls stay clickable right up to the edges instead of being
+         intercepted by the page-turn affordance. */
+      position: relative;
+      z-index: 1;
+    }
+    :global(html.js) .spread-links {
+      /* Same reason as .spread-media. */
+      position: relative;
+      z-index: 1;
+    }
+    :global(html.js) .spread-link {
+      color: var(--color-navy);
+    }
+    :global(html.js) .spread-cta {
+      /* Fixed navy/white, not the theme-swapping accent tokens - the
+         page itself is always cream paper in enhanced mode. Also lifted
+         above the corner hover strips, same reason as .spread-media. */
+      position: relative;
+      z-index: 1;
+      background: var(--color-navy);
+      color: #ffffff;
+      border-radius: 2px;
+      box-shadow: 0 8px 20px -10px rgba(26, 74, 107, 0.55);
+    }
+    :global(html.js) .spread-cta:hover {
+      background: var(--color-navy-deep);
+    }
+    :global(html.js) .spread-page-number {
+      /* #6b6258 on the #faf7f1 page background, 5.59:1 - verified AA,
+         lighter tones here (e.g. #8a8178) fall to ~3.6:1 and fail. */
+      color: #6b6258;
+    }
   }
 
   @media (min-width: 641px) {
@@ -473,37 +472,6 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
     }
     :global(html.js) .spread-page-right {
       padding-left: 6%;
-    }
-  }
-
-  @media (max-width: 640px) {
-    :global(html.js) .spread-face {
-      grid-template-columns: 1fr;
-      overflow-y: auto;
-    }
-    :global(html.js) .spread-face::before {
-      display: none;
-    }
-    :global(html.js) .spread-page {
-      padding: 7%;
-    }
-    :global(html.js) .spread-page-left {
-      border-bottom: 1px dashed #d8d2c8;
-      /* The "pin the CTA below a separately-scrolling description" trick
-         above needs a definite-height parent to work (it has one on the
-         fixed-aspect-ratio double-page spread). On mobile, pages stack
-         in a single-column grid with content-based height instead, so
-         that same flex + min-height:0 + overflow:auto combination had
-         no definite height to resolve against and collapsed the
-         description to 0px, hiding the chapter title and text entirely.
-         Mobile already scrolls the whole stacked spread as one normal
-         page, so there's nothing to pin here - just let everything flow
-         in order. */
-      display: block;
-      overflow-y: visible;
-    }
-    :global(html.js) .spread-left-scroll {
-      overflow-y: visible;
     }
   }
 </style>

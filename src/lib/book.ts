@@ -24,6 +24,15 @@ export function initProjectBook() {
   if (!bookRoot) return;
   const root: HTMLElement = bookRoot;
 
+  // Below 641px the CSS never arms the closed-book/3D presentation at all
+  // (see the matching @media wrapper in ProjectBook.astro/ProjectSpread.astro)
+  // - every spread just renders in normal, fully-visible document flow, same
+  // as the no-JS fallback. Bailing out here before anything else runs means
+  // this script never marks later spreads `inert`, which would otherwise
+  // silently disable their links and buttons even though they're plainly
+  // visible in that stacked layout.
+  if (window.matchMedia('(max-width: 640px)').matches) return;
+
   const spreads = Array.from(root.querySelectorAll<HTMLElement>('[data-book-spread]'));
   if (!spreads.length) return;
 

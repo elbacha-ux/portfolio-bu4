@@ -81,6 +81,13 @@ body {
   line-height: var(--lh-normal);
   -webkit-font-smoothing: antialiased;
   overflow-wrap: break-word;
+  /* When a word genuinely has to break to avoid overflowing a narrow
+     column (long technical terms in a 2-up mobile grid, long French
+     compound words), insert a real hyphen at a sensible syllable
+     boundary instead of silently cutting it at an arbitrary character -
+     works automatically from each <html lang> already being set
+     correctly per locale. */
+  hyphens: auto;
   transition: background-color var(--duration-base) var(--ease-standard), color var(--duration-base) var(--ease-standard);
 }
 

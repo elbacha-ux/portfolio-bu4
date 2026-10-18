@@ -62,11 +62,19 @@
   --fs-300: 1rem;       /* 16px - body minimum */
   --fs-400: 1.125rem;   /* 18px - body large */
   --fs-500: 1.375rem;   /* 22px - lead */
-  --fs-600: 1.75rem;    /* 28px - h4 */
-  --fs-700: 2.25rem;    /* 36px - h3 */
-  --fs-800: 3rem;       /* 48px - h2 */
-  --fs-900: 4rem;       /* 64px - h1 */
-  --fs-numeral: 6rem;   /* 96px - oversized Montserrat Black numerals */
+  /* Headings scale fluidly with viewport width instead of staying fixed
+     at their full desktop size everywhere - unconditional 48-96px
+     headings on a ~340px-wide phone screen were overflowing their
+     container on long words (e.g. "engineering" breaking mid-word on
+     the About page), not just wrapping awkwardly. Each clamps between a
+     mobile-appropriate floor and the original desktop value, which it
+     reaches at the same ~1280px width this design was built around -
+     desktop callers see no change. */
+  --fs-600: clamp(1.375rem, 1.1rem + 1.2vw, 1.75rem);  /* 22-28px - h4 */
+  --fs-700: clamp(1.5rem, 1.1rem + 2vw, 2.25rem);      /* 24-36px - h3 */
+  --fs-800: clamp(1.75rem, 1.1rem + 3.2vw, 3rem);      /* 28-48px - h2 */
+  --fs-900: clamp(2.25rem, 1.1rem + 5vw, 4rem);        /* 36-64px - h1 */
+  --fs-numeral: clamp(2.75rem, 1.5rem + 6vw, 6rem);    /* 44-96px - oversized Montserrat Black numerals */
 
   --fw-regular: 400;
   --fw-medium: 500;

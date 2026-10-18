@@ -51,9 +51,19 @@ const specialty = pick(member.specialty, lang);
   .specialty {
     margin: 0;
     color: var(--color-text-muted);
-    font-size: var(--fs-200);
+    /* Smaller on the 2-up mobile grid (MemberGrid.astro), where a card is
+       only ~155px wide - at --fs-200 a longer specialty like "Embedded
+       Telecommunications Engineering" doesn't fit a single word on one
+       line and wraps mid-word. The 4-up desktop grid has room to spare,
+       so it keeps the larger size. */
+    font-size: var(--fs-100);
     font-weight: var(--fw-medium);
     transition: color var(--duration-fast) var(--ease-standard);
+  }
+  @media (min-width: 768px) {
+    .specialty {
+      font-size: var(--fs-200);
+    }
   }
   .card-arrow {
     position: absolute;
