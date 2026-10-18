@@ -52,7 +52,7 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
 // Falls back to the project's first gallery photo as the share-preview
 // image when no dedicated cover was set - same "real photo beats generic
 // logo" goal as the member pages (see BaseLayout's `image` prop).
-const ogImage = project.image ?? (gallery.length > 0 ? `${base}${gallery[0]}` : undefined);
+const ogImage = project.image ? `${base}${project.image}` : gallery.length > 0 ? `${base}${gallery[0]}` : undefined;
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
 

@@ -17,7 +17,7 @@ export const people: Record<string, Member> = {
     slug: 'ahmed-belgacem',
     name: 'Ahmed Belgacem',
     specialty: L('Applied Computer Science', 'Informatique appliquée'),
-    photo: '/portfolio-bu4/images/members/ahmed-belgacem.jpg',
+    photo: 'images/members/ahmed-belgacem.jpg',
     intro: L(
       "First-year engineering student in applied computer science at ENISo (École Nationale d'Ingénieurs de Sousse). Motivated by technological progress and by the drive to move things forward, he enjoys turning his ideas into concrete projects. Passionate about artificial intelligence, embedded systems, robotics and programming, he looks for continuous learning and new challenges.",
       "Élève-ingénieur en première année en informatique appliquée à l'ENISo (École Nationale d'Ingénieurs de Sousse). Motivé par les avancées technologiques et par la volonté d'aller de l'avant vers un avenir meilleur, il aime donner vie à ses idées à travers des projets concrets. Passionné par l'intelligence artificielle, les systèmes embarqués, la robotique et la programmation, il cherche à apprendre continuellement et à relever de nouveaux défis."
@@ -135,7 +135,7 @@ export const people: Record<string, Member> = {
     slug: 'amena-aouichaoui',
     name: 'Amena Aouichaoui',
     specialty: L('Embedded Telecommunications Engineering', 'Génie télécommunications embarquées'),
-    photo: '/portfolio-bu4/images/members/amena-aouichaoui.jpg',
+    photo: 'images/members/amena-aouichaoui.jpg',
     intro: L(
       'Engineering student in embedded telecommunications at ENISo. A passionate, curious and motivated person, always looking for new opportunities to grow her skills and bring her ideas to life. She enjoys taking on new challenges, learning continuously and working on projects that let her creativity and know-how stand out.',
       "Élève-ingénieure en génie télécommunications embarquées à l'ENISo. Une personne passionnée, curieuse et motivée, toujours à la recherche de nouvelles opportunités pour développer ses compétences et donner vie à ses idées. Elle aime relever de nouveaux défis, apprendre continuellement et travailler sur des projets qui lui permettent de mettre en valeur sa créativité et son savoir-faire."
@@ -224,7 +224,7 @@ export const people: Record<string, Member> = {
     slug: 'fedi-khouildi',
     name: 'Fedi Khouildi',
     specialty: L('Embedded Telecommunications Engineering (GTE)', 'Génie des Télécommunications Embarquées (GTE)'),
-    photo: '/portfolio-bu4/images/members/fedi-khouildi.jpg',
+    photo: 'images/members/fedi-khouildi.jpg',
     intro: L(
       "Engineering student at the École Nationale d'Ingénieurs de Sousse (ENISo), interested in programming, embedded systems and telecommunications. Aims to build technical skills through concrete projects while strengthening communication, teamwork and project-management abilities.",
       "Étudiant ingénieur à l'École Nationale d'Ingénieurs de Sousse (ENISo). Intéressé par la programmation, les systèmes embarqués et les télécommunications. Son objectif est de développer ses compétences techniques à travers des projets concrets, tout en renforçant ses capacités de communication, de travail en équipe et de gestion de projet."
@@ -356,7 +356,7 @@ export const people: Record<string, Member> = {
     slug: 'lina-ben-hadj-slama',
     name: 'Lina Ben Hadj Slama',
     specialty: L('Applied Computer Science', 'Informatique appliquée'),
-    photo: '/portfolio-bu4/images/members/lina-ben-hadj-slama.jpg',
+    photo: 'images/members/lina-ben-hadj-slama.jpg',
     intro: L(
       'First-year engineering student in applied computer science. She completed secondary school at Lycée Pilote Sousse on the mathematics track, then spent two years in MP preparatory classes at IPEST. She is interested in crafts, reading, programming and discovery.',
       "Étudiante en première année du cycle d'ingénieur, filière informatique appliquée. Elle a fait ses études secondaires au lycée pilote de Sousse, filière mathématiques, puis a passé deux ans en classe préparatoire MP à l'IPEST. Elle s'intéresse aux travaux manuels, à la lecture, à la programmation et à la découverte."
@@ -466,7 +466,7 @@ export const people: Record<string, Member> = {
     slug: 'nour-lemjid',
     name: 'Nour Lemjid',
     specialty: L('Automotive Software Engineering', 'Logiciel automobile'),
-    photo: '/portfolio-bu4/images/members/nour-lemjid.jpg',
+    photo: 'images/members/nour-lemjid.jpg',
     intro: L(
       'Interested in embedded systems and automotive/aeronautical electronics, combining hardware, software and safety. Her projects focus on active vehicle safety (automatic emergency braking, drowsiness detection), energy management (battery management systems), emergency-signal detection and flight simulation. Motivated by designing reliable systems that protect people and contribute to the mobility of tomorrow.',
       "Intéressée par les systèmes embarqués et l'électronique appliquée à l'automobile et à l'aéronautique, avec une approche qui associe matériel, logiciel et sécurité. Ses projets portent sur la sécurité active des véhicules (freinage d'urgence automatique, détection de somnolence), la gestion d'énergie (BMS), la détection de signaux d'urgence et la simulation de vol. Sa motivation : concevoir des systèmes fiables qui protègent les personnes et contribuent à la mobilité de demain."
@@ -606,7 +606,7 @@ export const people: Record<string, Member> = {
     slug: 'rihab-trifi',
     name: 'Rihab Trifi',
     specialty: L('Industrial Electronics Engineering', 'Génie électronique industriel'),
-    photo: '/portfolio-bu4/images/members/rihab-trifi.jpg',
+    photo: 'images/members/rihab-trifi.jpg',
     intro: L(
       'Passionate, curious and results-oriented, she puts her creativity and know-how to work on ambitious projects. Always looking to learn and take on new challenges, she strives to design tailored solutions that combine professional rigor with originality.',
       "Passionnée, curieuse et orientée résultats, elle met sa créativité et son savoir-faire au service de projets ambitieux. Toujours en quête d'apprentissage et de nouveaux défis, elle s'efforce de concevoir des solutions sur mesure, alliant rigueur professionnelle et originalité."
@@ -681,7 +681,7 @@ export const people: Record<string, Member> = {
     slug: 'walid-ben-said',
     name: 'Walid Ben Said',
     specialty: L('Applied Computer Engineering', 'Génie informatique appliquée'),
-    photo: '/portfolio-bu4/images/members/walid-ben-said.jpg',
+    photo: 'images/members/walid-ben-said.jpg',
     intro: L(
       'Always looking for new opportunities to develop his skills and bring his ideas to life. Ready to work as part of a team, deliver concrete projects, and add value for the organizations he works with.',
       "Toujours à la recherche de nouvelles opportunités pour développer ses compétences et donner vie à ses idées. Prêt à travailler en équipe, à réaliser des projets concrets et à apporter une valeur ajoutée aux entreprises."
@@ -775,7 +775,7 @@ export const people: Record<string, Member> = {
     slug: 'nader-hlel',
     name: 'Nader Hlel',
     specialty: null,
-    photo: '/portfolio-bu4/images/members/nader-hlel.jpg',
+    photo: 'images/members/nader-hlel.jpg',
     intro: L(
       'A dedicated and supportive individual, currently pursuing 2nd-year GTE and Master 1 GT, always ready to share his knowledge and support others.',
       'Une personne dévouée et bienveillante, actuellement en 2e année de GTE et en Master 1 GT, toujours prête à partager ses connaissances et à soutenir les autres.'

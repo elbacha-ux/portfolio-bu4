@@ -39,7 +39,7 @@ export const projects: CollectiveProject[] = [
     ],
     outcome: null,
     link: 'https://elbacha-ux.github.io/portfolio-bu4/',
-    image: '/portfolio-bu4/images/projects/bu4-portfolio-website/slogan-cover.jpg',
+    image: 'images/projects/bu4-portfolio-website/slogan-cover.jpg',
     imageAlt: L("The site's 'Challenges are our business' slogan section", "La section devise « Les défis sont notre métier » du site"),
     videoUrl: null,
     documentsNote: null,
@@ -108,7 +108,7 @@ export const projects: CollectiveProject[] = [
     ],
     outcome: null,
     link: 'https://ahmedbfg.github.io/Re-imagine-Lab/',
-    image: '/portfolio-bu4/images/projects/re-imaginelab-campaign/poster.jpg',
+    image: 'images/projects/re-imaginelab-campaign/poster.jpg',
     imageAlt: L('Re-ImagineLab campaign poster', 'Affiche de la campagne Re-ImagineLab'),
     videoUrl: null,
     documentsNote: L(

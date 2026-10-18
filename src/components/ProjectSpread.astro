@@ -82,7 +82,7 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
             <source src={videoSrc} type="video/mp4" />
           </video>
         ) : project.image ? (
-          <img src={project.image} alt={imageAlt} loading="lazy" class="spread-image" />
+          <img src={`${base}${project.image}`} alt={imageAlt} loading="lazy" class="spread-image" />
         ) : (
           <div class="spread-illustration" role="img" aria-label={category ?? title ?? ''}>
             <span class="illustration-facet facet-a"></span>

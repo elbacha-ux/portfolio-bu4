@@ -12,6 +12,7 @@ interface Props {
 }
 const { project, lang } = Astro.props;
 const t = ui[lang];
+const base = import.meta.env.BASE_URL;
 const members = project.memberSlugs.map((s) => people[s]).filter(Boolean);
 const title = pick(project.title, lang);
 const description = pick(project.description, lang);
@@ -24,7 +25,7 @@ const detailHref = localePath(lang, `projects/${project.slug}/`);
   {project.image && (
     <div class="image-wrap">
       <img
-        src={project.image}
+        src={`${base}${project.image}`}
         alt={project.imageAlt ? pick(project.imageAlt, lang) ?? '' : ''}
         loading="lazy"
         width="480"

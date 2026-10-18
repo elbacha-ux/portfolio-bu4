@@ -51,7 +51,7 @@ const anchors = [
 const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
-<BaseLayout lang={lang} title={member.name} description={intro ?? `${member.name} - BU4`} image={member.photo ?? undefined}>
+<BaseLayout lang={lang} title={member.name} description={intro ?? `${member.name} - BU4`} image={member.photo ? `${base}${member.photo}` : undefined}>
   <MemberHero
     member={member}
     lang={lang}

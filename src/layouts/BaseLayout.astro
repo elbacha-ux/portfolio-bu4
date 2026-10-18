@@ -17,9 +17,10 @@ interface Props {
   /** Set true on the homepage so the title isn't duplicated with the site name. */
   isHome?: boolean;
   noindex?: boolean;
-  /** Site-root-relative path (already including the /portfolio-bu4 base,
-   * same convention as Member.photo/CollectiveProject.image) to a real
-   * content photo for this specific page - a member's portrait, a
+  /** Site-root-relative path, with `import.meta.env.BASE_URL` already
+   * prepended by the caller (unlike Member.photo/CollectiveProject.image,
+   * which are base-relative and need that prefix added before use) - a
+   * real content photo for this specific page, a member's portrait, a
    * project's cover. Falls back to the generic BU4 logo mark when absent,
    * so a shared link still gets a reasonable preview either way. */
   image?: string;

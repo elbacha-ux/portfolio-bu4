@@ -21,8 +21,9 @@ export function pickAll<T>(values: Localized<T>[], lang: Lang): T[] {
 
 /**
  * Builds a path for a page route in the given language, including the
- * `/portfolio-bu4` base path and (for non-default languages) the `/fr`
- * prefix - e.g. localePath('fr', 'members/nour-lemjid/') ->
+ * configured base path (`/portfolio-bu4` on GitHub Pages, `/` on Vercel -
+ * see astro.config.mjs) and, for non-default languages, the `/fr` prefix -
+ * e.g. on GitHub Pages, localePath('fr', 'members/nour-lemjid/') ->
  * '/portfolio-bu4/fr/members/nour-lemjid/'. `path` is relative, no leading
  * slash, trailing slash included (matches astro.config.mjs trailingSlash).
  */
