@@ -1,0 +1,154 @@
+---
+/**
+ * Share-this-page row: copy-link (clipboard, with the same "Copied!"
+ * feedback pattern as the Contact page) plus three share-intent links
+ * (WhatsApp, LinkedIn, X). All three are plain URL-based share intents -
+ * no SDK, no API key, nothing that could fail or add a dependency.
+ */
+import { ui } from '../i18n/ui';
+import type { Lang } from '../i18n';
+
+interface Props {
+  url: string;
+  title: string;
+  lang: Lang;
+}
+const { url, title, lang } = Astro.props;
+const t = ui[lang];
+
+const encodedUrl = encodeURIComponent(url);
+const encodedTitle = encodeURIComponent(title);
+const whatsappHref = `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`;
+const linkedinHref = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+const xHref = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`;
+---
+
+<div class="share-buttons">
+  <span class="share-label">{t.common.shareTitle}</span>
+  <div class="share-actions">
+    <a class="share-btn" href={whatsappHref} target="_blank" rel="noopener noreferrer" aria-label={t.common.shareOnWhatsApp} data-sound="click">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 2.5c-5.25 0-9.5 4.25-9.5 9.5 0 1.7.45 3.3 1.24 4.68L2.5 21.5l5-1.22A9.46 9.46 0 0 0 12 21.5c5.25 0 9.5-4.25 9.5-9.5S17.25 2.5 12 2.5Zm0 17.2c-1.52 0-2.95-.42-4.17-1.15l-.3-.18-2.97.73.73-2.88-.2-.3A7.68 7.68 0 0 1 4.3 12c0-4.25 3.45-7.7 7.7-7.7s7.7 3.45 7.7 7.7-3.45 7.7-7.7 7.7Zm4.23-5.77c-.23-.12-1.36-.67-1.57-.75-.21-.08-.36-.12-.52.12-.15.23-.6.75-.73.9-.13.15-.27.17-.5.06-.23-.12-.96-.35-1.84-1.13-.68-.6-1.14-1.35-1.27-1.58-.13-.23-.01-.35.1-.47.1-.1.23-.27.35-.4.12-.14.15-.23.23-.39.08-.15.04-.29-.02-.4-.06-.12-.52-1.25-.71-1.71-.19-.45-.38-.39-.52-.4h-.44c-.15 0-.4.06-.6.29-.21.23-.8.78-.8 1.9s.82 2.2.93 2.35c.12.15 1.62 2.48 3.93 3.47.55.24.98.38 1.31.49.55.17 1.06.15 1.46.09.44-.07 1.36-.56 1.56-1.1.19-.54.19-1 .13-1.1-.06-.1-.21-.16-.44-.28Z" />
+      </svg>
+    </a>
+    <a class="share-btn" href={linkedinHref} target="_blank" rel="noopener noreferrer" aria-label={t.common.shareOnLinkedIn} data-sound="click">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <rect x="2.5" y="2.5" width="19" height="19" rx="3" fill="none" stroke="currentColor" stroke-width="1.6" />
+        <circle cx="7.3" cy="8" r="1.4" />
+        <rect x="6.2" y="10.5" width="2.2" height="7" />
+        <path d="M11.5 10.5h2.1v1.1c.4-.6 1.1-1.3 2.4-1.3 2 0 2.9 1.3 2.9 3.6v3.6h-2.2v-3.2c0-1-.4-1.7-1.4-1.7-.8 0-1.3.5-1.5 1-.1.2-.1.5-.1.8v3.1h-2.2v-7Z" />
+      </svg>
+    </a>
+    <a class="share-btn" href={xHref} target="_blank" rel="noopener noreferrer" aria-label={t.common.shareOnX} data-sound="click">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <path d="M4 4l16 16M20 4 4 20" />
+      </svg>
+    </a>
+    <button
+      type="button"
+      class="share-btn share-copy-btn"
+      data-copy={url}
+      data-copy-label={t.common.copyLink}
+      data-copied-label={t.common.linkCopied}
+      aria-label={t.common.copyLink}
+      data-sound="confirm"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="9" y="9" width="12" height="12" rx="1.5" />
+        <path d="M6 15H4.5A1.5 1.5 0 0 1 3 13.5v-9A1.5 1.5 0 0 1 4.5 3h9A1.5 1.5 0 0 1 15 4.5V6" />
+      </svg>
+      <span class="copy-feedback" aria-live="polite"></span>
+    </button>
+  </div>
+</div>
+
+<script>
+  import { sound } from '../lib/sound-manager';
+
+  document.querySelectorAll<HTMLButtonElement>('.share-copy-btn').forEach((btn) => {
+    let resetTimer: number | undefined;
+    btn.addEventListener('click', async () => {
+      const value = btn.dataset.copy;
+      if (!value) return;
+      try {
+        await navigator.clipboard.writeText(value);
+      } catch {
+        return; // clipboard unavailable - the explicit share links still work
+      }
+      sound.confirm();
+      const feedback = btn.querySelector('.copy-feedback');
+      if (feedback) feedback.textContent = btn.dataset.copiedLabel ?? '';
+      btn.classList.add('is-copied');
+      window.clearTimeout(resetTimer);
+      resetTimer = window.setTimeout(() => {
+        btn.classList.remove('is-copied');
+        if (feedback) feedback.textContent = '';
+      }, 2000);
+    });
+  });
+</script>
+
+<style>
+  .share-buttons {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .share-label {
+    font-size: var(--fs-100);
+    font-weight: var(--fw-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+  }
+  .share-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .share-btn {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
+  }
+  .share-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+  .share-btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent-strong);
+    transform: translateY(-2px);
+  }
+  .share-copy-btn.is-copied {
+    border-color: var(--color-accent);
+    color: var(--color-accent-strong);
+  }
+  .copy-feedback {
+    position: absolute;
+    bottom: calc(100% + 0.4em);
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: var(--fs-100);
+    font-weight: var(--fw-heading);
+    background: var(--color-navy);
+    color: var(--color-white);
+    padding: 0.3em 0.6em;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-fast) var(--ease-standard);
+  }
+  .share-copy-btn.is-copied .copy-feedback {
+    opacity: 1;
+  }
+</style>

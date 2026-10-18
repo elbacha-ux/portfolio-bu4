@@ -7,6 +7,7 @@ import { ui } from '../i18n/ui';
 import { pick, pickAll, localePath } from '../i18n';
 import { projectGallery, hasProjectVideo, projectDocuments, documentPreviewImages } from '../lib/projectMedia';
 import { formatFileSize } from '../lib/cv';
+import ShareButtons from '../components/ShareButtons.astro';
 import type { Lang } from '../i18n';
 
 interface Props {
@@ -47,9 +48,15 @@ const documents = projectDocuments(slug).map((doc) => ({
 const hasLightbox = gallery.length > 0 || documents.some((d) => d.previewImages.length > 0);
 
 const otherProjects = projects.filter((p) => p.slug !== slug);
+
+// Falls back to the project's first gallery photo as the share-preview
+// image when no dedicated cover was set - same "real photo beats generic
+// logo" goal as the member pages (see BaseLayout's `image` prop).
+const ogImage = project.image ?? (gallery.length > 0 ? `${base}${gallery[0]}` : undefined);
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
-<BaseLayout lang={lang} title={title} description={description ?? title}>
+<BaseLayout lang={lang} title={title} description={description ?? title} image={ogImage}>
   <header class="project-hero glow-bg" data-spotlight>
     <div class="facets" aria-hidden="true">
       <span class="facet f1" data-parallax="0.09"></span>
@@ -82,6 +89,9 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
   <nav class="section-nav" aria-label={t.projects.title}>
     <div class="container section-nav-inner">
       <a class="back-link" href={localePath(lang, 'projects/')}>{t.common.backToProjects}</a>
+      <div class="section-nav-share">
+        <ShareButtons url={pageUrl} title={title} lang={lang} />
+      </div>
     </div>
   </nav>
 
@@ -357,7 +367,16 @@ const otherProjects = projects.filter((p) => p.slug !== slug);
     transition: background-color var(--duration-base) var(--ease-standard), border-color var(--duration-base) var(--ease-standard);
   }
   .section-nav-inner {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    row-gap: var(--space-1);
+    column-gap: var(--space-4);
     padding-block: var(--space-2);
+  }
+  .section-nav-share {
+    flex-shrink: 0;
+    margin-inline-start: auto;
   }
   .back-link {
     font-weight: var(--fw-medium);

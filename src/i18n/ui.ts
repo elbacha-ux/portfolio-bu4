@@ -47,6 +47,12 @@ interface UiDict {
     backToHome: string;
     backToTop: string;
     easterEgg: string;
+    shareTitle: string;
+    copyLink: string;
+    linkCopied: string;
+    shareOnWhatsApp: string;
+    shareOnLinkedIn: string;
+    shareOnX: string;
   };
   home: {
     heroEyebrow: string;
@@ -264,6 +270,12 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       backToHome: 'Back to home',
       backToTop: 'Back to top',
       easterEgg: "Challenges are our business - and you just found one. Nice.",
+      shareTitle: 'Share',
+      copyLink: 'Copy link',
+      linkCopied: 'Link copied!',
+      shareOnWhatsApp: 'Share on WhatsApp',
+      shareOnLinkedIn: 'Share on LinkedIn',
+      shareOnX: 'Share on X',
     },
     home: {
       heroEyebrow: 'Seven engineering students, one business unit',
@@ -486,6 +498,12 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       backToHome: "Retour à l'accueil",
       backToTop: 'Retour en haut',
       easterEgg: "Les défis, c'est notre métier - et vous venez d'en trouver un. Joli.",
+      shareTitle: 'Partager',
+      copyLink: 'Copier le lien',
+      linkCopied: 'Lien copié !',
+      shareOnWhatsApp: 'Partager sur WhatsApp',
+      shareOnLinkedIn: 'Partager sur LinkedIn',
+      shareOnX: 'Partager sur X',
     },
     home: {
       heroEyebrow: 'Sept élèves-ingénieurs, une business unit',

@@ -4,6 +4,7 @@ import MemberHero from '../components/MemberHero.astro';
 import MemberSkills from '../components/MemberSkills.astro';
 import MemberProjects from '../components/MemberProjects.astro';
 import CvSection from '../components/CvSection.astro';
+import ShareButtons from '../components/ShareButtons.astro';
 import Tag from '../components/Tag.astro';
 import LinkList from '../components/LinkList.astro';
 import Placeholder from '../components/Placeholder.astro';
@@ -46,9 +47,11 @@ const anchors = [
   { href: '#projects', label: t.member.navProjects, show: member.projects.length > 0 },
   { href: '#cv', label: t.member.navCv, show: memberHasCv },
 ].filter((a) => a.show);
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
-<BaseLayout lang={lang} title={member.name} description={intro ?? `${member.name} - BU4`}>
+<BaseLayout lang={lang} title={member.name} description={intro ?? `${member.name} - BU4`} image={member.photo ?? undefined}>
   <MemberHero
     member={member}
     lang={lang}
@@ -60,10 +63,15 @@ const anchors = [
 
   <nav class="section-nav" aria-label={t.member.navOverview}>
     <div class="container section-nav-inner">
-      <a class="back-link" href={localePath(lang, 'team/')}>{t.common.backToTeam}</a>
-      <ul class="anchors">
-        {anchors.map((a) => <li><a href={a.href}>{a.label}</a></li>)}
-      </ul>
+      <div class="section-nav-links">
+        <a class="back-link" href={localePath(lang, 'team/')}>{t.common.backToTeam}</a>
+        <ul class="anchors">
+          {anchors.map((a) => <li><a href={a.href}>{a.label}</a></li>)}
+        </ul>
+      </div>
+      <div class="section-nav-share">
+        <ShareButtons url={pageUrl} title={member.name} lang={lang} />
+      </div>
     </div>
   </nav>
 
@@ -158,9 +166,21 @@ const anchors = [
   .section-nav-inner {
     display: flex;
     align-items: center;
-    gap: var(--space-4);
+    flex-wrap: wrap;
+    row-gap: var(--space-1);
+    column-gap: var(--space-4);
     padding-block: var(--space-2);
+  }
+  .section-nav-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    min-width: 0;
     overflow-x: auto;
+  }
+  .section-nav-share {
+    flex-shrink: 0;
+    margin-inline-start: auto;
   }
   .back-link {
     flex-shrink: 0;
