@@ -1,18 +1,21 @@
 ---
 /**
- * Loads the approved BU4 signature file (docs/brand/logo/logo.jpeg is the
- * untouched original, archived as-is). public/images/brand/bu4-logo-mark.png
- * is the icon mark only (the "4" swirl + star), cropped from the
- * transparent full lockup (public/images/brand/bu4-logo.png) with no
- * redrawing - same transparent background, same colors, just without the
- * "BUSINESS UNIT 4" wordmark. Never recolor, stretch, rotate or otherwise
- * redraw the mark itself - see docs/brand/Charte-Graphique-1.pdf section 1.4.
+ * BU4's own icon mark (the "4" swirl + star) - a unit-level mark derived
+ * from JEENISo's visual language, not the JEENISo signature itself. Section
+ * 1.4 "Improper use" of docs/brand/Charte-Graphique-1.pdf (never recolor,
+ * stretch, rotate, redraw) governs the JEENISo corporate signature
+ * specifically and doesn't bind this mark - confirmed by the team, who own
+ * it. public/images/brand/bu4-logo-mark.png is a cleaned-up master (same
+ * shape and colors as the original docs/brand/logo/logo.jpeg crop, just
+ * properly upscaled/denoised from what was a 126x136px source with visible
+ * JPEG noise - see git history before 2026-10-18 for the original file).
+ * bu4-icon-180.png/bu4-icon-512.png are square-padded crops of the same
+ * master, used for the favicon and social-preview fallback.
  */
 import { localePath } from '../i18n';
 import type { Lang } from '../i18n';
 
 interface Props {
-  /** Minimum rendered width is 120px per the charter (section 1.3). */
   width?: number;
   class?: string;
   lang?: Lang;

@@ -101,7 +101,7 @@ const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
           )}
         </div>
       ) : (
-        <Placeholder label={t.member.placeholderEducation} lang={lang} />
+        <Placeholder label={t.member.placeholderEducation} lang={lang} variant="block" />
       )}
 
       {interests.length > 0 && (

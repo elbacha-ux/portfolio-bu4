@@ -1,20 +1,37 @@
 ---
 /** Dev: visible TODO badge. Prod: a neutral "coming soon" state - never a
- * fabricated value standing in for missing content. */
+ * fabricated value standing in for missing content.
+ *
+ * `variant="block"` adds a small decorative illustration (built from the
+ * same faceted-diagonal language as the hero sections, charter colors
+ * only) above the text, for the handful of call sites where a placeholder
+ * stands in for an entire section rather than a line of inline prose - see
+ * MemberView/MemberSkills/MemberProjects. The default `variant="inline"`
+ * is unchanged (plain text only), since a couple of call sites (BumSpotlight)
+ * nest this inside a <p>, where a block-level illustration would be invalid. */
 import { ui } from '../i18n/ui';
 import type { Lang } from '../i18n';
 
 interface Props {
   label?: string;
   lang?: Lang;
+  variant?: 'inline' | 'block';
 }
-const { label, lang = 'en' } = Astro.props;
+const { label, lang = 'en', variant = 'inline' } = Astro.props;
 const isDev = import.meta.env.DEV;
 const t = ui[lang];
 ---
 
 {isDev ? (
   <span class="placeholder-dev">TODO: {label ?? 'missing content'}</span>
+) : variant === 'block' ? (
+  <div class="placeholder-block">
+    <svg class="placeholder-art" viewBox="0 0 64 64" aria-hidden="true">
+      <rect x="4" y="4" width="56" height="56" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4" />
+      <polygon points="18,46 34,14 50,46" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+    </svg>
+    <span class="placeholder-prod">{t.common.comingSoon}</span>
+  </div>
 ) : (
   <span class="placeholder-prod">{t.common.comingSoon}</span>
 )}
@@ -32,5 +49,20 @@ const t = ui[lang];
   .placeholder-prod {
     color: var(--color-text-muted);
     font-style: italic;
+  }
+  .placeholder-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    padding-block: var(--space-4);
+    color: var(--color-border);
+  }
+  .placeholder-art {
+    width: 56px;
+    height: 56px;
+  }
+  .placeholder-block .placeholder-prod {
+    color: var(--color-text-muted);
   }
 </style>
