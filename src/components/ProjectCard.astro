@@ -22,14 +22,20 @@ const detailHref = localePath(lang, `projects/${project.slug}/`);
 
 <article class="project-card card reveal" data-tilt>
   {project.image && (
-    <img
-      src={project.image}
-      alt={project.imageAlt ? pick(project.imageAlt, lang) ?? '' : ''}
-      loading="lazy"
-      width="480"
-      height="300"
-      style={`view-transition-name: project-image-${project.slug}`}
-    />
+    <div class="image-wrap">
+      <img
+        src={project.image}
+        alt={project.imageAlt ? pick(project.imageAlt, lang) ?? '' : ''}
+        loading="lazy"
+        width="480"
+        height="300"
+        style={`view-transition-name: project-image-${project.slug}`}
+      />
+      <span class="view-pill" aria-hidden="true">
+        {t.projects.viewDetails}
+        <span class="view-pill-arrow">→</span>
+      </span>
+    </div>
   )}
   <div class="body">
     <div class="meta">
@@ -85,15 +91,61 @@ const detailHref = localePath(lang, `projects/${project.slug}/`);
   .card-link:hover {
     text-decoration: underline;
   }
+  .image-wrap {
+    position: relative;
+    overflow: hidden;
+    margin: calc(var(--space-3) * -1) calc(var(--space-3) * -1) var(--space-3);
+    width: calc(100% + var(--space-3) * 2);
+  }
+  .image-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10, 18, 28, 0.65), rgba(10, 18, 28, 0) 55%);
+    opacity: 0;
+    transition: opacity var(--duration-base) var(--ease-standard);
+  }
+  .project-card:hover .image-wrap::after {
+    opacity: 1;
+  }
   .project-card img {
     aspect-ratio: 16 / 10;
     object-fit: cover;
-    margin: calc(var(--space-3) * -1) calc(var(--space-3) * -1) var(--space-3);
-    width: calc(100% + var(--space-3) * 2);
+    width: 100%;
+    display: block;
     transition: transform var(--duration-slow) var(--ease-out);
   }
   .project-card:hover img {
     transform: scale(1.06);
+  }
+  .view-pill {
+    position: absolute;
+    left: var(--space-2);
+    bottom: var(--space-2);
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.5em 0.9em;
+    background: var(--color-white);
+    color: var(--color-navy);
+    font-size: var(--fs-100);
+    font-weight: var(--fw-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out);
+  }
+  .project-card:hover .view-pill {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .view-pill-arrow {
+    transition: transform var(--duration-fast) var(--ease-standard);
+  }
+  .project-card:hover .view-pill-arrow {
+    transform: translateX(3px);
   }
   .meta {
     display: flex;
