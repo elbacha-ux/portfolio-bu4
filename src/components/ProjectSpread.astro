@@ -489,6 +489,21 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
     }
     :global(html.js) .spread-page-left {
       border-bottom: 1px dashed #d8d2c8;
+      /* The "pin the CTA below a separately-scrolling description" trick
+         above needs a definite-height parent to work (it has one on the
+         fixed-aspect-ratio double-page spread). On mobile, pages stack
+         in a single-column grid with content-based height instead, so
+         that same flex + min-height:0 + overflow:auto combination had
+         no definite height to resolve against and collapsed the
+         description to 0px, hiding the chapter title and text entirely.
+         Mobile already scrolls the whole stacked spread as one normal
+         page, so there's nothing to pin here - just let everything flow
+         in order. */
+      display: block;
+      overflow-y: visible;
+    }
+    :global(html.js) .spread-left-scroll {
+      overflow-y: visible;
     }
   }
 </style>
