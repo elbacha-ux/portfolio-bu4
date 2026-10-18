@@ -88,13 +88,12 @@ const winnerNames = winners.map((w) => w.name).join(' & ');
     border-color: var(--color-accent);
   }
 
-  /* ---- One-time golden celebration ----
-   * The first medal a visitor ever clicks adds this class to its card
-   * (see BaseLayout's [data-confetti] handler) - a warm glow that rises
-   * and settles back to the card's normal surface, celebrating the
-   * discovery without permanently changing anything.
+  /* ---- Golden celebration ----
+   * Clicking a medal adds this class to its card (see BaseLayout's
+   * [data-confetti] handler) - a warm glow that rises and settles back to
+   * the card's normal surface, every time, not just once.
    */
-  .award-card.first-celebration {
+  .award-card.celebration-glow {
     animation: golden-glow 1.6s var(--ease-out);
   }
   @keyframes golden-glow {

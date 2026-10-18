@@ -176,14 +176,12 @@ const ogImageURL = new URL(image ?? `${import.meta.env.BASE_URL}images/brand/bu4
     <script>
       // Delegated handler for [data-confetti] (currently just the award
       // medal badges) - a small, localized burst centered on whatever was
-      // clicked, same confetti module as the BU4-signature easter egg. The
-      // very first medal a visitor ever clicks (sitewide, tracked in
-      // localStorage) also gets a one-time golden glow on its card - every
-      // click after that is just the regular confetti + chime.
+      // clicked, same confetti module as the BU4-signature easter egg, plus
+      // a golden glow on that card every time. The remove-reflow-add dance
+      // forces the CSS animation to restart even on rapid repeated clicks
+      // (just re-adding a class that's already present wouldn't replay it).
       import { burstConfetti } from '../lib/confetti';
       import { sound } from '../lib/sound-manager';
-
-      const FIRST_CELEBRATION_KEY = 'bu4-award-celebrated';
 
       document.addEventListener('click', (event) => {
         const trigger = (event.target as HTMLElement)?.closest<HTMLElement>('[data-confetti]');
@@ -192,19 +190,12 @@ const ogImageURL = new URL(image ?? `${import.meta.env.BASE_URL}images/brand/bu4
         burstConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
         sound.tada();
 
-        let isFirst = false;
-        try {
-          isFirst = localStorage.getItem(FIRST_CELEBRATION_KEY) !== 'yes';
-          if (isFirst) localStorage.setItem(FIRST_CELEBRATION_KEY, 'yes');
-        } catch {
-          /* storage unavailable - just skip the one-time flourish */
-        }
-        if (isFirst) {
-          const card = trigger.closest<HTMLElement>('.award-card');
-          if (card) {
-            card.classList.add('first-celebration');
-            card.addEventListener('animationend', () => card.classList.remove('first-celebration'), { once: true });
-          }
+        const card = trigger.closest<HTMLElement>('.award-card');
+        if (card) {
+          card.classList.remove('celebration-glow');
+          void card.offsetWidth; // force reflow so the animation restarts
+          card.classList.add('celebration-glow');
+          card.addEventListener('animationend', () => card.classList.remove('celebration-glow'), { once: true });
         }
       });
     </script>
