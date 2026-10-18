@@ -211,14 +211,18 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
   .corner {
     display: none;
   }
+  /* A generous full-height strip along the page edge, not just a small
+     corner button - hovering anywhere near that side of the page is
+     enough to reach for the turn, not just a precise 44px target. */
   :global(html.js) .corner {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
     position: absolute;
+    top: 0;
     bottom: 0;
-    width: 44px;
-    height: 44px;
+    width: clamp(48px, 16%, 90px);
+    padding-bottom: var(--space-4);
     border: none;
     background: none;
     color: #2a2622;
@@ -247,6 +251,42 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
   .corner svg {
     width: 20px;
     height: 20px;
+  }
+  /* A soft curling shadow that grows in from the edge under the cursor,
+     and a subtle 3D tilt of the page itself - both read as "this page
+     wants to be turned", not just a button lighting up. Degrades
+     harmlessly (no lift, icon-only affordance) in browsers without
+     :has() support. */
+  :global(html.js) .corner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity var(--duration-base) var(--ease-standard);
+    pointer-events: none;
+  }
+  :global(html.js) .corner-prev::before {
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.1), transparent);
+  }
+  :global(html.js) .corner-next::before {
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.1), transparent);
+  }
+  :global(html.js) .corner:hover::before,
+  :global(html.js) .corner:focus-visible::before {
+    opacity: 1;
+  }
+  :global(html.js) .spread-page {
+    transition: transform 0.35s var(--ease-standard);
+  }
+  :global(html.js) .spread-page-right:has(.corner-next:hover),
+  :global(html.js) .spread-page-right:has(.corner-next:focus-visible) {
+    transform: perspective(1400px) rotateY(-3deg);
+    transform-origin: right center;
+  }
+  :global(html.js) .spread-page-left:has(.corner-prev:hover),
+  :global(html.js) .spread-page-left:has(.corner-prev:focus-visible) {
+    transform: perspective(1400px) rotateY(3deg);
+    transform-origin: left center;
   }
 
   .spread-chapter {
@@ -299,6 +339,11 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
   }
   :global(html.js) .spread-media {
     margin: 0 0 var(--space-3);
+    /* Above the full-height corner hover strips (see .corner below), so
+       the video's own controls stay clickable right up to the edges
+       instead of being intercepted by the page-turn affordance. */
+    position: relative;
+    z-index: 1;
   }
   .spread-image,
   .spread-video {
@@ -351,6 +396,12 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
     flex-wrap: wrap;
     gap: var(--space-3);
   }
+  :global(html.js) .spread-links {
+    /* Same reason as .spread-media - stay clickable above the corner
+       hover strips. */
+    position: relative;
+    z-index: 1;
+  }
   .spread-link {
     display: inline-flex;
     align-items: center;
@@ -390,7 +441,11 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
   }
   :global(html.js) .spread-cta {
     /* Fixed navy/white, not the theme-swapping accent tokens - the page
-       itself is always cream paper in enhanced mode, see .spread-chapter. */
+       itself is always cream paper in enhanced mode, see .spread-chapter.
+       Also lifted above the corner hover strips, same reason as
+       .spread-media, so it stays clickable right up to the left edge. */
+    position: relative;
+    z-index: 1;
     background: var(--color-navy);
     color: #ffffff;
     border-radius: 2px;
