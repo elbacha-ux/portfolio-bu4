@@ -23,11 +23,13 @@ const { items, summaryLabel } = Astro.props;
   <ul class="bars" aria-hidden="true">
     {items.map((item) => (
       <li class="bar-row">
-        <span class="bar-label">{item.label}</span>
+        <div class="bar-head">
+          <span class="bar-label">{item.label}</span>
+          <span class="bar-value">{item.valueLabel}</span>
+        </div>
         <span class="bar-track">
           <span class="bar-fill" style={`width: ${Math.round((item.value / item.max) * 100)}%`}></span>
         </span>
-        <span class="bar-value">{item.valueLabel}</span>
       </li>
     ))}
   </ul>
@@ -40,6 +42,26 @@ const { items, summaryLabel } = Astro.props;
   </details>
 </div>
 
+<script>
+  // Replays the grow-from-0 animation every time a bar scrolls into view
+  // (not just once), by toggling the class that arms it instead of letting
+  // it run unconditionally on page load - see .bar-fill/.in-view below.
+  const fills = document.querySelectorAll<HTMLElement>('.bar-fill');
+  if (fills.length && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          entry.target.classList.toggle('in-view', entry.isIntersecting);
+        }
+      },
+      { threshold: 0.4 }
+    );
+    fills.forEach((fill) => io.observe(fill));
+  } else {
+    fills.forEach((fill) => fill.classList.add('in-view'));
+  }
+</script>
+
 <style>
   .bar-chart {
     width: 100%;
@@ -49,35 +71,51 @@ const { items, summaryLabel } = Astro.props;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: var(--space-2);
+    gap: var(--space-3);
   }
   .bar-row {
     display: grid;
-    grid-template-columns: 7rem 1fr 3rem;
-    align-items: center;
+    gap: 0.45rem;
+  }
+  .bar-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
     gap: var(--space-2);
   }
   .bar-label {
     font-size: var(--fs-200);
     font-weight: var(--fw-medium);
     color: var(--color-text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: var(--lh-normal);
+  }
+  .bar-value {
+    flex-shrink: 0;
+    font-size: var(--fs-200);
+    font-weight: var(--fw-black);
+    color: var(--color-accent-strong);
+    font-variant-numeric: tabular-nums;
   }
   .bar-track {
     display: block;
-    height: 10px;
+    height: 9px;
+    border-radius: var(--radius-pill);
     background: var(--color-bg-muted);
     position: relative;
     overflow: hidden;
+    box-shadow: inset 0 1px 2px rgba(var(--shadow-color), 0.14);
   }
   .bar-fill {
     display: block;
     height: 100%;
-    background: var(--color-accent);
+    border-radius: var(--radius-pill);
+    background: linear-gradient(90deg, var(--color-blue), var(--color-light-blue));
+    box-shadow: 0 0 8px 0 color-mix(in srgb, var(--color-blue) 55%, transparent);
     transform-origin: left;
-    animation: grow-bar var(--duration-slow) var(--ease-out) both;
+    transform: scaleX(0);
+  }
+  .bar-fill.in-view {
+    animation: grow-bar var(--duration-slow) var(--ease-out) forwards;
   }
   @keyframes grow-bar {
     from { transform: scaleX(0); }
@@ -85,14 +123,11 @@ const { items, summaryLabel } = Astro.props;
   }
   @media (prefers-reduced-motion: reduce) {
     .bar-fill {
+      transform: scaleX(1);
+    }
+    .bar-fill.in-view {
       animation: none;
     }
-  }
-  .bar-value {
-    font-size: var(--fs-100);
-    font-weight: var(--fw-heading);
-    color: var(--color-text-muted);
-    text-align: right;
   }
   .text-summary {
     margin-top: var(--space-2);

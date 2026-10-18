@@ -52,6 +52,17 @@ export interface MemberCertification {
   file: string | null;
 }
 
+export interface MemberTechnicalSkill {
+  name: Localized<string>;
+  /** Self-estimated proficiency, 0-100. Where the member hasn't given an
+   * exact number yet, this is a rough approximation from the rest of their
+   * profile (projects, certifications, how the skill is phrased) and is
+   * expected to be replaced once they provide a real figure - never treat
+   * it as a verified measurement. Null skips the bar entirely (see
+   * MemberSkills.astro), so an unrated skill just doesn't show one. */
+  level: number | null;
+}
+
 export interface Member {
   slug: string;
   /** Proper noun - not translated. */
@@ -71,7 +82,7 @@ export interface Member {
     certifications: MemberCertification[];
   } | null;
   skills: {
-    technical: Localized<string>[];
+    technical: MemberTechnicalSkill[];
     personal: Localized<string>[];
     languages: LanguageSkill[];
   };

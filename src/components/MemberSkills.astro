@@ -2,10 +2,13 @@
 /**
  * Skills & toolkit section: categorized technical badges (grouping is pure
  * presentation - see src/lib/skillCategories.ts - never invents a skill),
- * personal/soft skills, and two honest charts: a language-level bar chart
- * (built from the member's own stated CEFR level, a real standardized
- * scale - never a guessed score) and a skill-category distribution donut
- * (real counts of documented skills, never a proficiency percentage).
+ * personal/soft skills, and three charts: a language-level bar chart (built
+ * from the member's own stated CEFR level, a real standardized scale), a
+ * skill-category distribution donut (real counts of documented skills,
+ * never a proficiency score), and a per-skill proficiency bar chart. That
+ * last one IS a percentage estimate - each member's own number where given,
+ * a rough approximation otherwise (see MemberTechnicalSkill.level in
+ * data/types.ts) - never hide that it's an estimate when presenting it.
  */
 import Tag from './Tag.astro';
 import BarChart from './BarChart.astro';
@@ -26,7 +29,7 @@ const { member, lang } = Astro.props;
 const t = ui[lang];
 
 const personal = pickAll(member.skills.personal, lang);
-const categories = groupSkillsByCategory(member.skills.technical, lang);
+const categories = groupSkillsByCategory(member.skills.technical.map((s) => s.name), lang);
 
 const languageBars = member.skills.languages
   .map((l) => {
@@ -35,6 +38,10 @@ const languageBars = member.skills.languages
     return { label: pick(l.name, lang) ?? '', value: rank, max: CEFR_MAX, valueLabel: pick(l.level, lang) ?? '' };
   })
   .filter((x): x is { label: string; value: number; max: number; valueLabel: string } => x !== null);
+
+const skillLevelBars = member.skills.technical
+  .filter((s) => s.level !== null)
+  .map((s) => ({ label: pick(s.name, lang) ?? '', value: s.level as number, max: 100, valueLabel: `${s.level}%` }));
 
 const CATEGORY_COLORS = ['var(--color-blue)', 'var(--color-navy)', 'var(--color-light-blue)', 'var(--color-cool-gray)', 'var(--color-mid-gray)'];
 const categorySegments = categories.map((c, i) => ({
@@ -70,6 +77,13 @@ const hasAnything = categories.length > 0 || personal.length > 0;
       </div>
 
       <div class="charts-col">
+        {skillLevelBars.length > 0 && (
+          <div class="chart-block">
+            <p class="chart-title">{t.member.chartSkillLevelsTitle}</p>
+            <BarChart items={skillLevelBars} summaryLabel={t.member.chartSummaryLabel} />
+            <p class="chart-note">{t.member.chartSkillLevelsNote}</p>
+          </div>
+        )}
         {languageBars.length > 0 && (
           <div class="chart-block">
             <p class="chart-title">{t.member.chartLanguagesTitle}</p>
@@ -137,6 +151,12 @@ const hasAnything = categories.length > 0 || personal.length > 0;
     font-weight: var(--fw-heading);
     font-size: var(--fs-200);
     margin-bottom: var(--space-2);
+  }
+  .chart-note {
+    margin: var(--space-2) 0 0;
+    font-size: var(--fs-100);
+    font-style: italic;
+    color: var(--color-text-muted);
   }
 
   @media (min-width: 1024px) {

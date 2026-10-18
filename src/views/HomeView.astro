@@ -30,7 +30,7 @@ const description = site.description[lang];
 const toSlug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 const skillSlugs = new Set<string>();
 for (const m of members) {
-  for (const skill of pickAll(m.skills.technical, lang)) skillSlugs.add(toSlug(skill));
+  for (const skill of pickAll(m.skills.technical.map((s) => s.name), lang)) skillSlugs.add(toSlug(skill));
 }
 const stats = [
   { value: members.length, label: t.home.statMembers },

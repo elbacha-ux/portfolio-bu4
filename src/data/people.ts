@@ -38,7 +38,12 @@ export const people: Record<string, Member> = {
       ],
     },
     skills: {
-      technical: [L('Python', 'Python'), L('C', 'C'), L('HTML/CSS/JavaScript', 'HTML/CSS/JavaScript'), L('SolidWorks (3D modeling)', 'SolidWorks (modélisation 3D)')],
+      technical: [
+        { name: L('Python', 'Python'), level: 35 },
+        { name: L('C', 'C'), level: 40 },
+        { name: L('HTML/CSS/JavaScript', 'HTML/CSS/JavaScript'), level: 30 },
+        { name: L('SolidWorks (3D modeling)', 'SolidWorks (modélisation 3D)'), level: 65 },
+      ],
       personal: [
         L('Sense of responsibility', 'Sens des responsabilités'),
         L('Problem-solving', 'Résolution de problèmes'),
@@ -148,7 +153,11 @@ export const people: Record<string, Member> = {
       ],
     },
     skills: {
-      technical: [L('HTML', 'HTML'), L('CSS', 'CSS'), L('JavaScript', 'JavaScript')],
+      technical: [
+        { name: L('HTML', 'HTML'), level: 35 },
+        { name: L('CSS', 'CSS'), level: 30 },
+        { name: L('JavaScript', 'JavaScript'), level: 25 },
+      ],
       personal: [
         L('Time management and organization', 'Organisation et gestion du temps'),
         L('Teamwork', 'Travail en équipe'),
@@ -240,17 +249,20 @@ export const people: Record<string, Member> = {
     },
     skills: {
       technical: [
-        L('Python (functions, data structures, iterables, OOP, exception handling)', 'Python (fonctions, structures de données, itérables, programmation orientée objet, gestion des exceptions)'),
-        L('C basics', 'Bases en C'),
-        L('HTML', 'HTML'),
-        L('CSS', 'CSS'),
-        L('JavaScript', 'JavaScript'),
-        L('Notions of digital telecommunications and digital systems', 'Notions en télécommunications numériques et en systèmes numériques'),
-        L('Video editing', 'Montage vidéo'),
-        L('Advanced video editing with CapCut', 'Montage vidéo avancé avec CapCut'),
-        L('AI-assisted editing (video and photo)', 'Montage assisté par IA (vidéo et photo)'),
-        L('Suno (AI music generation)', 'Suno (génération musicale par IA)'),
-        L('Google Flow (AI video generation)', 'Google Flow (génération vidéo par IA)'),
+        // Exact figures given by Fedi (C/Python/HTML/CSS/JavaScript); the
+        // rest are rough estimates pending his real numbers - see the
+        // MemberTechnicalSkill.level doc comment in data/types.ts.
+        { name: L('Python (functions, data structures, iterables, OOP, exception handling)', 'Python (fonctions, structures de données, itérables, programmation orientée objet, gestion des exceptions)'), level: 60 },
+        { name: L('C basics', 'Bases en C'), level: 30 },
+        { name: L('HTML', 'HTML'), level: 50 },
+        { name: L('CSS', 'CSS'), level: 30 },
+        { name: L('JavaScript', 'JavaScript'), level: 30 },
+        { name: L('Notions of digital telecommunications and digital systems', 'Notions en télécommunications numériques et en systèmes numériques'), level: 25 },
+        { name: L('Video editing', 'Montage vidéo'), level: 65 },
+        { name: L('Advanced video editing with CapCut', 'Montage vidéo avancé avec CapCut'), level: 75 },
+        { name: L('AI-assisted editing (video and photo)', 'Montage assisté par IA (vidéo et photo)'), level: 60 },
+        { name: L('Suno (AI music generation)', 'Suno (génération musicale par IA)'), level: 100 },
+        { name: L('Google Flow (AI video generation)', 'Google Flow (génération vidéo par IA)'), level: 90 },
       ],
       personal: [
         L('Curiosity and eagerness to learn', "Curiosité et capacité d'apprentissage"),
@@ -365,7 +377,12 @@ export const people: Record<string, Member> = {
       ],
     },
     skills: {
-      technical: [L('Python', 'Python'), L('C', 'C'), L('Algorithms and data structures', 'Algorithmique et structures de données'), L('Applied mathematics and modeling', 'Mathématiques appliquées et modélisation')],
+      technical: [
+        { name: L('Python', 'Python'), level: 40 },
+        { name: L('C', 'C'), level: 35 },
+        { name: L('Algorithms and data structures', 'Algorithmique et structures de données'), level: 45 },
+        { name: L('Applied mathematics and modeling', 'Mathématiques appliquées et modélisation'), level: 50 },
+      ],
       personal: [
         L('Analytical and synthesis skills', 'Esprit d’analyse et de synthèse'),
         L('Scientific rigor and organization', 'Rigueur scientifique et sens de l’organisation'),
@@ -464,7 +481,14 @@ export const people: Record<string, Member> = {
       ],
     },
     skills: {
-      technical: [L('C/C++', 'C/C++'), L('Python', 'Python'), L('MATLAB', 'MATLAB'), L('Arduino', 'Arduino'), L('STM32', 'STM32'), L('ESP32', 'ESP32')],
+      technical: [
+        { name: L('C/C++', 'C/C++'), level: 45 },
+        { name: L('Python', 'Python'), level: 50 },
+        { name: L('MATLAB', 'MATLAB'), level: 55 },
+        { name: L('Arduino', 'Arduino'), level: 45 },
+        { name: L('STM32', 'STM32'), level: 45 },
+        { name: L('ESP32', 'ESP32'), level: 35 },
+      ],
       personal: [
         L('Analytical mindset', "Esprit d'analyse"),
         L('Rigor', 'Rigueur'),
@@ -595,7 +619,13 @@ export const people: Record<string, Member> = {
       certifications: [],
     },
     skills: {
-      technical: [L('Python', 'Python'), L('C', 'C'), L('HTML', 'HTML'), L('CSS', 'CSS'), L('Java', 'Java')],
+      technical: [
+        { name: L('Python', 'Python'), level: 30 },
+        { name: L('C', 'C'), level: 35 },
+        { name: L('HTML', 'HTML'), level: 35 },
+        { name: L('CSS', 'CSS'), level: 30 },
+        { name: L('Java', 'Java'), level: 25 },
+      ],
       personal: [L('Time management and organization', 'Organisation et gestion du temps'), L('Teamwork', 'Travail en équipe')],
       languages: [
         { name: L('French', 'Français'), level: L('C1', 'C1') },
@@ -675,7 +705,13 @@ export const people: Record<string, Member> = {
       ],
     },
     skills: {
-      technical: [L('Python', 'Python'), L('C', 'Langage C'), L('HTML', 'HTML'), L('CSS', 'CSS'), L('JavaScript', 'JS')],
+      technical: [
+        { name: L('Python', 'Python'), level: 35 },
+        { name: L('C', 'Langage C'), level: 30 },
+        { name: L('HTML', 'HTML'), level: 40 },
+        { name: L('CSS', 'CSS'), level: 35 },
+        { name: L('JavaScript', 'JS'), level: 25 },
+      ],
       personal: [L('Organization and time management', 'Organisation et gestion du temps'), L('Teamwork', 'Travail en équipe'), L('Creativity', 'Créativité')],
       languages: [
         { name: L('English', 'Anglais'), level: L('B2', 'B2') },

@@ -15,7 +15,7 @@ const toSlug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replac
 
 <ul class="member-grid">
   {members.map((m) => (
-    <li data-skills={pickAll(m.skills.technical, lang).map(toSlug).join(' ')}>
+    <li data-skills={pickAll(m.skills.technical.map((s) => s.name), lang).map(toSlug).join(' ')}>
       <MemberCard member={m} lang={lang} />
     </li>
   ))}

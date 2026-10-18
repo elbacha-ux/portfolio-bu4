@@ -20,7 +20,7 @@ const bum = people[team.bumSlug];
 const toSlug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 const skillMap = new Map<string, string>();
 for (const m of members) {
-  for (const skill of pickAll(m.skills.technical, lang)) {
+  for (const skill of pickAll(m.skills.technical.map((s) => s.name), lang)) {
     skillMap.set(toSlug(skill), skill);
   }
 }

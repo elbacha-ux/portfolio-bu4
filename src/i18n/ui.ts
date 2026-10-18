@@ -131,6 +131,8 @@ interface UiDict {
     toolkitTitle: string;
     chartLanguagesTitle: string;
     chartSkillsTitle: string;
+    chartSkillLevelsTitle: string;
+    chartSkillLevelsNote: string;
     chartProjectsTitle: string;
     chartSummaryLabel: string;
     filterAll: string;
@@ -353,6 +355,8 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       toolkitTitle: 'Technical toolkit',
       chartLanguagesTitle: 'Languages',
       chartSkillsTitle: 'Skills by category',
+      chartSkillLevelsTitle: 'Skill levels',
+      chartSkillLevelsNote: 'Self-estimated, approximate figures.',
       chartProjectsTitle: 'Projects by status',
       chartSummaryLabel: 'Text summary',
       filterAll: 'All',
@@ -573,6 +577,8 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       toolkitTitle: 'Boîte à outils technique',
       chartLanguagesTitle: 'Langues',
       chartSkillsTitle: 'Compétences par catégorie',
+      chartSkillLevelsTitle: 'Niveaux de compétence',
+      chartSkillLevelsNote: 'Estimations approximatives, auto-évaluées.',
       chartProjectsTitle: 'Projets par statut',
       chartSummaryLabel: 'Résumé textuel',
       filterAll: 'Tout',

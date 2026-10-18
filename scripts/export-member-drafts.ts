@@ -55,7 +55,15 @@ function render(slug: string): string {
   }
   lines.push('');
   lines.push('## Skills');
-  lines.push(`- Technical:\n${biList(m.skills.technical)}`);
+  lines.push(
+    `- Technical:\n${
+      m.skills.technical.length
+        ? m.skills.technical
+            .map((s) => `- EN: ${s.name.en}${s.level !== null ? ` (${s.level}%)` : ''}\n  FR: ${s.name.fr}${s.level !== null ? ` (${s.level}%)` : ''}`)
+            .join('\n')
+        : '_Not provided._'
+    }`
+  );
   lines.push(`- Personal:\n${biList(m.skills.personal)}`);
   lines.push(
     `- Languages: ${
