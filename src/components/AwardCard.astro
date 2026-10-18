@@ -39,7 +39,12 @@ const winnerNames = winners.map((w) => w.name).join(' & ');
         <span>{t.awards.winnerPending}</span>
       </div>
     )}
-    <span class="icon-badge"><AwardIcon name={award.icon} /></span>
+    <span class="icon-badge" data-confetti aria-hidden="true">
+      <span class="icon-badge-inner">
+        <AwardIcon name={award.icon} />
+        <span class="icon-shine"></span>
+      </span>
+    </span>
     {award.status === 'draft' && <Tag class="draft-tag">{t.common.draftBadge}</Tag>}
   </div>
 
@@ -83,6 +88,30 @@ const winnerNames = winners.map((w) => w.name).join(' & ');
     border-color: var(--color-accent);
   }
 
+  /* ---- One-time golden celebration ----
+   * The first medal a visitor ever clicks adds this class to its card
+   * (see BaseLayout's [data-confetti] handler) - a warm glow that rises
+   * and settles back to the card's normal surface, celebrating the
+   * discovery without permanently changing anything.
+   */
+  .award-card.first-celebration {
+    animation: golden-glow 1.6s var(--ease-out);
+  }
+  @keyframes golden-glow {
+    0% {
+      background-color: var(--color-surface);
+      box-shadow: var(--shadow-sm);
+    }
+    25% {
+      background-color: #fff4d6;
+      box-shadow: 0 0 0 3px #ffd34d, 0 0 40px 10px rgba(255, 196, 0, 0.5);
+    }
+    100% {
+      background-color: var(--color-surface);
+      box-shadow: var(--shadow-sm);
+    }
+  }
+
   .photo-zone {
     position: relative;
   }
@@ -116,18 +145,102 @@ const winnerNames = winners.map((w) => w.name).join(' & ');
     letter-spacing: 0.06em;
   }
 
+  /* ---- Medal badge ----
+     A circular medal (.icon-badge-inner) with two ribbon-tail flags
+     peeking out from behind it (.icon-badge::before/::after) - the award
+     icon's usual square corner badge, redrawn as an actual medal since
+     this section is explicitly the fun/lighthearted one on the site.
+     Clicking it bursts a small confetti shower (see BaseLayout's
+     [data-confetti] handler); hovering the whole card sweeps a shine
+     across it and the award icon itself gets the sitewide wiggle. */
   .icon-badge {
     position: absolute;
     top: var(--space-2);
     left: var(--space-2);
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
+    z-index: 2;
+    cursor: pointer;
+  }
+  /* Drop-in entrance: the medal falls into place and settles with a
+     little bounce once the card scrolls into view, slightly after the
+     card itself starts fading in. Progressive enhancement, same html.js
+     gate as .reveal - without JS the medal is just there, no animation. */
+  html.js .award-card.reveal .icon-badge {
+    opacity: 0;
+    transform: translateY(-46px) rotate(-18deg);
+  }
+  html.js .award-card.reveal.is-visible .icon-badge {
+    animation: medal-drop 0.75s cubic-bezier(0.17, 0.89, 0.32, 1.49) 0.25s both;
+  }
+  @keyframes medal-drop {
+    0% {
+      opacity: 0;
+      transform: translateY(-46px) rotate(-18deg);
+    }
+    55% {
+      opacity: 1;
+      transform: translateY(5px) rotate(5deg);
+    }
+    78% {
+      transform: translateY(-3px) rotate(-2deg);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) rotate(0deg);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html.js .award-card.reveal .icon-badge {
+      opacity: 1;
+      transform: none;
+    }
+    html.js .award-card.reveal.is-visible .icon-badge {
+      animation: none;
+    }
+  }
+  .icon-badge::before,
+  .icon-badge::after {
+    content: '';
+    position: absolute;
+    top: 24px;
+    width: 12px;
+    height: 20px;
+    z-index: -1;
+    clip-path: polygon(0 0, 100% 0, 100% 72%, 50% 100%, 0 72%);
+  }
+  .icon-badge::before {
+    left: 1px;
+    background: var(--color-blue);
+    transform: rotate(16deg);
+  }
+  .icon-badge::after {
+    right: 1px;
+    background: var(--color-light-blue);
+    transform: rotate(-16deg);
+  }
+  .icon-badge-inner {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
     background: var(--color-navy);
     color: var(--color-white);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-md);
+  }
+  .icon-shine {
+    position: absolute;
+    inset: -60%;
+    background: linear-gradient(120deg, transparent 42%, rgba(255, 255, 255, 0.55) 50%, transparent 58%);
+    transform: translateX(-130%);
+    transition: transform 0.7s var(--ease-out);
+  }
+  .award-card:hover .icon-shine {
+    transform: translateX(130%);
   }
 
   .draft-tag {

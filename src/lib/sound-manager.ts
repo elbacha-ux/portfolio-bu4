@@ -121,6 +121,13 @@ export const sound = {
     tone(660, 0.09, { peak: 0.06 });
     tone(880, 0.11, { delay: 0.07, peak: 0.055 });
   },
+  /** A short celebratory flourish - clicking an award medal. */
+  tada() {
+    if (!enabled || !throttled()) return;
+    tone(523, 0.1, { peak: 0.05 });
+    tone(659, 0.1, { peak: 0.05, delay: 0.08 });
+    tone(784, 0.24, { peak: 0.075, delay: 0.16 });
+  },
   /** Theme switch. */
   themeToggle() {
     if (!enabled || !throttled()) return;
