@@ -1,0 +1,387 @@
+---
+/**
+ * One project's two-page spread inside ProjectBook.astro: left page is the
+ * project's identity (chapter number, title, category/tools, description),
+ * right page is the visual showcase (real video/image when one exists,
+ * otherwise a CSS-only abstract illustration - never a stock photo) plus a
+ * short overview and links out to the full case-study page. Every field
+ * comes straight from src/data/projects.ts; nothing here is invented, and
+ * a project missing a field just renders fewer lines, same as the rest of
+ * the site.
+ */
+import type { CollectiveProject } from '../data/types';
+import { ui } from '../i18n/ui';
+import { pick, pickAll, localePath } from '../i18n';
+import { hasProjectVideo } from '../lib/projectMedia';
+import type { Lang } from '../i18n';
+
+interface Props {
+  project: CollectiveProject;
+  lang: Lang;
+  index: number;
+  total: number;
+}
+const { project, lang, index, total } = Astro.props;
+const t = ui[lang];
+const base = import.meta.env.BASE_URL;
+
+const title = pick(project.title, lang);
+const description = pick(project.description, lang);
+const category = pick(project.category, lang);
+const tools = pickAll(project.tools, lang);
+const overview = project.caseStudy ? pick(project.caseStudy.overview, lang) : null;
+const detailHref = localePath(lang, `projects/${project.slug}/`);
+const chapterNumber = String(index + 1).padStart(2, '0');
+
+const hasVideo = hasProjectVideo(project.slug);
+const videoSrc = hasVideo ? `${base}videos/${project.slug}.mp4` : null;
+const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?? '';
+---
+
+<article
+  class="book-spread"
+  data-book-spread
+  data-index={index}
+  style={`z-index: ${total - index}`}
+  aria-hidden="true"
+  aria-label={`${t.projects.bookChapterLabel} ${chapterNumber}: ${title}`}
+>
+  <div class="spread-shadow-overlay" aria-hidden="true"></div>
+  <div class="spread-face">
+    <div class="spread-page spread-page-left">
+      <button type="button" class="corner corner-prev" data-book-prev aria-label={t.projects.bookPrev}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6" /></svg>
+      </button>
+      <p class="spread-chapter">{t.projects.bookChapterLabel} {chapterNumber}</p>
+      <h3>{title}</h3>
+      {(category || tools.length > 0) && (
+        <p class="spread-meta">
+          {category}
+          {category && tools.length > 0 && ' · '}
+          {tools.length > 0 && tools.join(', ')}
+        </p>
+      )}
+      {description && <p class="spread-description">{description}</p>}
+      <p class="spread-page-number">{index * 2 + 1}</p>
+    </div>
+
+    <div class="spread-page spread-page-right">
+      <button type="button" class="corner corner-next" data-book-next aria-label={t.projects.bookNext}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
+      </button>
+      <div class="spread-media">
+        {videoSrc ? (
+          <video controls muted playsinline preload="metadata" class="spread-video">
+            <source src={videoSrc} type="video/mp4" />
+          </video>
+        ) : project.image ? (
+          <img src={project.image} alt={imageAlt} loading="lazy" class="spread-image" />
+        ) : (
+          <div class="spread-illustration" role="img" aria-label={category ?? title ?? ''}>
+            <span class="illustration-facet facet-a"></span>
+            <span class="illustration-facet facet-b"></span>
+            <span class="illustration-facet facet-c"></span>
+          </div>
+        )}
+      </div>
+      {overview && <p class="spread-overview">{overview}</p>}
+      <div class="spread-links">
+        {project.link && (
+          <a href={project.link} target="_blank" rel="noopener noreferrer" class="spread-link" data-sound="click">
+            {t.projects.visitSite} <span aria-hidden="true">↗</span>
+          </a>
+        )}
+        {project.repositoryUrl && (
+          <a href={project.repositoryUrl} target="_blank" rel="noopener noreferrer" class="spread-link" data-sound="click">
+            {t.projects.sourceCode} <span aria-hidden="true">↗</span>
+          </a>
+        )}
+        <a href={detailHref} class="spread-link spread-link-case-study" data-sound="click">
+          {t.projects.bookReadCaseStudy} <span aria-hidden="true">→</span>
+        </a>
+      </div>
+      <p class="spread-page-number">{index * 2 + 2}</p>
+    </div>
+  </div>
+</article>
+
+<style>
+  .book-spread {
+    display: block;
+  }
+  .spread-shadow-overlay {
+    display: none;
+  }
+  .spread-face {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+    background: var(--color-surface);
+    border: var(--border-weight) solid var(--color-border);
+    padding: var(--space-5);
+  }
+
+  :global(html.js) .book-spread {
+    height: 100%;
+  }
+  :global(html.js) .spread-shadow-overlay {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.35), transparent 18%);
+    opacity: 0;
+    transition: opacity 0.85s var(--ease-standard);
+    pointer-events: none;
+  }
+  :global(html.js) .book-spread.is-turned .spread-shadow-overlay,
+  :global(html.js) .book-spread:not(.is-active):not(.is-turned) .spread-shadow-overlay {
+    opacity: 0.6;
+  }
+  :global(html.js) .spread-face {
+    position: relative;
+    height: 100%;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    background: #faf7f1;
+    border: none;
+    box-shadow: 0 40px 70px -25px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+  }
+  :global(html.js) .spread-face::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    margin-left: -20px;
+    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.12), transparent);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .spread-page {
+    position: relative;
+    padding: var(--space-4);
+    color: var(--color-text);
+    min-width: 0;
+  }
+  /* The fixed "ink on cream paper" look only applies once the enhanced
+     book is active (background: #faf7f1, below) - the plain no-JS
+     fallback keeps using theme-adaptive colors on a theme-adaptive
+     surface, so dark mode without JS still has real contrast instead of
+     fixed dark text landing on a fixed-dark reading of --color-surface. */
+  :global(html.js) .spread-page {
+    padding: 9% 8%;
+    overflow-y: auto;
+    color: #2a2622;
+  }
+  .spread-page-left {
+    border-bottom: var(--border-weight) dashed var(--color-border);
+  }
+  :global(html.js) .spread-page-left {
+    border-bottom: none;
+  }
+
+  .corner {
+    display: none;
+  }
+  :global(html.js) .corner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 0;
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: none;
+    color: #2a2622;
+    opacity: 0;
+    cursor: pointer;
+    transition: opacity var(--duration-fast) var(--ease-standard);
+  }
+  :global(html.js) .spread-page:hover .corner {
+    opacity: 0.5;
+  }
+  :global(html.js) .corner:hover {
+    opacity: 1 !important;
+  }
+  :global(html.js) .corner:disabled {
+    display: none;
+  }
+  .corner-prev {
+    left: 0;
+  }
+  .corner-next {
+    right: 0;
+  }
+  .corner svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .spread-chapter {
+    font-size: var(--fs-100);
+    font-weight: var(--fw-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--color-accent-strong);
+    margin: 0 0 var(--space-2);
+  }
+  /* Fixed navy once enhanced, not the theme-swapping accent token: the
+     page itself is always cream paper in that mode, so the ink needs to
+     stay fixed too (a light-blue dark-mode accent would be unreadable
+     here - same bug class as the homepage stat numbers, fixed earlier). */
+  :global(html.js) .spread-chapter {
+    color: var(--color-navy);
+  }
+  .spread-page h3 {
+    font-size: var(--fs-700);
+    margin-bottom: var(--space-2);
+  }
+  :global(html.js) .spread-page h3 {
+    color: #1c1a17;
+  }
+  .spread-meta {
+    font-size: var(--fs-200);
+    font-weight: var(--fw-medium);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-3);
+  }
+  :global(html.js) .spread-meta {
+    color: #6b6258;
+  }
+  .spread-description {
+    font-size: var(--fs-300);
+    line-height: var(--lh-relaxed);
+  }
+  .spread-overview {
+    font-size: var(--fs-200);
+    line-height: var(--lh-relaxed);
+    margin-top: var(--space-3);
+  }
+  :global(html.js) .spread-description,
+  :global(html.js) .spread-overview {
+    color: #3a3530;
+  }
+
+  .spread-media {
+    margin: calc(var(--space-4) * -1) calc(var(--space-4) * -1) var(--space-3);
+  }
+  :global(html.js) .spread-media {
+    margin: 0 0 var(--space-3);
+  }
+  .spread-image,
+  .spread-video {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    display: block;
+  }
+  .spread-illustration {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #efeae1;
+  }
+  .illustration-facet {
+    position: absolute;
+    display: block;
+  }
+  .facet-a {
+    width: 55%;
+    height: 140%;
+    top: -20%;
+    left: -10%;
+    background: var(--color-light-blue);
+    opacity: 0.3;
+    clip-path: polygon(0 0, 70% 0, 40% 100%, 0 100%);
+  }
+  .facet-b {
+    width: 35%;
+    height: 120%;
+    top: -10%;
+    right: -5%;
+    background: var(--color-blue);
+    opacity: 0.25;
+    clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);
+  }
+  .facet-c {
+    width: 20%;
+    height: 60%;
+    bottom: -5%;
+    left: 40%;
+    background: var(--color-navy);
+    opacity: 0.15;
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  }
+
+  .spread-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  .spread-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    font-size: var(--fs-200);
+    font-weight: var(--fw-heading);
+    color: var(--color-accent-strong);
+    text-decoration: none;
+  }
+  /* Fixed navy once enhanced - see the .spread-chapter comment above. */
+  :global(html.js) .spread-link {
+    color: var(--color-navy);
+  }
+  .spread-link:hover {
+    text-decoration: underline;
+  }
+  .spread-link-case-study {
+    border-bottom: 2px solid var(--color-blue);
+  }
+  :global(html.js) .spread-link-case-study {
+    color: #1c1a17;
+  }
+
+  .spread-page-number {
+    margin: var(--space-3) 0 0;
+    font-size: var(--fs-100);
+    color: var(--color-text-muted);
+    text-align: right;
+  }
+  :global(html.js) .spread-page-number {
+    /* #6b6258 on the #faf7f1 page background, 5.59:1 - verified AA,
+       lighter tones here (e.g. #8a8178) fall to ~3.6:1 and fail. */
+    color: #6b6258;
+  }
+
+  @media (min-width: 641px) {
+    :global(html.js) .spread-page-left {
+      padding-right: 6%;
+    }
+    :global(html.js) .spread-page-right {
+      padding-left: 6%;
+    }
+  }
+
+  @media (max-width: 640px) {
+    :global(html.js) .spread-face {
+      grid-template-columns: 1fr;
+      overflow-y: auto;
+    }
+    :global(html.js) .spread-face::before {
+      display: none;
+    }
+    :global(html.js) .spread-page {
+      padding: 7%;
+    }
+    :global(html.js) .spread-page-left {
+      border-bottom: 1px dashed #d8d2c8;
+    }
+  }
+</style>

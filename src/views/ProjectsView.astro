@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
-import ProjectList from '../components/ProjectList.astro';
+import ProjectBook from '../components/ProjectBook.astro';
 import { projects } from '../data/projects';
 import { ui } from '../i18n/ui';
 import type { Lang } from '../i18n';
@@ -17,8 +17,20 @@ const t = ui[lang];
   <section class="container section">
     <SectionHeading numeral="02" eyebrow={t.projects.eyebrow} title={t.projects.title} />
     <p class="lead reveal">{t.projects.lead}</p>
-    <ProjectList projects={projects} lang={lang} />
   </section>
+
+  {projects.length > 0 ? (
+    <section class="book-stage-section">
+      <div class="stage-grid" aria-hidden="true"></div>
+      <div class="container">
+        <ProjectBook projects={projects} lang={lang} />
+      </div>
+    </section>
+  ) : (
+    <section class="container section">
+      <p class="empty-state">{t.common.noProjectsYet}</p>
+    </section>
+  )}
 </BaseLayout>
 
 <style>
@@ -26,5 +38,34 @@ const t = ui[lang];
     max-width: 60ch;
     margin-bottom: var(--space-4);
     color: var(--color-text-muted);
+  }
+  .empty-state {
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+
+  /* Deliberately fixed-dark "studio" backdrop for the book, regardless of
+     the site's light/dark toggle - same pattern as SloganShowcase's navy
+     section (a signature dark moment, not something that should flatten
+     out in light mode). */
+  .book-stage-section {
+    position: relative;
+    overflow: hidden;
+    background: #0a1420;
+    padding-block: var(--space-7);
+    margin-top: var(--space-6);
+  }
+  .stage-grid {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.12;
+    background-image: linear-gradient(rgba(113, 180, 226, 0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(113, 180, 226, 0.6) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent 75%);
+  }
+  .book-stage-section .container {
+    position: relative;
+    z-index: 1;
   }
 </style>

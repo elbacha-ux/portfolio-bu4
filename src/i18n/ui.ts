@@ -183,6 +183,15 @@ interface UiDict {
     documentsTitle: string;
     downloadDocument: string;
     otherProjectsTitle: string;
+    bookOpenHint: string;
+    bookCoverTitle: string;
+    bookCoverSubtitle: string;
+    bookClose: string;
+    bookNext: string;
+    bookPrev: string;
+    bookChapterLabel: string;
+    bookChapterOf: string;
+    bookReadCaseStudy: string;
   };
   awards: {
     eyebrow: string;
@@ -413,6 +422,15 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       documentsTitle: 'Documents',
       downloadDocument: 'Download',
       otherProjectsTitle: 'Other projects',
+      bookOpenHint: 'Click to open',
+      bookCoverTitle: 'Projects & Experiments',
+      bookCoverSubtitle: 'An Engineering Portfolio',
+      bookClose: 'Close book',
+      bookNext: 'Next chapter',
+      bookPrev: 'Previous chapter',
+      bookChapterLabel: 'Chapter',
+      bookChapterOf: 'of',
+      bookReadCaseStudy: 'Read the full case study',
     },
     awards: {
       eyebrow: 'Team culture',
@@ -641,6 +659,15 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       documentsTitle: 'Documents',
       downloadDocument: 'Télécharger',
       otherProjectsTitle: 'Autres projets',
+      bookOpenHint: 'Cliquez pour ouvrir',
+      bookCoverTitle: 'Projets & Expérimentations',
+      bookCoverSubtitle: "Un portfolio d'ingénierie",
+      bookClose: 'Fermer le livre',
+      bookNext: 'Chapitre suivant',
+      bookPrev: 'Chapitre précédent',
+      bookChapterLabel: 'Chapitre',
+      bookChapterOf: 'sur',
+      bookReadCaseStudy: "Lire l'étude de cas complète",
     },
     awards: {
       eyebrow: "Esprit d'équipe",
