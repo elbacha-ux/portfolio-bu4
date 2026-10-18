@@ -14,7 +14,7 @@ import { people } from '../data/people';
 import { team } from '../data/team';
 import { projects } from '../data/projects';
 import { awards } from '../data/awards';
-import { locales, pickAll } from '../i18n';
+import { pickAll } from '../i18n';
 
 interface Props {
   lang: Lang;
@@ -34,9 +34,8 @@ for (const m of members) {
 }
 const stats = [
   { value: members.length, label: t.home.statMembers },
-  { value: awards.length, label: t.home.statAwards },
+  { value: projects.length, label: t.home.statProjects },
   { value: skillSlugs.size, label: t.home.statSkills },
-  { value: locales.length, label: t.home.statLanguages },
 ];
 ---
 
@@ -248,7 +247,7 @@ const stats = [
     padding: var(--space-4) 0 0;
     border-top: 1px solid var(--color-border);
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--space-3);
   }
   .stats li {
@@ -309,11 +308,6 @@ const stats = [
     color: var(--color-white);
   }
 
-  @media (min-width: 640px) {
-    .stats {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
 
   @media (min-width: 1024px) {
     .hero-grid {

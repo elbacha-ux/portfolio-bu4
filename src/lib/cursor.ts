@@ -1,14 +1,15 @@
 /**
- * Replaces the system cursor with a small dot that tracks the pointer
- * exactly and a softly trailing ring that grows over interactive elements.
- * Mouse/trackpad only (same hover:hover + pointer:fine gate as
+ * Replaces the system cursor with a small dot and a ring that both track
+ * the pointer directly - the ring's short CSS transition (see
+ * .cursor-ring in global.css) gives it just enough catch-up to feel soft
+ * without visibly lagging behind fast mouse movement, which a per-frame JS
+ * lerp did. Mouse/trackpad only (same hover:hover + pointer:fine gate as
  * tilt/spotlight/parallax) and skipped entirely under
  * prefers-reduced-motion, in which case the native cursor is left alone -
  * the `custom-cursor` class this adds is the only thing that hides it (see
  * global.css), so nothing here needs its own reduced-motion branching.
  */
 
-const RING_LERP = 0.18;
 const HOVER_SELECTOR = 'a, button, input, textarea, select, summary, [data-tilt], .btn, label';
 const TEXT_FIELD_SELECTOR = 'input, textarea, [contenteditable="true"]';
 
@@ -26,24 +27,18 @@ export function initCursor() {
   ring.setAttribute('aria-hidden', 'true');
   document.body.append(dot, ring);
 
-  let targetX = window.innerWidth / 2;
-  let targetY = window.innerHeight / 2;
-  let ringX = targetX;
-  let ringY = targetY;
-
   const place = (el: HTMLElement, x: number, y: number) => {
     el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
   };
-  place(dot, targetX, targetY);
-  place(ring, ringX, ringY);
+  place(dot, window.innerWidth / 2, window.innerHeight / 2);
+  place(ring, window.innerWidth / 2, window.innerHeight / 2);
 
   window.addEventListener('pointermove', (event) => {
     if (event.pointerType !== 'mouse') return;
-    targetX = event.clientX;
-    targetY = event.clientY;
     dot.classList.remove('is-hidden');
     ring.classList.remove('is-hidden');
-    place(dot, targetX, targetY);
+    place(dot, event.clientX, event.clientY);
+    place(ring, event.clientX, event.clientY);
   });
 
   document.addEventListener('mouseleave', () => {
@@ -75,12 +70,4 @@ export function initCursor() {
       ring.classList.remove('is-hidden');
     }
   });
-
-  function tick() {
-    ringX += (targetX - ringX) * RING_LERP;
-    ringY += (targetY - ringY) * RING_LERP;
-    place(ring, ringX, ringY);
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
 }

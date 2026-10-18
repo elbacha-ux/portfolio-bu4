@@ -53,9 +53,8 @@ interface UiDict {
     heroTitle: string;
     heroLeadSuffix: string;
     statMembers: string;
-    statAwards: string;
+    statProjects: string;
     statSkills: string;
-    statLanguages: string;
     section1Eyebrow: string;
     section1Title: string;
     section1Body: string;
@@ -270,9 +269,8 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       heroLeadSuffix:
         "We build, learn and ship projects together - from embedded electronics to the web platform you're reading this on.",
       statMembers: 'Members',
-      statAwards: 'Award categories',
+      statProjects: 'Projects done',
       statSkills: 'Technical skills',
-      statLanguages: 'Languages',
       section1Eyebrow: 'Who we are',
       section1Title: "A team built on JEENISo's engineering culture",
       section1Body:
@@ -491,9 +489,8 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       heroLeadSuffix:
         "Nous construisons, apprenons et menons des projets ensemble - des systèmes embarqués à la plateforme web que vous consultez en ce moment.",
       statMembers: 'Membres',
-      statAwards: 'Catégories de récompenses',
+      statProjects: 'Projets réalisés',
       statSkills: 'Compétences techniques',
-      statLanguages: 'Langues',
       section1Eyebrow: 'Qui sommes-nous',
       section1Title: "Une équipe portée par la culture d'ingénierie de JEENISo",
       section1Body:
