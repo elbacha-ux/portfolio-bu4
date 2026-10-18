@@ -25,7 +25,10 @@ const member = people[slug];
 const intro = pick(member.intro, lang);
 const program = member.education ? pick(member.education.program, lang) : null;
 const degrees = member.education ? pickAll(member.education.degrees, lang) : [];
-const certifications = member.education ? pickAll(member.education.certifications, lang) : [];
+const certifications = member.education
+  ? member.education.certifications.map((c) => ({ label: pick(c.label, lang), file: c.file }))
+  : [];
+const base = import.meta.env.BASE_URL;
 const interests = pickAll(member.interests, lang);
 
 const links = [
@@ -75,7 +78,17 @@ const anchors = [
           {certifications.length > 0 && (
             <>
               <p class="label">{t.member.additionalTraining}</p>
-              <ul>{certifications.map((c) => <li>{c}</li>)}</ul>
+              <ul>
+                {certifications.map((c) => (
+                  <li>
+                    {c.file ? (
+                      <a href={`${base}${c.file}`} target="_blank" rel="noopener noreferrer" data-sound="click">{c.label}</a>
+                    ) : (
+                      c.label
+                    )}
+                  </li>
+                ))}
+              </ul>
             </>
           )}
         </div>

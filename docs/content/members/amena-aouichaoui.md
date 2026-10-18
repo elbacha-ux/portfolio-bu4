@@ -44,7 +44,7 @@ EN: Engineering student in embedded telecommunications at ENISo. A passionate, c
   FR: Travail en équipe
 - EN: Autonomy and sense of responsibility
   FR: Autonomie et sens des responsabilités
-- Languages: English/Anglais, French/Français, German/Allemand (basic/notions de base)
+- Languages: English/Anglais (B2/B2), French/Français (B2/B2), German/Allemand (basic/notions de base)
 
 ## Interests
 - EN: Technology and innovation - embedded systems and robotics

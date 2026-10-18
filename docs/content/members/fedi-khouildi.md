@@ -15,11 +15,19 @@ EN: Engineering student at the École Nationale d'Ingénieurs de Sousse (ENISo),
   EN: Embedded Telecommunications Engineering (GTE)
   FR: Génie des Télécommunications Embarquées (GTE)
 - Institution: ENISo
-- Years: 2026-2029 (engineering cycle); preparatory classes at IPEIM (2025)
+- Years: 2026-2029
 - Degrees:
 - EN: Baccalauréat in mathematics (2024)
   FR: Baccalauréat en mathématiques (2024)
+- EN: Preparatory classes in mathematics and physics - IPEIM (2025)
+  FR: Classes préparatoires en mathématiques et physique - IPEIM (2025)
 - Additional training:
+- EN: Python Developer Associate - DataCamp (October 2026)
+  FR: Python Developer Associate - DataCamp (octobre 2026)
+- EN: Business Model Canvas (BMC) training
+  FR: Formation en Business Model Canvas (BMC)
+- EN: Networking basics
+  FR: Notions de base en réseaux
 - EN: In progress
   FR: En cours d'acquisition
 
@@ -39,6 +47,14 @@ EN: Engineering student at the École Nationale d'Ingénieurs de Sousse (ENISo),
   FR: Notions en télécommunications numériques et en systèmes numériques
 - EN: Video editing
   FR: Montage vidéo
+- EN: Advanced video editing with CapCut
+  FR: Montage vidéo avancé avec CapCut
+- EN: AI-assisted editing (video and photo)
+  FR: Montage assisté par IA (vidéo et photo)
+- EN: Suno (AI music generation)
+  FR: Suno (génération musicale par IA)
+- EN: Google Flow (AI video generation)
+  FR: Google Flow (génération vidéo par IA)
 - Personal:
 - EN: Curiosity and eagerness to learn
   FR: Curiosité et capacité d'apprentissage
@@ -50,7 +66,7 @@ EN: Engineering student at the École Nationale d'Ingénieurs de Sousse (ENISo),
   FR: Intérêt pour la communication et le développement des compétences relationnelles
 - EN: Motivated to grow in project management and leadership
   FR: Motivation à progresser en gestion de projet et en leadership
-- Languages: Arabic/Arabe (native/langue maternelle), French/Français (B2/B2), English/Anglais (B2/B2)
+- Languages: Arabic/Arabe (native/langue maternelle), French/Français (B2/B2), English/Anglais (B2/B2), German/Allemand (A1/A1)
 
 ## Interests
 - EN: Embedded systems
@@ -65,8 +81,20 @@ EN: Engineering student at the École Nationale d'Ingénieurs de Sousse (ENISo),
   FR: Cybersécurité
 - EN: Music and guitar
   FR: Musique et guitare
+- EN: Gaming - League of Legends (Master)
+  FR: Jeux vidéo - League of Legends (rang Maître)
+- EN: Gym and calisthenics
+  FR: Musculation et callisthénie
 
 ## Projects
+### League of Birds / League of Birds (completed)
+EN: A Flappy Bird-style arcade game, designed and built solo in Unity.
+  FR: Un jeu d'arcade inspiré de Flappy Bird, conçu et développé en solo avec Unity.
+- Role:
+  EN: Solo design and development.
+  FR: Conception et développement en solo.
+- Tools: Unity, C#
+
 ### BU4 portfolio website / Site web portfolio de BU4 (in-progress)
 EN: A website presenting Business Unit 4's identity, members, skills, projects and professional information - a digital showcase for the team's capabilities. This is the site you are viewing now.
   FR: Site web présentant l'identité de la Business Unit 4, ses membres, leurs compétences, leurs projets et leurs informations professionnelles - une vitrine numérique pour valoriser les compétences de l'équipe. C'est le site que vous consultez actuellement.
@@ -88,6 +116,10 @@ EN: A video produced for a JEENISo motivation challenge.
   FR: Membre de JEENISo - Junior-Entreprise de l'ENISo. Participation aux travaux collaboratifs de la Business Unit 4, notamment à la conception de ce site web et des portfolios individuels de ses membres.
 - **EUREKA Club, ENISo**
 - **Cyberguards, ENISo**
+- **Mawawil** — EN: Manager of the musical troupe.
+  FR: Manager de la troupe musicale.
+- **Beatbox** — EN: Member of the artistic committee (LPS).
+  FR: Membre du comité artistique (LPS).
 
 ## Goals
 - Short term:

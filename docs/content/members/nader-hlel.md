@@ -4,7 +4,8 @@
 
 
 ## Intro
-_Not provided._
+EN: A dedicated and supportive individual, currently pursuing 2nd-year GTE and Master 1 GT, always ready to share his knowledge and support others.
+  FR: Une personne dévouée et bienveillante, actuellement en 2e année de GTE et en Master 1 GT, toujours prête à partager ses connaissances et à soutenir les autres.
 
 ## Education
 _Not provided._

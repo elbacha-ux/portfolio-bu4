@@ -48,7 +48,7 @@ function render(slug: string): string {
     if (m.education.degrees.length) lines.push(`- Degrees:\n${biList(m.education.degrees)}`);
     if (m.education.certifications.length) {
       lines.push('- Additional training:');
-      lines.push(biList(m.education.certifications));
+      lines.push(biList(m.education.certifications.map((c) => c.label)));
     }
   } else {
     lines.push('_Not provided._');

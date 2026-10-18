@@ -44,6 +44,14 @@ export interface MemberExperience {
   detail: Localized<string> | null;
 }
 
+export interface MemberCertification {
+  label: Localized<string>;
+  /** Path to the certificate file under public/ (e.g.
+   * 'documents/members/<slug>/<name>.pdf'), when the member supplied one.
+   * Null for a plain-text entry with no backing document. */
+  file: string | null;
+}
+
 export interface Member {
   slug: string;
   /** Proper noun - not translated. */
@@ -60,7 +68,7 @@ export interface Member {
     /** Date range - identical in both languages. */
     years: string | null;
     degrees: Localized<string>[];
-    certifications: Localized<string>[];
+    certifications: MemberCertification[];
   } | null;
   skills: {
     technical: Localized<string>[];
