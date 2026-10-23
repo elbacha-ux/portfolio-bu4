@@ -15,6 +15,7 @@ const t = ui[lang];
 {projects.length > 0 ? (
   <ul class="project-list">
     {projects.map((p) => <li><ProjectCard project={p} lang={lang} /></li>)}
+    <slot />
   </ul>
 ) : (
   <p class="empty-state">{t.common.noProjectsYet}</p>

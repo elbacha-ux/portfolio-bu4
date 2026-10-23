@@ -9,8 +9,17 @@ import type { Lang } from '../i18n';
 interface Props {
   project: CollectiveProject;
   lang: Lang;
+  /** Overrides the default `projects/<slug>/` link - used for cards that
+   * aren't a real CollectiveProject detail page (e.g. the magazine teaser
+   * on the home page). */
+  hrefOverride?: string;
+  /** Overrides the default "View details" CTA label. */
+  ctaLabelOverride?: string;
+  /** Extra tag shown next to the category tag, e.g. "Coming soon" - used
+   * instead of the in-progress status tag for cards without a status. */
+  badgeOverride?: string;
 }
-const { project, lang } = Astro.props;
+const { project, lang, hrefOverride, ctaLabelOverride, badgeOverride } = Astro.props;
 const t = ui[lang];
 const base = import.meta.env.BASE_URL;
 const members = project.memberSlugs.map((s) => people[s]).filter(Boolean);
@@ -18,7 +27,8 @@ const title = pick(project.title, lang);
 const description = pick(project.description, lang);
 const category = pick(project.category, lang);
 const tools = pickAll(project.tools, lang);
-const detailHref = localePath(lang, `projects/${project.slug}/`);
+const detailHref = hrefOverride ?? localePath(lang, `projects/${project.slug}/`);
+const ctaLabel = ctaLabelOverride ?? t.projects.viewDetails;
 ---
 
 <article class="project-card card reveal" data-tilt>
@@ -33,7 +43,7 @@ const detailHref = localePath(lang, `projects/${project.slug}/`);
         style={`view-transition-name: project-image-${project.slug}`}
       />
       <span class="view-pill" aria-hidden="true">
-        {t.projects.viewDetails}
+        {ctaLabel}
         <span class="view-pill-arrow">→</span>
       </span>
     </div>
@@ -42,6 +52,7 @@ const detailHref = localePath(lang, `projects/${project.slug}/`);
     <div class="meta">
       {category && <Tag>{category}</Tag>}
       {project.status === 'in-progress' && <Tag class="status-tag">{t.common.inProgress}</Tag>}
+      {badgeOverride && <Tag class="status-tag">{badgeOverride}</Tag>}
     </div>
     <h3 style={`view-transition-name: project-title-${project.slug}`}><a class="card-link" href={detailHref} data-sound="click">{title}</a></h3>
     {description && <p>{description}</p>}
@@ -52,7 +63,7 @@ const detailHref = localePath(lang, `projects/${project.slug}/`);
           <span class="visit-arrow" aria-hidden="true">↗</span>
         </a>
       )}
-      <a class="details-link" href={detailHref}>{t.projects.viewDetails}</a>
+      <a class="details-link" href={detailHref}>{ctaLabel}</a>
     </div>
     {members.length > 0 && (
       <p class="contributors">

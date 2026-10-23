@@ -20,8 +20,18 @@ interface Props {
   lang: Lang;
   index: number;
   total: number;
+  /** Overrides the default `projects/<slug>/` case-study link - used for
+   * spreads that aren't a real CollectiveProject detail page (e.g. the
+   * magazine's teaser page in ProjectBook.astro). */
+  hrefOverride?: string;
+  /** Overrides the default "Read the full case study" CTA label. */
+  ctaLabelOverride?: string;
+  /** Shows the right-page image uncropped (object-fit: contain, letterboxed
+   * within the usual 16/10 frame) instead of the default cover-crop - used
+   * for the magazine's portrait cover so the whole cover is visible. */
+  showWholeImage?: boolean;
 }
-const { project, lang, index, total } = Astro.props;
+const { project, lang, index, total, hrefOverride, ctaLabelOverride, showWholeImage } = Astro.props;
 const t = ui[lang];
 const base = import.meta.env.BASE_URL;
 
@@ -30,7 +40,8 @@ const description = pick(project.description, lang);
 const category = pick(project.category, lang);
 const tools = pickAll(project.tools, lang);
 const overview = project.caseStudy ? pick(project.caseStudy.overview, lang) : null;
-const detailHref = localePath(lang, `projects/${project.slug}/`);
+const detailHref = hrefOverride ?? localePath(lang, `projects/${project.slug}/`);
+const ctaLabel = ctaLabelOverride ?? t.projects.bookReadCaseStudy;
 const chapterNumber = String(index + 1).padStart(2, '0');
 
 const hasVideo = hasProjectVideo(project.slug);
@@ -65,7 +76,7 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
       </div>
       <div class="spread-left-footer">
         <a href={detailHref} class="spread-cta" data-sound="click">
-          {t.projects.bookReadCaseStudy} <span aria-hidden="true">→</span>
+          {ctaLabel} <span aria-hidden="true">→</span>
         </a>
         <p class="spread-page-number">{index * 2 + 1}</p>
       </div>
@@ -81,7 +92,12 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
             <source src={videoSrc} type="video/mp4" />
           </video>
         ) : project.image ? (
-          <img src={`${base}${project.image}`} alt={imageAlt} loading="lazy" class="spread-image" />
+          <img
+            src={`${base}${project.image}`}
+            alt={imageAlt}
+            loading="lazy"
+            class={`spread-image${showWholeImage ? ' spread-image-contain' : ''}`}
+          />
         ) : (
           <div class="spread-illustration" role="img" aria-label={category ?? title ?? ''}>
             <span class="illustration-facet facet-a"></span>
@@ -192,6 +208,15 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
     aspect-ratio: 16 / 10;
     object-fit: cover;
     display: block;
+  }
+  /* Lets a portrait image (e.g. the magazine cover) show in full,
+     letterboxed within the usual frame, instead of being cover-cropped.
+     Theme-adaptive here to match the base/mobile surface; overridden to
+     the fixed cream page color under the enhanced (html.js) book below,
+     where the page itself is always cream regardless of site theme. */
+  .spread-image-contain {
+    object-fit: contain;
+    background: var(--color-surface);
   }
   .spread-illustration {
     position: relative;
@@ -436,6 +461,13 @@ const imageAlt = project.imageAlt ? pick(project.imageAlt, lang) ?? '' : title ?
          intercepted by the page-turn affordance. */
       position: relative;
       z-index: 1;
+    }
+    /* The enhanced page is always cream (#faf7f1), fixed regardless of
+       site theme - see the comment on .spread-page above - so the
+       letterbox behind a contained image must match that, not the
+       theme-swapping surface token used for the base/mobile fallback. */
+    :global(html.js) .spread-image-contain {
+      background: #faf7f1;
     }
     :global(html.js) .spread-links {
       /* Same reason as .spread-media. */

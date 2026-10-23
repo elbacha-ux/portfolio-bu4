@@ -13,9 +13,12 @@
  * just sees a clean stacked list of project spreads, not a locked book.
  */
 import type { CollectiveProject } from '../data/types';
+import { L } from '../data/types';
 import ProjectSpread from './ProjectSpread.astro';
 import { ui } from '../i18n/ui';
 import { site } from '../data/site';
+import { magazine } from '../data/magazine';
+import { localePath } from '../i18n';
 import type { Lang } from '../i18n';
 
 interface Props {
@@ -24,8 +27,34 @@ interface Props {
 }
 const { projects, lang } = Astro.props;
 const t = ui[lang];
-const total = projects.length;
 const base = import.meta.env.BASE_URL;
+
+/**
+ * The magazine isn't a CollectiveProject (no members/case study/detail
+ * route) - it gets one extra closing page in the book, built from
+ * src/data/magazine.ts, that links out to the magazine page instead of a
+ * `projects/<slug>/` case study. See ProjectSpread.astro's hrefOverride.
+ */
+const magazineSpread: CollectiveProject = {
+  slug: 'magazine',
+  title: L(t.nav.magazine, t.nav.magazine),
+  description: L(magazine.subtitle, magazine.subtitle),
+  category: L(t.magazine.eyebrow, t.magazine.eyebrow),
+  status: null,
+  memberSlugs: [],
+  tools: [],
+  skills: [],
+  outcome: null,
+  link: null,
+  image: magazine.cover,
+  imageAlt: L(`${t.magazine.coverAltPrefix} "${magazine.title}"`, `${t.magazine.coverAltPrefix} "${magazine.title}"`),
+  videoUrl: null,
+  documentsNote: null,
+  repositoryUrl: null,
+  caseStudy: null,
+};
+const allSpreads = [...projects, magazineSpread];
+const total = allSpreads.length;
 ---
 
 <div class="project-book" data-close-label={t.projects.bookClose} data-prev-label={t.projects.bookPrev}>
@@ -53,7 +82,21 @@ const base = import.meta.env.BASE_URL;
       </button>
 
       <div class="book-pages">
-        {projects.map((project, i) => <ProjectSpread project={project} lang={lang} index={i} total={total} />)}
+        {allSpreads.map((project, i) =>
+          project.slug === 'magazine' ? (
+            <ProjectSpread
+              project={project}
+              lang={lang}
+              index={i}
+              total={total}
+              hrefOverride={localePath(lang, 'magazine/')}
+              ctaLabelOverride={t.projects.bookReadMagazine}
+              showWholeImage
+            />
+          ) : (
+            <ProjectSpread project={project} lang={lang} index={i} total={total} />
+          )
+        )}
       </div>
     </div>
   </div>

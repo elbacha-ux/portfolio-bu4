@@ -76,6 +76,7 @@ interface UiDict {
     awardsLead: string;
     closingTitle: string;
     closingBody: string;
+    magazineCta: string;
   };
   about: {
     eyebrow: string;
@@ -192,6 +193,7 @@ interface UiDict {
     bookChapterLabel: string;
     bookChapterOf: string;
     bookReadCaseStudy: string;
+    bookReadMagazine: string;
   };
   awards: {
     eyebrow: string;
@@ -221,6 +223,7 @@ interface UiDict {
     eyebrow: string;
     title: string;
     lead: string;
+    teaser: string;
     coverAltPrefix: string;
     comingSoon: string;
     pdfDownload: string;
@@ -322,6 +325,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       awardsLead: 'A friendly, honest way to recognize what makes this team work.',
       closingTitle: 'Want to work with BU4?',
       closingBody: 'Explore our projects or get in touch to talk about collaborating.',
+      magazineCta: 'Read the magazine',
     },
     about: {
       eyebrow: 'About',
@@ -443,6 +447,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       bookChapterLabel: 'Chapter',
       bookChapterOf: 'of',
       bookReadCaseStudy: 'Read the full case study',
+      bookReadMagazine: 'Read the magazine',
     },
     awards: {
       eyebrow: 'Team culture',
@@ -472,6 +477,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       eyebrow: 'JEENISo Magazine',
       title: 'Magazine',
       lead: "A look inside BU4 and JEENISo's magazine project - stories, interviews and reporting from the team.",
+      teaser: 'Are solar panels and photovoltaic energy really as eco-friendly as we think? This issue investigates.',
       coverAltPrefix: 'Cover of the magazine issue',
       comingSoon: 'Full issue coming soon',
       pdfDownload: 'Download PDF',
@@ -571,6 +577,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       awardsLead: 'Une manière conviviale et sincère de reconnaître ce qui fait la force de cette équipe.',
       closingTitle: 'Envie de travailler avec BU4 ?',
       closingBody: 'Découvrez nos projets ou contactez-nous pour en discuter.',
+      magazineCta: 'Lire le magazine',
     },
     about: {
       eyebrow: 'À propos',
@@ -692,6 +699,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       bookChapterLabel: 'Chapitre',
       bookChapterOf: 'sur',
       bookReadCaseStudy: "Lire l'étude de cas complète",
+      bookReadMagazine: 'Lire le magazine',
     },
     awards: {
       eyebrow: "Esprit d'équipe",
@@ -721,6 +729,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       eyebrow: 'Magazine JEENISo',
       title: 'Magazine',
       lead: "Un aperçu du projet magazine de BU4 et JEENISo - récits, interviews et reportages de l'équipe.",
+      teaser: "Les panneaux photovoltaïques et l'énergie solaire sont-ils vraiment aussi écologiques qu'on le pense ? Ce numéro enquête.",
       coverAltPrefix: 'Couverture du numéro du magazine',
       comingSoon: 'Numéro complet à venir',
       pdfDownload: 'Télécharger le PDF',

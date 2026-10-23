@@ -4,6 +4,7 @@ import SectionHeading from '../components/SectionHeading.astro';
 import Button from '../components/Button.astro';
 import MemberGrid from '../components/MemberGrid.astro';
 import ProjectList from '../components/ProjectList.astro';
+import ProjectCard from '../components/ProjectCard.astro';
 import AwardCarousel from '../components/AwardCarousel.astro';
 import BumSpotlight from '../components/BumSpotlight.astro';
 import { site } from '../data/site';
@@ -14,6 +15,8 @@ import { people } from '../data/people';
 import { team } from '../data/team';
 import { projects } from '../data/projects';
 import { awards } from '../data/awards';
+import { magazine } from '../data/magazine';
+import { L, type CollectiveProject } from '../data/types';
 import { pickAll } from '../i18n';
 
 interface Props {
@@ -21,6 +24,32 @@ interface Props {
 }
 const { lang } = Astro.props;
 const t = ui[lang];
+
+/**
+ * The magazine isn't a CollectiveProject (no members/tools/case study), but
+ * its home-page teaser should look exactly like the real project cards -
+ * reusing ProjectCard with overrides (see hrefOverride/ctaLabelOverride/
+ * badgeOverride there) instead of a bespoke card avoids a second, drifting
+ * copy of the card's styles.
+ */
+const magazineProject: CollectiveProject = {
+  slug: 'magazine',
+  title: L(magazine.title, magazine.title),
+  description: L(t.magazine.teaser, t.magazine.teaser),
+  category: L(t.nav.magazine, t.nav.magazine),
+  status: null,
+  memberSlugs: [],
+  tools: [],
+  skills: [],
+  outcome: null,
+  link: null,
+  image: magazine.cover,
+  imageAlt: L(`${t.magazine.coverAltPrefix} "${magazine.title}"`, `${t.magazine.coverAltPrefix} "${magazine.title}"`),
+  videoUrl: null,
+  documentsNote: null,
+  repositoryUrl: null,
+  caseStudy: null,
+};
 
 const members = team.memberSlugs.map((slug) => people[slug]);
 const bum = people[team.bumSlug];
@@ -81,7 +110,17 @@ const stats = [
 
   <section class="container section">
     <SectionHeading numeral="02" eyebrow={t.home.section2Eyebrow} title={t.home.section2Title} />
-    <ProjectList projects={featuredProjects} lang={lang} />
+    <ProjectList projects={featuredProjects} lang={lang}>
+      <li>
+        <ProjectCard
+          project={magazineProject}
+          lang={lang}
+          hrefOverride={localePath(lang, 'magazine/')}
+          ctaLabelOverride={t.home.magazineCta}
+          badgeOverride={t.magazine.comingSoon}
+        />
+      </li>
+    </ProjectList>
     {projects.length > 3 && (
       <div class="section-cta"><Button href={localePath(lang, 'projects/')} variant="secondary">{t.common.seeAllProjects}</Button></div>
     )}
