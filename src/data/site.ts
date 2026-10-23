@@ -34,6 +34,6 @@ export const navRoutes = [
   { key: 'projects', href: 'projects/' },
   { key: 'team', href: 'team/' },
   { key: 'awards', href: 'awards/' },
-  { key: 'contact', href: 'contact/' },
   { key: 'magazine', href: 'magazine/' },
+  { key: 'contact', href: 'contact/' },
 ] as const;

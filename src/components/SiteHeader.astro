@@ -124,11 +124,14 @@ function isActive(href: string) {
     if (event.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') closeMenu();
   });
 
-  // Safety net: the drawer is desktop-nav territory above 1024px, so force
-  // it shut if the viewport crosses that while it happens to be open
-  // (e.g. rotating a tablet, or resizing a dev window).
+  // Safety net: the drawer is desktop-nav territory above 1280px (see the
+  // matching @media breakpoint below - raised from 1024px once Magazine
+  // became a 7th nav item, since the full nav + controls row no longer
+  // fit at the old width), so force it shut if the viewport crosses that
+  // while it happens to be open (e.g. rotating a tablet, or resizing a
+  // dev window).
   window.addEventListener('resize', () => {
-    if (window.innerWidth >= 1024 && toggle?.getAttribute('aria-expanded') === 'true') closeMenu();
+    if (window.innerWidth >= 1280 && toggle?.getAttribute('aria-expanded') === 'true') closeMenu();
   });
 
   // Glass effect once scrolled past the header's own height - a crisp
@@ -172,7 +175,12 @@ function isActive(href: string) {
 
   .primary-nav ul {
     display: flex;
-    gap: var(--space-4);
+    /* Tightened from --space-4 once Magazine became a 7th nav item - the
+       header's container caps at a fixed max-width, so past that the
+       full nav + controls row no longer fits at --space-4 regardless of
+       how wide the actual viewport is, and the CTA button (which no
+       longer wraps, see .cta-desktop) would overflow off-screen instead. */
+    gap: var(--space-3);
     list-style: none;
     margin: 0;
     padding: 0;
@@ -214,6 +222,7 @@ function isActive(href: string) {
 
   .cta-desktop {
     display: none;
+    white-space: nowrap;
   }
 
   .menu-toggle {
@@ -340,7 +349,12 @@ function isActive(href: string) {
     color: var(--color-accent-strong);
   }
 
-  @media (min-width: 1024px) {
+  /* Raised from 1024px once Magazine became a 7th nav item - below this,
+     the full nav + controls row (7 links, language/theme/sound toggles,
+     the CTA button) genuinely doesn't fit even after tightening the nav
+     gap above, regardless of how the container's own max-width is
+     capped - see the matching resize-listener comment above. */
+  @media (min-width: 1280px) {
     .primary-nav {
       display: block;
     }
