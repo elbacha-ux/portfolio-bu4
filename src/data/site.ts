@@ -35,4 +35,5 @@ export const navRoutes = [
   { key: 'team', href: 'team/' },
   { key: 'awards', href: 'awards/' },
   { key: 'contact', href: 'contact/' },
+  { key: 'magazine', href: 'magazine/' },
 ] as const;

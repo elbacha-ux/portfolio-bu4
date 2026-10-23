@@ -131,6 +131,22 @@ placeholder wherever one of these gaps exists.
     `src/data/site.ts`) if BU4 wants those channels listed too; both the
     Contact page and the footer will then pick them up automatically.
 
+## Magazine
+
+23. **The `/magazine/` page is a teaser - only the cover is real.** Title,
+    subtitle and cover image (`public/magazine/cover.png`) for "Soleil en
+    réserve" are confirmed; everything else is `null`/empty in
+    `src/data/magazine.ts` on purpose, so the page shows a "coming soon"
+    state instead of a broken link/player:
+    - `pdfPath` - no full-issue PDF yet. Add the file under `public/magazine/`
+      and set this to its base-relative path to show the download button.
+    - `podcast.audioPath` - no episode audio yet. The guest credit (Walid
+      Hassen, École Nationale d'Ingénieurs de Monastir) and episode title
+      field are already in place; add the audio file and path to reveal the
+      player.
+    - `pages` - empty. Reserved for a future flipbook; no flipbook rendering
+      code exists yet, so this currently does nothing.
+
 ## Deployment
 
 17. The site assumes GitHub Pages at

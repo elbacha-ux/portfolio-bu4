@@ -1,0 +1,168 @@
+---
+/**
+ * BU4/JEENISo magazine page - teaser mode. Only the cover is real right
+ * now; the PDF download, podcast player and (later) flipbook are each
+ * driven by src/data/magazine.ts and simply don't render until their
+ * value stops being null, same convention as CvSection.astro.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { magazine } from '../data/magazine';
+import { ui } from '../i18n/ui';
+import { localePath } from '../i18n';
+import type { Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+const base = import.meta.env.BASE_URL;
+
+const coverAlt = `${t.magazine.coverAltPrefix} "${magazine.title}"`;
+const hasPodcast = magazine.podcast.audioPath !== null;
+---
+
+<BaseLayout lang={lang} title={t.magazine.title} description={t.magazine.lead}>
+  <section class="container section">
+    <SectionHeading numeral="07" eyebrow={t.magazine.eyebrow} title={t.magazine.title} />
+    <p class="lead reveal">{t.magazine.lead}</p>
+
+    <div class="magazine-spread reveal">
+      <div class="magazine-cover-frame">
+        <img
+          class="magazine-cover"
+          src={`${base}${magazine.cover}`}
+          width={magazine.coverWidth}
+          height={magazine.coverHeight}
+          alt={coverAlt}
+        />
+      </div>
+
+      <div class="magazine-info">
+        <p class="magazine-issue-title">{magazine.title}</p>
+        <p class="magazine-issue-subtitle">{magazine.subtitle}</p>
+        <span class="tag magazine-coming-soon">{t.magazine.comingSoon}</span>
+
+        {magazine.pdfPath && (
+          <a class="btn btn-primary magazine-pdf" href={`${base}${magazine.pdfPath}`} download data-sound="confirm">
+            {t.magazine.pdfDownload}
+          </a>
+        )}
+
+        {hasPodcast && (
+          <div class="magazine-podcast">
+            <h2>{t.magazine.podcastTitle}</h2>
+            {magazine.podcast.episodeTitle && <p class="magazine-podcast-episode">{magazine.podcast.episodeTitle}</p>}
+            {magazine.podcast.guest && (
+              <p class="magazine-podcast-guest">{t.magazine.podcastGuestLabel}: {magazine.podcast.guest}</p>
+            )}
+            <audio class="magazine-player" controls src={`${base}${magazine.podcast.audioPath}`}>
+            </audio>
+          </div>
+        )}
+
+        <p class="magazine-team-line">
+          {t.magazine.teamLinePrefix} <a href={localePath(lang, 'team/')}>{t.magazine.teamLinkText}</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lead {
+    max-width: 65ch;
+    margin-bottom: var(--space-5);
+    color: var(--color-text-muted);
+  }
+
+  .magazine-spread {
+    display: grid;
+    gap: var(--space-5);
+    align-items: start;
+  }
+  @media (min-width: 768px) {
+    .magazine-spread {
+      grid-template-columns: minmax(220px, 320px) 1fr;
+      gap: var(--space-6);
+    }
+  }
+
+  /* A book-like tilt + lift on hover/focus, pure CSS so it costs nothing
+     when JS is absent and nothing to disable under reduced motion - the
+     @media guard below just never defines the transform in the first
+     place. */
+  .magazine-cover-frame {
+    perspective: 1400px;
+  }
+  .magazine-cover {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-md);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .magazine-cover {
+      transition: transform var(--duration-base) var(--ease-standard), box-shadow var(--duration-base) var(--ease-standard);
+    }
+    .magazine-cover-frame:hover .magazine-cover,
+    .magazine-cover-frame:focus-within .magazine-cover {
+      transform: perspective(1400px) rotateY(-10deg) rotateX(2deg) scale(1.015);
+      box-shadow: 0 35px 55px -25px rgba(0, 0, 0, 0.45);
+    }
+  }
+
+  .magazine-info {
+    min-width: 0;
+  }
+  .magazine-issue-title {
+    font-family: var(--font-primary);
+    font-weight: var(--fw-heading);
+    font-size: var(--fs-700);
+    line-height: var(--lh-tight);
+    margin: 0 0 var(--space-2);
+  }
+  .magazine-issue-subtitle {
+    color: var(--color-text-muted);
+    max-width: 55ch;
+    margin: 0 0 var(--space-3);
+  }
+  .magazine-coming-soon {
+    background: var(--color-accent-soft);
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-4);
+  }
+
+  .magazine-pdf {
+    display: inline-flex;
+    margin-bottom: var(--space-4);
+  }
+
+  .magazine-podcast {
+    margin-bottom: var(--space-4);
+    padding: var(--space-4);
+    background: var(--color-accent-soft);
+  }
+  .magazine-podcast h2 {
+    font-size: var(--fs-500);
+    margin-bottom: var(--space-1);
+  }
+  .magazine-podcast-episode {
+    font-weight: var(--fw-medium);
+    margin-bottom: 0.25rem;
+  }
+  .magazine-podcast-guest {
+    color: var(--color-text-muted);
+    font-size: var(--fs-200);
+    margin-bottom: var(--space-3);
+  }
+  .magazine-player {
+    width: 100%;
+  }
+
+  .magazine-team-line {
+    color: var(--color-text-muted);
+  }
+</style>

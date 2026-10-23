@@ -15,6 +15,7 @@ interface UiDict {
     team: string;
     awards: string;
     contact: string;
+    magazine: string;
     menuLabel: string;
     langSwitchLabel: string;
     themeToggleLabel: string;
@@ -216,6 +217,18 @@ interface UiDict {
     copyLabel: string;
     copiedLabel: string;
   };
+  magazine: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    coverAltPrefix: string;
+    comingSoon: string;
+    pdfDownload: string;
+    podcastTitle: string;
+    podcastGuestLabel: string;
+    teamLinePrefix: string;
+    teamLinkText: string;
+  };
   footer: {
     affiliation: string;
     contactLabel: string;
@@ -246,6 +259,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       team: 'Team',
       awards: 'Awards',
       contact: 'Contact',
+      magazine: 'Magazine',
       menuLabel: 'Menu',
       langSwitchLabel: 'Choose language',
       themeToggleLabel: 'Toggle color theme',
@@ -454,6 +468,18 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       copyLabel: 'Copy',
       copiedLabel: 'Copied!',
     },
+    magazine: {
+      eyebrow: 'JEENISo Magazine',
+      title: 'Magazine',
+      lead: "A look inside BU4 and JEENISo's magazine project - stories, interviews and reporting from the team.",
+      coverAltPrefix: 'Cover of the magazine issue',
+      comingSoon: 'Full issue coming soon',
+      pdfDownload: 'Download PDF',
+      podcastTitle: 'Listen to the episode',
+      podcastGuestLabel: 'Guest',
+      teamLinePrefix: 'Produced by the BU4 team - see the full',
+      teamLinkText: 'team page',
+    },
     footer: {
       affiliation: 'Business Unit 4 is part of',
       contactLabel: 'Contact',
@@ -482,6 +508,7 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       team: 'Équipe',
       awards: 'Récompenses',
       contact: 'Contact',
+      magazine: 'Magazine',
       menuLabel: 'Menu',
       langSwitchLabel: 'Choisir la langue',
       themeToggleLabel: 'Changer le thème',
@@ -689,6 +716,18 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       websiteLabel: 'Site de JEENISo',
       copyLabel: 'Copier',
       copiedLabel: 'Copié !',
+    },
+    magazine: {
+      eyebrow: 'Magazine JEENISo',
+      title: 'Magazine',
+      lead: "Un aperçu du projet magazine de BU4 et JEENISo - récits, interviews et reportages de l'équipe.",
+      coverAltPrefix: 'Couverture du numéro du magazine',
+      comingSoon: 'Numéro complet à venir',
+      pdfDownload: 'Télécharger le PDF',
+      podcastTitle: "Écouter l'épisode",
+      podcastGuestLabel: 'Invité',
+      teamLinePrefix: "Réalisé par l'équipe BU4 - voir la",
+      teamLinkText: "page de l'équipe",
     },
     footer: {
       affiliation: 'Business Unit 4 fait partie de',
