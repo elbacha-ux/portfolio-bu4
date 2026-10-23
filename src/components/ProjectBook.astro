@@ -18,7 +18,7 @@ import ProjectSpread from './ProjectSpread.astro';
 import { ui } from '../i18n/ui';
 import { site } from '../data/site';
 import { magazine } from '../data/magazine';
-import { localePath } from '../i18n';
+import { localePath, pick } from '../i18n';
 import type { Lang } from '../i18n';
 
 interface Props {
@@ -35,10 +35,11 @@ const base = import.meta.env.BASE_URL;
  * src/data/magazine.ts, that links out to the magazine page instead of a
  * `projects/<slug>/` case study. See ProjectSpread.astro's hrefOverride.
  */
+const magazineDescription = `${magazine.subtitle} ${pick(magazine.description[0], lang)}`;
 const magazineSpread: CollectiveProject = {
   slug: 'magazine',
   title: L(t.nav.magazine, t.nav.magazine),
-  description: L(magazine.subtitle, magazine.subtitle),
+  description: L(magazineDescription, magazineDescription),
   category: L(t.magazine.eyebrow, t.magazine.eyebrow),
   status: null,
   memberSlugs: [],
@@ -91,7 +92,7 @@ const total = allSpreads.length;
               total={total}
               hrefOverride={localePath(lang, 'magazine/')}
               ctaLabelOverride={t.projects.bookReadMagazine}
-              showWholeImage
+              fillPage
             />
           ) : (
             <ProjectSpread project={project} lang={lang} index={i} total={total} />
