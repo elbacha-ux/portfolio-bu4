@@ -9,7 +9,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import { magazine } from '../data/magazine';
 import { ui } from '../i18n/ui';
-import { localePath } from '../i18n';
+import { localePath, pick } from '../i18n';
 import type { Lang } from '../i18n';
 
 interface Props {
@@ -43,6 +43,10 @@ const hasPodcast = magazine.podcast.audioPath !== null;
         <p class="magazine-issue-title">{magazine.title}</p>
         <p class="magazine-issue-subtitle">{magazine.subtitle}</p>
         <span class="tag magazine-coming-soon">{t.magazine.comingSoon}</span>
+
+        <div class="magazine-description">
+          {magazine.description.map((paragraph) => <p>{pick(paragraph, lang)}</p>)}
+        </div>
 
         {magazine.pdfPath && (
           <a class="btn btn-primary magazine-pdf" href={`${base}${magazine.pdfPath}`} download data-sound="confirm">
@@ -133,6 +137,18 @@ const hasPodcast = magazine.podcast.audioPath !== null;
     background: var(--color-accent-soft);
     color: var(--color-accent-strong);
     margin-bottom: var(--space-4);
+  }
+
+  .magazine-description {
+    max-width: 60ch;
+    margin-bottom: var(--space-4);
+  }
+  .magazine-description p {
+    color: var(--color-text);
+    margin-bottom: var(--space-3);
+  }
+  .magazine-description p:last-child {
+    margin-bottom: 0;
   }
 
   .magazine-pdf {

@@ -223,9 +223,9 @@ interface UiDict {
     eyebrow: string;
     title: string;
     lead: string;
-    teaser: string;
     coverAltPrefix: string;
     comingSoon: string;
+    comingSoonShort: string;
     pdfDownload: string;
     podcastTitle: string;
     podcastGuestLabel: string;
@@ -477,9 +477,9 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       eyebrow: 'JEENISo Magazine',
       title: 'Magazine',
       lead: "A look inside BU4 and JEENISo's magazine project - stories, interviews and reporting from the team.",
-      teaser: 'Are solar panels and photovoltaic energy really as eco-friendly as we think? This issue investigates.',
       coverAltPrefix: 'Cover of the magazine issue',
       comingSoon: 'Full issue coming soon',
+      comingSoonShort: 'Coming soon',
       pdfDownload: 'Download PDF',
       podcastTitle: 'Listen to the episode',
       podcastGuestLabel: 'Guest',
@@ -729,9 +729,9 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       eyebrow: 'Magazine JEENISo',
       title: 'Magazine',
       lead: "Un aperçu du projet magazine de BU4 et JEENISo - récits, interviews et reportages de l'équipe.",
-      teaser: "Les panneaux photovoltaïques et l'énergie solaire sont-ils vraiment aussi écologiques qu'on le pense ? Ce numéro enquête.",
       coverAltPrefix: 'Couverture du numéro du magazine',
       comingSoon: 'Numéro complet à venir',
+      comingSoonShort: 'À venir',
       pdfDownload: 'Télécharger le PDF',
       podcastTitle: "Écouter l'épisode",
       podcastGuestLabel: 'Invité',

@@ -18,8 +18,12 @@ interface Props {
   /** Extra tag shown next to the category tag, e.g. "Coming soon" - used
    * instead of the in-progress status tag for cards without a status. */
   badgeOverride?: string;
+  /** CSS object-position for the thumbnail - used to keep the relevant
+   * part of a non-16/10 source image in frame (e.g. a portrait cover whose
+   * title sits near the bottom, which center-cropping would cut off). */
+  imageObjectPosition?: string;
 }
-const { project, lang, hrefOverride, ctaLabelOverride, badgeOverride } = Astro.props;
+const { project, lang, hrefOverride, ctaLabelOverride, badgeOverride, imageObjectPosition } = Astro.props;
 const t = ui[lang];
 const base = import.meta.env.BASE_URL;
 const members = project.memberSlugs.map((s) => people[s]).filter(Boolean);
@@ -40,7 +44,7 @@ const ctaLabel = ctaLabelOverride ?? t.projects.viewDetails;
         loading="lazy"
         width="480"
         height="300"
-        style={`view-transition-name: project-image-${project.slug}`}
+        style={`view-transition-name: project-image-${project.slug};${imageObjectPosition ? ` object-position: ${imageObjectPosition};` : ''}`}
       />
       <span class="view-pill" aria-hidden="true">
         {ctaLabel}

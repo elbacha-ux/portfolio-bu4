@@ -32,14 +32,36 @@ const t = ui[lang];
  * badgeOverride there) instead of a bespoke card avoids a second, drifting
  * copy of the card's styles.
  */
+/* The home teaser shows only the issue's own opening line, in its real
+   published French, on both language versions of the site - same
+   "real published text" convention as magazine.title/subtitle - rather
+   than a translated, multi-paragraph summary better suited to the
+   magazine's own page. */
+const magazineDescription = magazine.description[0].fr;
 const magazineProject: CollectiveProject = {
   slug: 'magazine',
   title: L(magazine.title, magazine.title),
-  description: L(t.magazine.teaser, t.magazine.teaser),
+  description: L(magazineDescription, magazineDescription),
   category: L(t.nav.magazine, t.nav.magazine),
   status: null,
-  memberSlugs: [],
-  tools: [],
+  memberSlugs: [
+    'ahmed-belgacem',
+    'amena-aouichaoui',
+    'fedi-khouildi',
+    'lina-ben-hadj-slama',
+    'nour-lemjid',
+    'rihab-trifi',
+    'walid-ben-said',
+  ],
+  /* The issue's own content formats (from magazine.description), shown as
+     chips the same way a real project's tech stack is - not fabricated,
+     just the formats named in the confirmed editorial text above. */
+  tools: [
+    L('Analysis', 'Analyses'),
+    L('Infographics', 'Infographies'),
+    L('Expert interview', "Interview d'expert"),
+    L('Podcast', 'Podcast'),
+  ],
   skills: [],
   outcome: null,
   link: null,
@@ -117,7 +139,8 @@ const stats = [
           lang={lang}
           hrefOverride={localePath(lang, 'magazine/')}
           ctaLabelOverride={t.home.magazineCta}
-          badgeOverride={t.magazine.comingSoon}
+          badgeOverride={t.magazine.comingSoonShort}
+          imageObjectPosition="center 85%"
         />
       </li>
     </ProjectList>
