@@ -235,8 +235,6 @@ interface UiDict {
     /** "Page {current} of {total}" template, read by the aria-live page
      * indicator - {current}/{total} are replaced at runtime. */
     flipbookPageStatus: string;
-    flipbookFullscreenEnter: string;
-    flipbookFullscreenExit: string;
   };
   footer: {
     affiliation: string;
@@ -493,8 +491,6 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       flipbookPrev: 'Previous page',
       flipbookNext: 'Next page',
       flipbookPageStatus: 'Page {current} of {total}',
-      flipbookFullscreenEnter: 'View fullscreen',
-      flipbookFullscreenExit: 'Exit fullscreen',
     },
     footer: {
       affiliation: 'Business Unit 4 is part of',
@@ -749,8 +745,6 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       flipbookPrev: 'Page précédente',
       flipbookNext: 'Page suivante',
       flipbookPageStatus: 'Page {current} sur {total}',
-      flipbookFullscreenEnter: 'Voir en plein écran',
-      flipbookFullscreenExit: 'Quitter le plein écran',
     },
     footer: {
       affiliation: 'Business Unit 4 fait partie de',

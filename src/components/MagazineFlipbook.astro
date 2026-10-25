@@ -4,9 +4,9 @@
  * scripts/pdf-to-pages.mjs (see src/data/magazine-pages.json). Progressive
  * enhancement: the stage shows a plain cover image and a <noscript> PDF
  * link by default; only `html.js .magazine-flipbook` (global.css gate,
- * same pattern as ProjectBook.astro) reveals the prev/next/fullscreen
- * controls, and src/lib/flipbook.ts arms the actual page-turning once the
- * section scrolls into view.
+ * same pattern as ProjectBook.astro) reveals the prev/next controls, and
+ * src/lib/flipbook.ts arms the actual page-turning once the section
+ * scrolls into view.
  */
 import { ui } from '../i18n/ui';
 import type { Lang } from '../i18n';
@@ -36,8 +36,6 @@ const pdfHref = `${base}${pdfPath}`;
   data-width={width}
   data-height={height}
   data-page-status={t.magazine.flipbookPageStatus}
-  data-fullscreen-enter={t.magazine.flipbookFullscreenEnter}
-  data-fullscreen-exit={t.magazine.flipbookFullscreenExit}
   style={`--flipbook-ratio: ${width} / ${height};`}
 >
   <div class="flipbook-viewport" data-flipbook-viewport>
@@ -55,9 +53,6 @@ const pdfHref = `${base}${pdfPath}`;
     <p class="flipbook-indicator" data-flipbook-indicator aria-live="polite">1 / {pages.length}</p>
     <button type="button" class="flipbook-btn" data-flipbook-next aria-label={t.magazine.flipbookNext} data-sound="click">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6" /></svg>
-    </button>
-    <button type="button" class="flipbook-btn flipbook-fullscreen" data-flipbook-fullscreen aria-label={t.magazine.flipbookFullscreenEnter} data-sound="click">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" /></svg>
     </button>
   </div>
 
@@ -81,21 +76,14 @@ const pdfHref = `${base}${pdfPath}`;
     background: transparent;
   }
   /* The viewport clips to the stage's natural width normally. On the
-     cover/back-cover (src/lib/flipbook.ts toggles .is-cover-shifted) it
-     narrows to exactly one page's width while .flipbook-sizer - sized to
-     200% of *its* parent, so the stage inside it (which StPageFlip keeps
-     forcing to its own inline "width: 100%", overriding any width rule we
-     put directly on .flipbook-stage) ends up back at its original
-     absolute size, keeping StPageFlip's internal scale unaffected - is
-     centered inside the viewport via auto margins. Combined with the
-     wrapper's +/-25% translateX (half a page width), the occupied half of
-     the canvas lands exactly inside this narrowed window and the blank
-     half is clipped away entirely, rather than just nudged (a translateX
-     shift alone can center the occupied half but still leaves a sliver of
-     the blank half showing). */
+     cover/back-cover, src/lib/flipbook.ts's updateCoverShift() narrows it
+     to exactly one page's width and offsets .flipbook-sizer/the canvas to
+     match, all as explicit pixel inline styles (not CSS percentages here)
+     - see that function's own comment for why. This stylesheet only
+     supplies the default (100%, untransformed) state and the width
+     transition; the shifted state's actual numbers live in the script. */
   .flipbook-viewport {
     width: 100%;
-    margin-inline: auto;
     overflow: hidden;
   }
   .flipbook-sizer {
@@ -105,18 +93,6 @@ const pdfHref = `${base}${pdfPath}`;
     .flipbook-viewport {
       transition: width 400ms ease;
     }
-  }
-  .magazine-flipbook.is-cover-shifted .flipbook-viewport {
-    width: 50%;
-  }
-  .magazine-flipbook.is-cover-shifted .flipbook-sizer {
-    width: 200%;
-    /* `margin-inline: auto` does NOT center an element wider than its
-       container - auto margins collapse to 0 and all the overflow goes
-       to one side when over-constrained. An explicit -50% margin (of the
-       *viewport's* width, which is this element's containing block) is
-       the actual centering math: (200% - 100%) / 2 = 50%. */
-    margin-left: -50%;
   }
   .flipbook-stage {
     width: 100%;
@@ -189,35 +165,12 @@ const pdfHref = `${base}${pdfPath}`;
     width: 20px;
     height: 20px;
   }
-  .flipbook-fullscreen.is-fullscreen svg {
-    transform: rotate(180deg);
-  }
   .flipbook-indicator {
     min-width: 6ch;
     text-align: center;
     font-size: var(--fs-200);
     font-weight: var(--fw-heading);
     color: var(--color-text-muted);
-  }
-
-  :global(.magazine-flipbook:fullscreen) {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background: var(--color-navy);
-    padding: var(--space-4);
-  }
-  :global(.magazine-flipbook:fullscreen) .flipbook-viewport {
-    flex: 1 1 auto;
-    height: 0;
-    min-height: 0;
-  }
-  :global(.magazine-flipbook:fullscreen) .flipbook-sizer {
-    height: 100%;
-  }
-  :global(.magazine-flipbook:fullscreen) .flipbook-stage {
-    aspect-ratio: auto;
-    height: 100%;
   }
 </style>
 

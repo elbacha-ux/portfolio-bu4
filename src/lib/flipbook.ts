@@ -2,9 +2,8 @@
  * Magazine flipbook on the Magazine page (see MagazineFlipbook.astro) -
  * StPageFlip (the `page-flip` package) wrapped with: lazy init once the
  * section scrolls into view, prev/next buttons, an aria-live page
- * indicator, left/right arrow keys while the flipbook has focus, a
- * fullscreen toggle, and a near-zero flip time under
- * prefers-reduced-motion.
+ * indicator, left/right arrow keys while the flipbook is in view, and a
+ * near-zero flip time under prefers-reduced-motion.
  *
  * Progressive enhancement: without this script only the static cover image
  * and the <noscript> PDF link are shown - see the `html.js` gate in
@@ -19,9 +18,15 @@ export function initMagazineFlipbook(): void {
   // init() below) is hoisted, so control-flow narrowing of the outer
   // `const` doesn't carry into it the way it does for arrow functions.
   const root: HTMLElement = rootOrNull;
-  const stage = root.querySelector<HTMLElement>('[data-flipbook-stage]');
+  const stageOrNull = root.querySelector<HTMLElement>('[data-flipbook-stage]');
+  const viewportOrNull = root.querySelector<HTMLElement>('[data-flipbook-viewport]');
+  const sizerOrNull = root.querySelector<HTMLElement>('.flipbook-sizer');
   const pagesJson = root.dataset.pages;
-  if (!stage || !pagesJson) return;
+  if (!stageOrNull || !viewportOrNull || !sizerOrNull || !pagesJson) return;
+  // Same hoisted-function narrowing quirk as `root` above.
+  const stage: HTMLElement = stageOrNull;
+  const viewport: HTMLElement = viewportOrNull;
+  const sizer: HTMLElement = sizerOrNull;
 
   const pageUrls = JSON.parse(pagesJson) as string[];
   if (pageUrls.length < 2) return;
@@ -29,17 +34,19 @@ export function initMagazineFlipbook(): void {
   const width = Number(root.dataset.width);
   const height = Number(root.dataset.height);
   const pageStatusTemplate = root.dataset.pageStatus ?? 'Page {current} of {total}';
-  const fullscreenEnterLabel = root.dataset.fullscreenEnter ?? 'View fullscreen';
-  const fullscreenExitLabel = root.dataset.fullscreenExit ?? 'Exit fullscreen';
 
   const prevBtn = root.querySelector<HTMLButtonElement>('[data-flipbook-prev]');
   const nextBtn = root.querySelector<HTMLButtonElement>('[data-flipbook-next]');
-  const fullscreenBtn = root.querySelector<HTMLButtonElement>('[data-flipbook-fullscreen]');
   const indicator = root.querySelector<HTMLElement>('[data-flipbook-indicator]');
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let pageFlip: PageFlipInstance | null = null;
+  // Arms the document-level arrow-key handler below only while the
+  // flipbook is actually in view, so scrolling it into frame is enough to
+  // swipe pages with the keyboard - no click-to-focus first - without
+  // hijacking arrow keys used elsewhere on a long page once scrolled away.
+  let isInView = false;
 
   function updateIndicator(current: number, total: number): void {
     if (!indicator) return;
@@ -50,6 +57,14 @@ export function initMagazineFlipbook(): void {
     );
   }
 
+  function clearCoverShift(wrapper: HTMLElement): void {
+    wrapper.style.transform = '';
+    viewport.style.width = '';
+    sizer.style.width = '';
+    sizer.style.marginLeft = '';
+    root.classList.remove('is-cover-shifted');
+  }
+
   /**
    * With showCover on, the cover/back-cover render alone on a canvas sized
    * for a full two-page spread - StPageFlip paints its unused half opaque
@@ -57,18 +72,24 @@ export function initMagazineFlipbook(): void {
    * setting for this, and shifting the canvas alone can't fully fix it
    * either: translating it by half a page width centers the *occupied*
    * half, but a sliver of the blank half still rides along into view
-   * (they're pixels on the same rigid canvas). So this does two things
-   * together: the `.flipbook-viewport`/`.flipbook-stage` width swap (see
-   * MagazineFlipbook.astro's `is-cover-shifted` styles) narrows the
-   * visible window to exactly one page's width, and the wrapper's
-   * translateX by that same half-page-width slides the occupied half
-   * exactly into that window - between them the blank half ends up
-   * entirely outside the clipped viewport. Only applies in
+   * (they're pixels on the same rigid canvas). So this narrows the
+   * viewport to exactly one page's width (clipping via overflow: hidden)
+   * and slides the canvas sideways by a quarter of its own width so the
+   * occupied half lands exactly inside that narrowed window, with the
+   * blank half pushed entirely outside it.
+   *
+   * All three numbers (viewport width, sizer width/offset, canvas
+   * translate) are computed here from a single measured pixel width and
+   * applied as inline styles - not expressed as CSS percentages (e.g.
+   * `width: 50%`, `margin-left: -50%`) - because that specific trick
+   * leans on how a block wider than its containing block resolves auto
+   * margins, a case engines have historically disagreed on. Plain
+   * measured-pixel arithmetic has no such ambiguity. Only applies in
    * landscape/double-page mode - a single portrait page (phones, or a
    * real middle spread) already has no blank half to hide.
    */
   function updateCoverShift(): void {
-    if (!pageFlip || !stage) return;
+    if (!pageFlip) return;
     const wrapper = stage.querySelector<HTMLElement>('.stf__wrapper');
     if (!wrapper) return;
     if (!wrapper.style.transition) {
@@ -76,26 +97,34 @@ export function initMagazineFlipbook(): void {
     }
 
     if (pageFlip.getOrientation() !== 'landscape') {
-      wrapper.style.transform = '';
-      root.classList.remove('is-cover-shifted');
+      clearCoverShift(wrapper);
       return;
     }
     const current = pageFlip.getCurrentPageIndex();
     const total = pageFlip.getPageCount();
-    if (current === 0) {
-      wrapper.style.transform = 'translateX(-25%)';
-      root.classList.add('is-cover-shifted');
-    } else if (current === total - 1) {
-      wrapper.style.transform = 'translateX(25%)';
-      root.classList.add('is-cover-shifted');
-    } else {
-      wrapper.style.transform = '';
-      root.classList.remove('is-cover-shifted');
+    if (current !== 0 && current !== total - 1) {
+      clearCoverShift(wrapper);
+      return;
     }
+
+    // Measured fresh against the CSS default (100%) each time, not
+    // cached - "stretch" mode means this width changes with the window.
+    viewport.style.width = '';
+    sizer.style.width = '';
+    sizer.style.marginLeft = '';
+    const fullWidth = viewport.getBoundingClientRect().width;
+    const halfWidth = fullWidth / 2;
+    const quarterWidth = fullWidth / 4;
+
+    viewport.style.width = `${halfWidth}px`;
+    sizer.style.width = `${fullWidth}px`;
+    sizer.style.marginLeft = `${-quarterWidth}px`;
+    wrapper.style.transform = current === 0 ? `translateX(-${quarterWidth}px)` : `translateX(${quarterWidth}px)`;
+    root.classList.add('is-cover-shifted');
   }
 
   async function init(): Promise<void> {
-    if (pageFlip || !stage) return;
+    if (pageFlip) return;
     const { PageFlip } = await import('page-flip');
 
     const settings: Partial<FlipSetting> = {
@@ -146,54 +175,40 @@ export function initMagazineFlipbook(): void {
     const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
-            init();
-            io.disconnect();
-          }
+          isInView = entry.isIntersecting;
+          if (entry.isIntersecting) init();
         }
       },
       { rootMargin: '200px' }
     );
     io.observe(root);
   } else {
+    isInView = true;
     init();
   }
 
   prevBtn?.addEventListener('click', () => pageFlip?.flipPrev());
   nextBtn?.addEventListener('click', () => pageFlip?.flipNext());
 
-  stage.addEventListener('keydown', (event) => {
+  // Document-level (not just the stage) so scrolling the flipbook into
+  // view is enough to swipe pages with the keyboard, same as
+  // ProjectBook.astro/book.ts's own arrow-key handling - gated by
+  // isInView so it doesn't hijack arrow keys used elsewhere on the page,
+  // and skipped while typing in an unrelated text field.
+  document.addEventListener('keydown', (event) => {
+    if (!isInView || !pageFlip) return;
+    const target = event.target as HTMLElement | null;
+    const inTextField = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+    if (inTextField) return;
+
     if (event.key === 'ArrowRight') {
       event.preventDefault();
-      pageFlip?.flipNext();
+      pageFlip.flipNext();
     } else if (event.key === 'ArrowLeft') {
       event.preventDefault();
-      pageFlip?.flipPrev();
+      pageFlip.flipPrev();
     }
   });
-
-  function isFullscreen(): boolean {
-    return document.fullscreenElement === root;
-  }
-
-  function updateFullscreenLabel(): void {
-    if (!fullscreenBtn) return;
-    const active = isFullscreen();
-    fullscreenBtn.setAttribute('aria-label', active ? fullscreenExitLabel : fullscreenEnterLabel);
-    fullscreenBtn.classList.toggle('is-fullscreen', active);
-  }
-
-  fullscreenBtn?.addEventListener('click', () => {
-    const action = isFullscreen() ? document.exitFullscreen() : root.requestFullscreen();
-    action.catch(() => {
-      /* Fullscreen API unavailable/denied - button stays a harmless no-op. */
-    });
-  });
-  document.addEventListener('fullscreenchange', () => {
-    updateFullscreenLabel();
-    pageFlip?.update();
-  });
-  updateFullscreenLabel();
 
   window.addEventListener('pagehide', () => {
     pageFlip?.destroy();
