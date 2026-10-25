@@ -7,14 +7,31 @@ import type { Lang } from '../i18n';
 interface Props {
   projects: CollectiveProject[];
   lang: Lang;
+  /** Overrides one card's link/CTA by slug - used for entries that aren't
+   * a real `projects/<slug>/` detail page (e.g. the magazine, whose real
+   * page is /magazine/). */
+  overrideSlug?: string;
+  overrideHref?: string;
+  overrideCtaLabel?: string;
+  overrideImageObjectPosition?: string;
 }
-const { projects, lang } = Astro.props;
+const { projects, lang, overrideSlug, overrideHref, overrideCtaLabel, overrideImageObjectPosition } = Astro.props;
 const t = ui[lang];
 ---
 
 {projects.length > 0 ? (
   <ul class="project-list">
-    {projects.map((p) => <li><ProjectCard project={p} lang={lang} /></li>)}
+    {projects.map((p) => (
+      <li>
+        <ProjectCard
+          project={p}
+          lang={lang}
+          hrefOverride={p.slug === overrideSlug ? overrideHref : undefined}
+          ctaLabelOverride={p.slug === overrideSlug ? overrideCtaLabel : undefined}
+          imageObjectPosition={p.slug === overrideSlug ? overrideImageObjectPosition : undefined}
+        />
+      </li>
+    ))}
     <slot />
   </ul>
 ) : (

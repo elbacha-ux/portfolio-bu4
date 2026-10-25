@@ -15,15 +15,12 @@ interface Props {
   hrefOverride?: string;
   /** Overrides the default "View details" CTA label. */
   ctaLabelOverride?: string;
-  /** Extra tag shown next to the category tag, e.g. "Coming soon" - used
-   * instead of the in-progress status tag for cards without a status. */
-  badgeOverride?: string;
   /** CSS object-position for the thumbnail - used to keep the relevant
    * part of a non-16/10 source image in frame (e.g. a portrait cover whose
    * title sits near the bottom, which center-cropping would cut off). */
   imageObjectPosition?: string;
 }
-const { project, lang, hrefOverride, ctaLabelOverride, badgeOverride, imageObjectPosition } = Astro.props;
+const { project, lang, hrefOverride, ctaLabelOverride, imageObjectPosition } = Astro.props;
 const t = ui[lang];
 const base = import.meta.env.BASE_URL;
 const members = project.memberSlugs.map((s) => people[s]).filter(Boolean);
@@ -56,7 +53,6 @@ const ctaLabel = ctaLabelOverride ?? t.projects.viewDetails;
     <div class="meta">
       {category && <Tag>{category}</Tag>}
       {project.status === 'in-progress' && <Tag class="status-tag">{t.common.inProgress}</Tag>}
-      {badgeOverride && <Tag class="status-tag">{badgeOverride}</Tag>}
     </div>
     <h3 style={`view-transition-name: project-title-${project.slug}`}><a class="card-link" href={detailHref} data-sound="click">{title}</a></h3>
     {description && <p>{description}</p>}

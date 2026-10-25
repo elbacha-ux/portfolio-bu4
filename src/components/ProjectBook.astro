@@ -13,12 +13,10 @@
  * just sees a clean stacked list of project spreads, not a locked book.
  */
 import type { CollectiveProject } from '../data/types';
-import { L } from '../data/types';
 import ProjectSpread from './ProjectSpread.astro';
 import { ui } from '../i18n/ui';
 import { site } from '../data/site';
-import { magazine } from '../data/magazine';
-import { localePath, pick } from '../i18n';
+import { localePath } from '../i18n';
 import type { Lang } from '../i18n';
 
 interface Props {
@@ -28,34 +26,7 @@ interface Props {
 const { projects, lang } = Astro.props;
 const t = ui[lang];
 const base = import.meta.env.BASE_URL;
-
-/**
- * The magazine isn't a CollectiveProject (no members/case study/detail
- * route) - it gets one extra closing page in the book, built from
- * src/data/magazine.ts, that links out to the magazine page instead of a
- * `projects/<slug>/` case study. See ProjectSpread.astro's hrefOverride.
- */
-const magazineDescription = `${magazine.subtitle} ${pick(magazine.description[0], lang)}`;
-const magazineSpread: CollectiveProject = {
-  slug: 'magazine',
-  title: L(t.nav.magazine, t.nav.magazine),
-  description: L(magazineDescription, magazineDescription),
-  category: L(t.magazine.eyebrow, t.magazine.eyebrow),
-  status: null,
-  memberSlugs: [],
-  tools: [],
-  skills: [],
-  outcome: null,
-  link: null,
-  image: magazine.cover,
-  imageAlt: L(`${t.magazine.coverAltPrefix} "${magazine.title}"`, `${t.magazine.coverAltPrefix} "${magazine.title}"`),
-  videoUrl: null,
-  documentsNote: null,
-  repositoryUrl: null,
-  caseStudy: null,
-};
-const allSpreads = [...projects, magazineSpread];
-const total = allSpreads.length;
+const total = projects.length;
 ---
 
 <div class="project-book" data-close-label={t.projects.bookClose} data-prev-label={t.projects.bookPrev}>
@@ -83,7 +54,7 @@ const total = allSpreads.length;
       </button>
 
       <div class="book-pages">
-        {allSpreads.map((project, i) =>
+        {projects.map((project, i) =>
           project.slug === 'magazine' ? (
             <ProjectSpread
               project={project}

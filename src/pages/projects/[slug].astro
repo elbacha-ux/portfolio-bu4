@@ -3,7 +3,10 @@ import ProjectView from '../../views/ProjectView.astro';
 import { projects } from '../../data/projects';
 
 export function getStaticPaths() {
-  return projects.map((p) => ({ params: { slug: p.slug } }));
+  // The magazine has no case study of its own - its real detail page is
+  // /magazine/ (the flipbook), not this generic template - so it's
+  // excluded here even though it's a real CollectiveProject entry.
+  return projects.filter((p) => p.slug !== 'magazine').map((p) => ({ params: { slug: p.slug } }));
 }
 
 const { slug } = Astro.params;

@@ -47,7 +47,10 @@ const documents = projectDocuments(slug).map((doc) => ({
 }));
 const hasLightbox = gallery.length > 0 || documents.some((d) => d.previewImages.length > 0);
 
-const otherProjects = projects.filter((p) => p.slug !== slug);
+// The magazine has no /projects/<slug>/ page of its own (see
+// src/pages/projects/[slug].astro's getStaticPaths) - excluded here too so
+// this list never links to a page that doesn't exist.
+const otherProjects = projects.filter((p) => p.slug !== slug && p.slug !== 'magazine');
 
 // Falls back to the project's first gallery photo as the share-preview
 // image when no dedicated cover was set - same "real photo beats generic

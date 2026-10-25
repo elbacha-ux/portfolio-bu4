@@ -1,5 +1,6 @@
 import type { CollectiveProject } from './types';
 import { L } from './types.ts';
+import { magazine } from './magazine.ts';
 
 /**
  * Collective BU4 projects. Only verified, cross-referenced work goes here.
@@ -10,6 +11,14 @@ import { L } from './types.ts';
  * - re-imaginelab-campaign: confirmed by the team to involve all seven
  *   members across video (script/execution/behind-the-scenes/editing),
  *   the campaign website, and customer-acquisition strategy.
+ * - magazine: the published issue (src/data/magazine.ts) counted as the
+ *   team's third collective project. It has no case study of its own -
+ *   its real detail page is /magazine/ (the flipbook), not an auto-generated
+ *   /projects/magazine/ page, so it's excluded from
+ *   src/pages/projects/[slug].astro's getStaticPaths, and every place that
+ *   renders it as a card/spread overrides the link to /magazine/ (see the
+ *   `overrideSlug`/`hrefOverride` props in HomeView.astro and
+ *   ProjectBook.astro).
  */
 export const projects: CollectiveProject[] = [
   {
@@ -144,5 +153,39 @@ export const projects: CollectiveProject[] = [
       ),
       currentProgress: null,
     },
+  },
+  {
+    slug: 'magazine',
+    title: L(magazine.title, magazine.title),
+    description: magazine.description[0],
+    category: L('Magazine', 'Magazine'),
+    status: 'completed',
+    memberSlugs: [
+      'ahmed-belgacem',
+      'amena-aouichaoui',
+      'fedi-khouildi',
+      'lina-ben-hadj-slama',
+      'nour-lemjid',
+      'rihab-trifi',
+      'walid-ben-said',
+    ],
+    tools: [
+      L('Analysis', 'Analyses'),
+      L('Infographics', 'Infographies'),
+      L('Expert interview', "Interview d'expert"),
+      L('Podcast', 'Podcast'),
+    ],
+    skills: [],
+    outcome: null,
+    link: null,
+    image: magazine.cover,
+    imageAlt: L(
+      `Cover of the magazine issue "${magazine.title}"`,
+      `Couverture du numéro du magazine « ${magazine.title} »`
+    ),
+    videoUrl: null,
+    documentsNote: null,
+    repositoryUrl: null,
+    caseStudy: null,
   },
 ];

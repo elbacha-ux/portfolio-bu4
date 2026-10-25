@@ -224,13 +224,19 @@ interface UiDict {
     title: string;
     lead: string;
     coverAltPrefix: string;
-    comingSoon: string;
-    comingSoonShort: string;
     pdfDownload: string;
     podcastTitle: string;
     podcastGuestLabel: string;
     teamLinePrefix: string;
     teamLinkText: string;
+    flipbookLabel: string;
+    flipbookPrev: string;
+    flipbookNext: string;
+    /** "Page {current} of {total}" template, read by the aria-live page
+     * indicator - {current}/{total} are replaced at runtime. */
+    flipbookPageStatus: string;
+    flipbookFullscreenEnter: string;
+    flipbookFullscreenExit: string;
   };
   footer: {
     affiliation: string;
@@ -478,13 +484,17 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       title: 'Magazine',
       lead: "A look inside BU4 and JEENISo's magazine project - stories, interviews and reporting from the team.",
       coverAltPrefix: 'Cover of the magazine issue',
-      comingSoon: 'Full issue coming soon',
-      comingSoonShort: 'Coming soon',
       pdfDownload: 'Download PDF',
       podcastTitle: 'Listen to the episode',
       podcastGuestLabel: 'Guest',
       teamLinePrefix: 'Produced by the BU4 team - see the full',
       teamLinkText: 'team page',
+      flipbookLabel: 'Magazine flipbook',
+      flipbookPrev: 'Previous page',
+      flipbookNext: 'Next page',
+      flipbookPageStatus: 'Page {current} of {total}',
+      flipbookFullscreenEnter: 'View fullscreen',
+      flipbookFullscreenExit: 'Exit fullscreen',
     },
     footer: {
       affiliation: 'Business Unit 4 is part of',
@@ -730,13 +740,17 @@ export const ui: Record<'en' | 'fr', UiDict> = {
       title: 'Magazine',
       lead: "Un aperçu du projet magazine de BU4 et JEENISo - récits, interviews et reportages de l'équipe.",
       coverAltPrefix: 'Couverture du numéro du magazine',
-      comingSoon: 'Numéro complet à venir',
-      comingSoonShort: 'À venir',
       pdfDownload: 'Télécharger le PDF',
       podcastTitle: "Écouter l'épisode",
       podcastGuestLabel: 'Invité',
       teamLinePrefix: "Réalisé par l'équipe BU4 - voir la",
       teamLinkText: "page de l'équipe",
+      flipbookLabel: 'Feuilletage du magazine',
+      flipbookPrev: 'Page précédente',
+      flipbookNext: 'Page suivante',
+      flipbookPageStatus: 'Page {current} sur {total}',
+      flipbookFullscreenEnter: 'Voir en plein écran',
+      flipbookFullscreenExit: 'Quitter le plein écran',
     },
     footer: {
       affiliation: 'Business Unit 4 fait partie de',
